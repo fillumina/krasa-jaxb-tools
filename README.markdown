@@ -4,16 +4,7 @@ Plugin for generation of Bean Validation Annotations (JSR-303) **-XJsr303Annotat
 
 Versions
 ----------------
-
-- `2.2` Some new features added because of PR requests
-  
-  - Added `@Valid` annotation to `sequence`s to force items validation
-  - Added support for `Jakarta EE 9` with parameter `validationAnnotations`
-
-- `2.1` Revert back to Java 1.8 (sorry folks!).
-
-- `2.0` A refactorized version of the original [krasa-jaxb-toos](https://github.com/krasa/krasa-jaxb-tools) last synced on August 2022, with some enhancements (support for `EachDigits`, `EachDecimalMin` and `EachDecimalMax` in primitive lists), improved tests and bug fixed. It is compiled using JDK 11. The `pom.xml` `groupId` has been changed to `com.fillumina`.
-
+- `2.2.1` Resolved a bug in which sometimes the `@Valid` annotation is applied twice to List types.
 -----
 
 Release

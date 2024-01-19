@@ -6,6 +6,7 @@ import java.math.BigInteger;
 
 /**
  * @author Vojtech Krasa
+ * @author Viserius
  */
 class Utils {
 
@@ -108,6 +109,7 @@ class Utils {
 		if(var == null) {
 			return false;
 		}
-        return "JDirectClass".equals(var.type().getClass().getSimpleName());
+        return "JDirectClass".equals(var.type().getClass().getSimpleName())
+				|| "JNarrowedClass".equals(var.type().getClass().getSimpleName());
     }
 }

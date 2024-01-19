@@ -38,6 +38,7 @@ import org.xml.sax.ErrorHandler;
  * @author Francesco Illuminati
  * @author Vojtěch Krása
  * @author cocorossello
+ * @author Viserius
  */
 public class JaxbValidationsPlugins extends Plugin {
 
@@ -190,10 +191,6 @@ public class JaxbValidationsPlugins extends Plugin {
                 !hasAnnotation(field, "NotNull")) {
 
             addNotNullAnnotation(classOutline, field);
-        }
-
-        if (property.isCollection()) {
-            addValidAnnotation(propertyName, classOutline.implClass.name(), field);
         }
 
         // https://www.ibm.com/developerworks/webservices/library/ws-tip-null/index.html

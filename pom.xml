@@ -11,7 +11,7 @@
 
   <groupId>com.fillumina</groupId>
   <artifactId>krasa-jaxb-tools</artifactId>
-  <version>2.3-SNAPSHOT</version>
+  <version>2.2.1</version>
   <packaging>jar</packaging>
   <name>krasa-jaxb-tools</name>
 
@@ -30,9 +30,9 @@
   </licenses>
 
   <scm>
-    <connection>scm:git:git@github.com:fillumina/krasa-jaxb-tools.git</connection>
-    <url>git@github.com:fillumina/krasa-jaxb-tools.git</url>
-    <developerConnection>scm:git:git@github.com:fillumina/krasa-jaxb-tools.git</developerConnection>
+    <connection>scm:git:git@github.com:Viserius/krasa-jaxb-tools.git</connection>
+    <url>git@github.com:Viserius/krasa-jaxb-tools.git</url>
+    <developerConnection>scm:git:git@github.com:Viserius/krasa-jaxb-tools.git</developerConnection>
   </scm>
 
   <developers>
@@ -43,6 +43,10 @@
     <developer>
       <name>Vojtech Krasa</name>
       <email>vojta.krasa@gmail.com</email>
+    </developer>
+    <developer>
+      <name>Viserius</name>
+      <url>https://github.com/Viserius/krasa-jaxb-tools</url>
     </developer>
   </developers>
 
