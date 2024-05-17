@@ -15,26 +15,35 @@
  */
 package com.sun.tools.xjc.addon.krasa;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import org.apache.maven.project.MavenProject;
 import org.jvnet.jaxb2.maven2.AbstractXJC2Mojo;
 import org.jvnet.jaxb2.maven2.test.RunXJC2Mojo;
 
 /**
+ * Testing helper for generated classes.
+ *
+ * We cannot use reflection here because RunXJC2Mojo acts on the generation phase and the
+ * generated artifacts are not compiled.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
 public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
-
     public abstract String getFolderName();
 
     public String getNamespace() {
@@ -45,6 +54,10 @@ public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
         return ValidationAnnotation.JAVAX;
     }
 
+    public String getAnnotationFileName() {
+        return "annotation.txt";
+    }
+
     // artifact creation happens before test executions!
     public final void setUp() throws Exception {
         super.testExecute();
@@ -52,6 +65,36 @@ public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
 
     public final void testExecute() throws Exception {
         // override RunXJC2Mojo own method to allow tests to be executed after mojo creation
+    }
+
+
+    public final void testWrite() {
+        String annotatonFilename = getAnnotationFileName();
+        Path filename = Paths.get(getAbsolutePath() + annotatonFilename);
+
+        writeAllElementsTo(filename);
+
+        checkAllAnnotations(filename, annotatonFilename);
+    }
+
+    private void checkAllAnnotations(Path filename, String annotatonFilename) throws AssertionError {
+        List<String> actual = readFile(filename);
+        String annotationFilename = getBaseDir() + "/src/test/resources/" + getFolderName() + "/" +
+                annotatonFilename;
+        Path annotations = Paths.get(annotationFilename);
+        List<String> expected = readFile(annotations);
+
+        if (expected.size() != actual.size()) {
+            throw new AssertionError("wrong number of assertions in " + getFolderName());
+        }
+
+        for (int i=0,l=expected.size(); i<l; i++) {
+            String expectedLine = expected.get(i).trim();
+            String actualLine = actual.get(i).trim();
+
+            assertEquals("annotation differs in " + getFolderName() + " " + getAnnotation().name(),
+                    expectedLine, actualLine);
+        }
     }
 
     @Override
@@ -83,28 +126,85 @@ public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
         );
     }
 
+    public void writeAllElementsTo(Path filename) {
+        try (BufferedWriter writer = Files.newBufferedWriter(filename, Charset.defaultCharset(),
+                StandardOpenOption.CREATE, StandardOpenOption.APPEND)) {
+            gatAllElementsAsString(writer);
+            writer.close();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public void gatAllElementsAsString(Appendable buf) throws IOException {
+        List<Path> fileList = allFilesInDirectory(getAbsolutePath());
+        Collections.sort(fileList);
+        for (Path p : fileList) {
+            String name = p.getFileName().toString();
+            if (name.endsWith(".java") &&
+                    !name.startsWith("package-info") &&
+                    !name.startsWith("ObjectFactory")) {
+                String filename = name.replace(".java", "");
+                ArtifactTester artifactTester = element(filename);
+                buf.append(filename).append(System.lineSeparator());
+                List<String> attributeList = artifactTester.getAllAttributes();
+                Collections.sort(attributeList);
+                for (String attribute : attributeList) {
+                    buf.append("    ").append(attribute).append(System.lineSeparator());
+                    List<String> annotationList = artifactTester.getAnnotations(attribute)
+                            .stream()
+                            .map(s -> s.trim())
+                            .filter(s -> !s.startsWith("@Xml"))
+                            .collect(Collectors.toList());
+                    Collections.sort(annotationList);
+                    for (String a : annotationList) {
+                        buf.append("        ").append(a).append(System.lineSeparator());
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * @param elementName The name of the root element created (the java class name created by JAXB).
      */
     public ArtifactTester element(String elementName) {
         final String filename = elementName + ".java";
-        List<String> lines;
-        try {
-            lines = readFile(filename);
-        } catch (IOException ex) {
-            throw new AssertionError("error loading file " + filename, ex);
-        }
+        List<String> lines = readFile(filename);
         return new ArtifactTester(filename, lines);
     }
 
-    private List<String> readFile(String filename) throws IOException {
+    private List<String> readFile(String filename) {
+        String absoluteName = getAbsolutePath() + filename;
+        Path path = Paths.get(absoluteName);
+        return readFile(path);
+    }
+
+    private List<String> readFile(Path path) {
+        try {
+            return Files.readAllLines(path);
+        } catch (IOException ex) {
+            throw new AssertionError("error loading file " + path, ex);
+        }
+    }
+
+    private List<Path> allFilesInDirectory(String path) {
+        try {
+            return Files.list(new File(path).toPath())
+                    .collect(Collectors.toList());
+        } catch (IOException ex) {
+            throw new AssertionError("error loading files in " + path, ex);
+        }
+    }
+
+    private String getAbsolutePath() {
         String ns = getNamespace();
-        ns = ns.trim().isEmpty() ? "generated" : ns;
-        String fullPath = getGeneratedDirectory().getAbsolutePath() + File.separator +
-                ns + File.separator + filename;
-        Path path = Paths.get(fullPath);
-        List<String> content = Files.readAllLines(path);
-        return content;
+        if (ns == null) {
+            ns = "";
+        } else {
+            ns = File.separator + (ns.trim().isEmpty() ? "generated" : ns);
+        }
+        return getGeneratedDirectory().getAbsolutePath() + ns + File.separator;
     }
 
     public class ArtifactTester {
@@ -166,6 +266,19 @@ public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
             }
             throw new AssertionError(
                     "attribute " + className + " not found in file " + filename);
+        }
+
+        private List<String> getAllAttributes() {
+            List<String> list = new ArrayList<>();
+            for (int i = 0, l = lines.size(); i < l; i++) {
+                String line = lines.get(i).trim();
+                if (line.startsWith("protected ") && line.endsWith(";")) {
+                    int idx = line.lastIndexOf(' ') + 1;
+                    String attrName = line.substring(idx, line.length() - 1);
+                    list.add(attrName);
+                }
+            }
+            return list;
         }
 
         private int getLineForAttribute(String attributeName) {

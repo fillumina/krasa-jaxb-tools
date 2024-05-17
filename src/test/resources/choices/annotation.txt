@@ -1,0 +1,3 @@
+Choices
+    coffee
+    tea

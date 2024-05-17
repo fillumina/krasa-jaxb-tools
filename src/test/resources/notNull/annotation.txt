@@ -1,0 +1,3 @@
+NotNullType
+    notNullString
+        @NotNull

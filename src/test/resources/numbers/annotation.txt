@@ -1,0 +1,39 @@
+Numbers
+    decimalValue
+        @NotNull
+    integerValue
+        @NotNull
+    negativeIntegerValue
+        @DecimalMax(value = "-1", inclusive = true)
+        @NotNull
+    nonNegativeIntegerValue
+        @DecimalMin(value = "0", inclusive = true)
+        @NotNull
+    nonPositiveIntegerValue
+        @DecimalMax(value = "0", inclusive = true)
+        @NotNull
+    positiveIntegerValue
+        @DecimalMin(value = "1", inclusive = true)
+        @NotNull
+    valueDimension
+        @Digits(integer = 12, fraction = 2)
+        @NotNull
+    valueFourDigitYear
+        @DecimalMin(value = "1", inclusive = true)
+        @Digits(integer = 4, fraction = 0)
+        @NotNull
+    valueFourPositiveNonZeroDecimal
+        @DecimalMin(value = "0.0000", inclusive = false)
+        @Digits(integer = 12, fraction = 4)
+        @NotNull
+    valuePositiveDimension
+        @DecimalMin(value = "0.00", inclusive = true)
+        @Digits(integer = 12, fraction = 2)
+        @NotNull
+    valuePositiveNonZeroDimension
+        @DecimalMin(value = "0.00", inclusive = false)
+        @Digits(integer = 12, fraction = 2)
+        @NotNull
+    valueSixDigitDecimalFractionOne
+        @Digits(integer = 6, fraction = 1)
+        @NotNull

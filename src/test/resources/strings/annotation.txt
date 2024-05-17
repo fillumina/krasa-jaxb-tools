@@ -1,0 +1,4 @@
+Strings
+    address
+        @NotNull
+        @Size(min = 21, max = 43)

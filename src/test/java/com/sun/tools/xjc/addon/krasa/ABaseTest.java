@@ -1,6 +1,15 @@
 package com.sun.tools.xjc.addon.krasa;
 
-public abstract class ABaseTest extends RunXJC2MojoTestHelper {
+public abstract class ABaseTest extends AnnotationsMojoTestHelper {
+
+    public ABaseTest(ValidationAnnotation annotation) {
+        super("abase", annotation);
+    }
+
+    @Override
+    public String getNamespace() {
+        return "";
+    }
 
     @Override
     public String getFolderName() {

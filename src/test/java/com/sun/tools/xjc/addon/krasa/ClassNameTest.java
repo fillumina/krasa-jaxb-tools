@@ -15,6 +15,10 @@ public class ClassNameTest extends RunXJC2MojoTestHelper {
         return "a";
     }
 
+    public String getAnnotationFileName() {
+        return "ClassNameTest-annotation.txt";
+    }
+
     public void test() {
         element("NotNullType")
             .attribute("notNullString")

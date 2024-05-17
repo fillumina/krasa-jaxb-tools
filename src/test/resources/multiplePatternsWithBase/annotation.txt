@@ -1,0 +1,6 @@
+MultiPatternWithBase
+    multiplePatternsWithBase
+        @Pattern(regexp = "([0-9])|([A-B])")
+        @Pattern(regexp = "[Y-Z]"),
+        @Pattern.List({
+        })

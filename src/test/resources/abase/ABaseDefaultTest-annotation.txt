@@ -1,0 +1,614 @@
+AddressType
+    addressFieldOne
+        @NotNull
+        @Size(max = 60)
+    addressFieldThree
+        @Size(max = 60)
+    addressFieldTwo
+        @Size(max = 60)
+    city
+        @Size(max = 50)
+    countryCode
+        @NotNull
+        @Size(min = 2, max = 2)
+    county
+        @Size(max = 50)
+    familyName
+        @Size(max = 50)
+    formalTitle
+        @Size(max = 10)
+    givenName
+        @Size(max = 50)
+    isDefaultBilling
+    isDefaultOneClick
+    isDefaultShipping
+    name
+        @NotNull
+        @Size(max = 50)
+    phoneNumber
+        @Size(min = 0, max = 3)
+        @Valid
+    postalCode
+        @Size(max = 50)
+    stateOrRegion
+        @Size(max = 50)
+AddressTypeSupportNonCity
+    addressFieldOne
+        @NotNull
+        @Size(max = 60)
+    addressFieldThree
+        @Size(max = 60)
+    addressFieldTwo
+        @Size(max = 60)
+    city
+        @Size(max = 50)
+    countryCode
+        @NotNull
+        @Size(min = 2, max = 2)
+    county
+        @Size(max = 50)
+    districtOrCounty
+        @Size(max = 50)
+    name
+        @NotNull
+        @Size(max = 50)
+    phoneNumber
+        @Size(max = 50)
+    postalCode
+        @Size(max = 50)
+    stateOrRegion
+        @Size(max = 50)
+AgeRecommendedDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @DecimalMin("1")
+AgeRecommendedUnitOfMeasure
+AirFlowDisplacementDimension
+    unitOfMeasure
+    value
+        @Digits(integer = 12, fraction = 2)
+AirFlowDisplacementUnitOfMeasure
+AmperageDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+AmperageUnitOfMeasure
+ApertureDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+ApertureUnitOfMeasure
+AreaDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+AreaDimensionOptionalUnit
+    unitOfMeasure
+    value
+        @Digits(integer = 12, fraction = 2)
+AreaUnitOfMeasure
+AssemblyTimeDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @DecimalMin("1")
+AssemblyTimeUnitOfMeasure
+BaseCurrencyCode
+Battery
+    areBatteriesIncluded
+    areBatteriesRequired
+    batterySubgroup
+        @Size(min = 0, max = 3)
+        @Valid
+    batteryType
+        @NotNull
+        @Pattern(regexp = "(\\Qbattery_type_2/3A\\E)|(\\Qbattery_type_4/3A\\E)|(\\Qbattery_type_4/5A\\E)|(\\Qbattery_type_9v\\E)|(\\Qbattery_type_12v\\E)|(\\Qbattery_type_a\\E)|(\\Qbattery_type_a76\\E)|(\\Qbattery_type_aa\\E)|(\\Qbattery_type_aaa\\E)|(\\Qbattery_type_aaaa\\E)|(\\Qbattery_type_c\\E)|(\\Qbattery_type_cr123a\\E)|(\\Qbattery_type_cr2\\E)|(\\Qbattery_type_cr5\\E)|(\\Qbattery_type_d\\E)|(\\Qbattery_type_lithium_ion\\E)|(\\Qbattery_type_lithium_metal\\E)|(\\Qbattery_type_L-SC\\E)|(\\Qbattery_type_p76\\E)|(\\Qbattery_type_product_specific\\E)|(\\Qbattery_type_SC\\E)|(\\Qnonstandard_battery\\E)|(\\Qlr44\\E)|(\\Qunknown\\E)|(\\Qcr2032\\E)|(\\Qlr41\\E)")
+        @Size(min = 1, max = 50)
+    numberOfBatteries
+        @DecimalMin("1")
+        @NotNull
+BatteryAverageLifeUnitOfMeasure
+BatteryCellTypeValues
+BatteryLifeDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+BatteryPowerDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+BatteryPowerIntegerDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @DecimalMin("1")
+BatteryPowerUnitOfMeasure
+BurnTimeDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+BurnTimeUnitOfMeasure
+CharacterDataType
+    additionalMessageDiscriminator
+    effectiveTimestamp
+    isOfferOnlyUpdate
+    payload
+        @NotNull
+    plugin
+        @Size(min = 0)
+        @Valid
+    schemaVersion
+    sku
+        @NotNull
+        @Size(min = 1, max = 40)
+ClothingSizeDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+ClothingSizeUnitOfMeasure
+ConditionInfo
+    conditionNote
+        @Size(max = 2000)
+    conditionType
+        @NotNull
+        @Pattern(regexp = "(\\QNew\\E)|(\\QUsedLikeNew\\E)|(\\QUsedVeryGood\\E)|(\\QUsedGood\\E)|(\\QUsedAcceptable\\E)|(\\QCollectibleLikeNew\\E)|(\\QCollectibleVeryGood\\E)|(\\QCollectibleGood\\E)|(\\QCollectibleAcceptable\\E)|(\\QClub\\E)|(\\QNewOpenBox\\E)|(\\QNewOem\\E)|(\\QRefurbished\\E)")
+ContinuousShootingDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @DecimalMin("1")
+ContinuousShootingUnitOfMeasure
+CurencyDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+CurrencyAmount
+    currency
+    value
+        @Digits(integer = 20, fraction = 2)
+CurrentDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+CurrentUnitOfMeasure
+Customer
+    birthDate
+    customerAddress
+        @Size(min = 0)
+        @Valid
+    email
+        @Valid
+    familyName
+        @Size(max = 50)
+    formalTitle
+        @Size(max = 10)
+    givenName
+        @Size(max = 50)
+    name
+        @Size(max = 50)
+CustomizationInfoType
+    data
+        @NotNull
+        @Size(max = 500)
+    type
+        @NotNull
+        @Size(min = 1, max = 50)
+DataTransferUnitOfMeasure
+DateIntegerDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @DecimalMin("1")
+DateUnitOfMeasure
+DatedCompareAtPrice
+    compareAtPrice
+        @NotNull
+        @Valid
+    delete
+    endDate
+    startDate
+DatedPrice
+    delete
+    endDate
+    previousPrice
+        @Valid
+    price
+        @Valid
+    startDate
+DegreeDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+DegreeUnitOfMeasure
+EmailAddressType
+    preferredFormat
+        @Pattern(regexp = "(\\QTextOnly\\E)|(\\QHTML\\E)")
+    value
+        @Pattern(regexp = "[^@]+@[^@\\.]+(\\.[^@\\.]+)+")
+EnergyConsumptionDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+EnergyConsumptionUnitOfMeasure
+EnergyDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+EnergyUnitOfMeasure
+FocalLengthDimension
+ForceDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+ForceUnitOfMeasure
+FrequencyDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+FrequencyIntegerDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @DecimalMin("1")
+FrequencyUnitOfMeasure
+GlobalCurrencyCode
+GraduationInterval
+    unitOfMeasure
+        @NotNull
+    value
+        @DecimalMin("1")
+        @Digits(integer = 12, fraction = 0)
+HardnessDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+HardnessUnitOfMeasure
+HazmatItemType
+IdentityPackageType
+JewelryLengthDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 4)
+JewelryLengthUnitOfMeasure
+JewelryWeightDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 4)
+JewelryWeightUnitOfMeasure
+LanguageStringType
+LengthDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+LengthDimensionOptionalUnit
+    unitOfMeasure
+    value
+        @Digits(integer = 12, fraction = 2)
+LengthIntegerDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @DecimalMin("1")
+LengthUnitOfMeasure
+LensFixedFocalLengthDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+LoyaltyCustomAttribute
+    attributeName
+        @Size(max = 50)
+    value
+        @Size(max = 50)
+LuminanceDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+LuminanceIntegerDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @DecimalMin("0")
+LuminancePositiveIntegerDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @DecimalMin("1")
+LuminanceUnitOfMeasure
+LuminiousIntensityDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+LuminousIntensityUnitOfMeasure
+MemorySizeDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+MemorySizeIntegerDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @DecimalMin("1")
+        @Digits(integer = 12, fraction = 0)
+MemorySizeUnitOfMeasure
+MillimeterDecimalDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @DecimalMin("0.00")
+        @Digits(integer = 12, fraction = 2)
+MillimeterUnitOfMeasure
+MinimumAgeRecommendedDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @DecimalMin("0")
+NameValuePair
+    name
+        @NotNull
+        @Size(min = 1, max = 50)
+    value
+        @NotNull
+        @Size(max = 500)
+NoiseLevelDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+NoiseLevelUnitOfMeasure
+OpticalPowerDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+OpticalPowerUnitOfMeasure
+OptionalLengthIntegerDimension
+    unitOfMeasure
+    value
+        @DecimalMin("1")
+OptionalResolutionDimension
+    unitOfMeasure
+    value
+        @Size(min = 1, max = 50)
+PhoneNumberType
+    description
+        @Size(max = 30)
+    type
+        @Pattern(regexp = "(\\QVoice\\E)|(\\QFax\\E)")
+    value
+        @Size(max = 50)
+PixelDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+PixelUnitOfMeasure
+PositiveCurrencyAmount
+    currency
+        @NotNull
+    value
+        @DecimalMax("99999999.99")
+        @DecimalMin("0.00")
+        @Digits(integer = 10, fraction = 2)
+PositiveNonZeroWeightDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @DecimalMin("1.00")
+        @Digits(integer = 12, fraction = 2)
+PositiveWeightDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @DecimalMin("0.00")
+        @Digits(integer = 12, fraction = 2)
+PowerDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+PowerUnitOfMeasure
+PressureDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+PressureUnitOfMeasure
+PromotionApplicationType
+PromotionDataType
+    amount
+        @NotNull
+        @Valid
+    component
+        @NotNull
+        @Size(min = 1)
+        @Valid
+    promotionClaimCode
+        @NotNull
+        @Size(min = 6, max = 12)
+    type
+        @NotNull
+RelatedProductID
+    type
+        @NotNull
+        @Pattern(regexp = "(\\QUPC\\E)|(\\QEAN\\E)|(\\QGTIN\\E)")
+    value
+        @NotNull
+        @Size(min = 8, max = 16)
+ResistanceDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+ResistanceUnitOfMeasure
+ResolutionDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+ResolutionUnitOfMeasure
+SerialNumberFormatType
+StandardProductID
+    type
+        @NotNull
+        @Pattern(regexp = "(\\QISBN\\E)|(\\QUPC\\E)|(\\QEAN\\E)|(\\QASIN\\E)|(\\QGTIN\\E)|(\\QGCID\\E)|(\\QPZN\\E)")
+    value
+        @NotNull
+        @Size(min = 8, max = 16)
+StoneCreationMethod
+StringLengthDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Size(min = 1, max = 50)
+StringLengthOptionalDimension
+    unitOfMeasure
+    value
+        @Size(min = 1, max = 50)
+StringTemperatureDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Size(min = 1, max = 50)
+StringTimeDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Size(min = 1, max = 50)
+SubscriptionTermDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @DecimalMin("1")
+SunProtectionDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @DecimalMin("1")
+SunProtectionUnitOfMeasure
+TemperatureDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+TemperatureRatingDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+TemperatureRatingUnitOfMeasure
+TemperatureUnitOfMeasure
+TimeDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+TimeIntegerDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @DecimalMin("1")
+TimeUnitOfMeasure
+TorqueType
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+TorqueUnitOfMeasure
+VoltageDecimalDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @DecimalMin("0.00")
+        @Digits(integer = 12, fraction = 2)
+VoltageIntegerDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @DecimalMin("1")
+VoltageIntegerDimensionOptionalUnit
+    unitOfMeasure
+    value
+        @DecimalMin("1")
+VoltageUnitOfMeasure
+VolumeAndVolumeRateDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+VolumeDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+VolumeIntegerDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @DecimalMin("1")
+VolumeRateDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+VolumeRateUnitOfMeasure
+VolumeUnitOfMeasure
+WattageDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+WattageDimensionOptionalUnit
+    unitOfMeasure
+    value
+        @Digits(integer = 12, fraction = 2)
+WattageIntegerDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @DecimalMin("1")
+WattageUnitOfMeasure
+WeightDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @Digits(integer = 12, fraction = 2)
+WeightIntegerDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @DecimalMin("1")
+WeightRecommendationType
+    maximumWeightRecommendation
+        @Valid
+    minimumWeightRecommendation
+        @Valid
+WeightUnitOfMeasure
+ZoomDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @DecimalMin("1")
+ZoomUnitOfMeasure

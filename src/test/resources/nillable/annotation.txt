@@ -1,0 +1,6 @@
+Nillable
+    mustBeOmittedOrBeNil
+    mustBeThereAndBeNil
+    notNullable
+        @NotNull
+    nullable

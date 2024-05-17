@@ -1,0 +1,4 @@
+Invoice
+    amount
+        @DecimalMin(value = "0", inclusive = false)
+        @NotNull
