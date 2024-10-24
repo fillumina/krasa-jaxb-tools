@@ -204,12 +204,6 @@ CustomizationInfoType
         @NotNull
         @Size(min = 1, max = 50)
 DataTransferUnitOfMeasure
-DateIntegerDimension
-    unitOfMeasure
-        @NotNull
-    value
-        @DecimalMin(value = "1", inclusive = true)
-DateUnitOfMeasure
 DatedCompareAtPrice
     compareAtPrice
         @NotNull
@@ -225,6 +219,12 @@ DatedPrice
     price
         @Valid
     startDate
+DateIntegerDimension
+    unitOfMeasure
+        @NotNull
+    value
+        @DecimalMin(value = "1", inclusive = true)
+DateUnitOfMeasure
 DegreeDimension
     unitOfMeasure
         @NotNull
