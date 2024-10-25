@@ -1,0 +1,23 @@
+<xsd:schema
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="a"
+    xmlns:a="a"
+    elementFormDefault="qualified">
+
+  <xsd:simpleType name="StringConverted">
+      <xsd:restriction base="xsd:decimal">
+          <xsd:minInclusive value="0"/>
+          <xsd:maxExclusive value="99.9"/>
+          <xsd:fractionDigits value="1" />
+          <xsd:totalDigits value="4" />
+      </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:complexType name="StringClassContainer">
+      <xsd:sequence>
+          <xsd:element name="stringField" type="a:StringConverted" minOccurs="1"/>
+      </xsd:sequence>
+  </xsd:complexType>
+
+</xsd:schema>
+

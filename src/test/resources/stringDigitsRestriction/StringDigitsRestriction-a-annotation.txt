@@ -1,0 +1,6 @@
+StringClassContainer
+    stringField
+        @DecimalMax(value = "99.9", inclusive = false)
+        @DecimalMin(value = "0", inclusive = true)
+        @Digits(integer = 4, fraction = 1)
+        @NotNull
