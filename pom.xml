@@ -140,6 +140,16 @@
       <groupId>org.apache.cxf</groupId>
       <artifactId>cxf-tools-wsdlto-frontend-jaxws</artifactId>
       <version>3.5.9</version>
+      <exclusions>
+        <exclusion>
+          <!--
+            vulnerability in the commons-io included dependency
+            https://ossindex.sonatype.org/component/pkg:maven/commons-io/commons-io@2.8.0
+          -->
+          <groupId>org.apache.velocity</groupId>
+          <artifactId>velocity-engine-core</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
