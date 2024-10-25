@@ -15,6 +15,7 @@ public class StringDigitsRestrictionTest extends RunXJC2MojoTestHelper {
     public void test() throws ClassNotFoundException {
         withElement("StringClassContainer")
                 .withField("stringField")
+                        .assertType("String")
                         .withAnnotation("NotNull").assertNoParameters()
                         .withAnnotation("DecimalMin")
                                 .assertParam("value", "0")

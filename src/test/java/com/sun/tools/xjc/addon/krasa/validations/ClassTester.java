@@ -63,4 +63,11 @@ public class ClassTester {
         return this;
     }
 
+    public ClassTester assertType(String type) {
+        if (!definition.contains(type + " ")) {
+            throw new AssertionError("attribute " + attributeName +
+                    " is not of type " + type + " but: " + definition);
+        }
+        return this;
+    }
 }
