@@ -17,7 +17,7 @@
                 </xsd:simpleType>
             </xsd:element>
         </xsd:sequence>
-    </xsd:complexType>    
-    
+    </xsd:complexType>
+
 </xsd:schema>
 

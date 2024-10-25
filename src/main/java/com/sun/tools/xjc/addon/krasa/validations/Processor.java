@@ -211,7 +211,7 @@ public class Processor {
             if (fieldHelper.isArray()) {
                 annotator.addSizeAnnotation(facet.minLength(), facet.maxLength(), facet.length());
 
-            } else if (fieldHelper.isNumber()) {
+            } else if (fieldHelper.isNumber() || fieldHelper.isString()) {
                 if (options.isAllNumericConstraints()) {
                     annotator.addDecimalMinAnnotationInclusive(facet.minInclusive());
                     annotator.addDecimalMinAnnotationExclusive(facet.minExclusive());
@@ -227,12 +227,12 @@ public class Processor {
 
                 annotator.addDigitsAnnotation(facet.totalDigits(), facet.fractionDigits());
 
-            } else if (fieldHelper.isString()) {
-                annotator.addSizeAnnotation(facet.minLength(), facet.maxLength(), facet.length());
+                if (fieldHelper.isString()) {
+                    annotator.addSizeAnnotation(facet.minLength(), facet.maxLength(), facet.length());
 
-                Set<String> patternSet = gatherRegexpAndEnumeration(facet, simpleType);
-                annotator.addPatterns(patternSet);
-
+                    Set<String> patternSet = gatherRegexpAndEnumeration(facet, simpleType);
+                    annotator.addPatterns(patternSet);
+                }
             } else if (fieldHelper.isStringList() && options.isValidationCollection()) {
                 annotator.addEachSizeAnnotation(facet.minLength(), facet.maxLength());
 
