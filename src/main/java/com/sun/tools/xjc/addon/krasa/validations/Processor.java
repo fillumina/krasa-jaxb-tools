@@ -17,10 +17,13 @@ import com.sun.xml.xsom.impl.AttributeUseImpl;
 import com.sun.xml.xsom.impl.ElementDecl;
 import com.sun.xml.xsom.impl.SimpleTypeImpl;
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -230,63 +233,85 @@ public class Processor {
                 if (fieldHelper.isString()) {
                     annotator.addSizeAnnotation(facet.minLength(), facet.maxLength(), facet.length());
 
-                    Set<String> patternSet = gatherRegexpAndEnumeration(facet, simpleType);
+                    List<List<String>> patternSet = gatherRegexpAndEnumeration(facet, simpleType);
                     annotator.addPatterns(patternSet);
                 }
             } else if (fieldHelper.isStringList() && options.isValidationCollection()) {
                 annotator.addEachSizeAnnotation(facet.minLength(), facet.maxLength());
 
-                Set<String> patternSet = gatherRegexpAndEnumeration(facet, simpleType);
+                List<List<String>> patternSet = gatherRegexpAndEnumeration(facet, simpleType);
                 annotator.addEachPatterns(patternSet);
             }
         }
+
+
 
         /**
          * Collect REGEXP and ENUMERATION types on parents.
          * ENUMERATION is treated as a pattern with fixed value
          */
-        private Set<String> gatherRegexpAndEnumeration(Facet facet, XSSimpleType simpleType) {
+        private List<List<String>> gatherRegexpAndEnumeration(Facet facet, XSSimpleType simpleType) {
 
-            final List<String> patternList = facet.patternList();
-            addIfNotNull(patternList, facet.pattern());
+            final List<List<String>> multiPatterns = new ArrayList<>();
+            final Set<String> multiEnumerations = new LinkedHashSet<>();
 
-            final List<String> enumerationList = facet.enumerationList();
-            addIfNotNull(enumerationList, facet.enumeration());
+            final List<String> patterns = getPatterns(facet);
+            multiPatterns.add(patterns);
+
+            final List<String> enumerations = getEnumerations(facet);
+            addAllIfNotNullOrEmpty(multiEnumerations, enumerations, String::isEmpty);
 
             XSSimpleType baseType = simpleType;
             while ((baseType = baseType.getSimpleBaseType()) != null) {
                 if (baseType instanceof XSRestrictionSimpleType) {
                     Facet baseFacet = new Facet((XSRestrictionSimpleType) baseType);
 
-                    addIfNotNull(patternList, baseFacet.pattern());
-                    addAllIfNotNull(patternList, baseFacet.patternList());
-
-                    addIfNotNull(enumerationList, baseFacet.enumeration());
-                    addAllIfNotNull(enumerationList, baseFacet.enumerationList());
+                    addIfNotNullOrEmpty(multiPatterns, getPatterns(baseFacet), Collection::isEmpty);
+                    addAllIfNotNullOrEmpty(multiEnumerations, getEnumerations(baseFacet), String::isEmpty);
                 }
             }
 
-            if (!patternList.isEmpty() || !enumerationList.isEmpty()) {
-                List<String> adjustedPatterns = patternList.stream()
-                        .filter(p -> isValidRegexp(p))
-                        .map(p -> replaceRegexp(p))
-                        .distinct()
-                        .collect(Collectors.toList());
+            if (! (multiPatterns.isEmpty() && multiEnumerations.isEmpty()) ) {
+                List<String> enumerationList = (List<String>) new ArrayList<>(multiEnumerations);
+                if (multiPatterns.size() > 1) {
+                    addIfNotNullOrEmpty(multiPatterns, enumerationList, Collection::isEmpty);
+                } else {
+                    multiPatterns.get(0).addAll(enumerationList);
+                }
 
-                // escaped enumuerations can be treated as patterns
-                List<String> adjustedEnumerations = enumerationList.stream()
-                        .filter(p -> p != null && !p.isEmpty())
-                        .map(p -> escapeRegexp(p))
-                        .distinct()
-                        .collect(Collectors.toList());
-
-                addAllIfNotNull(adjustedPatterns, adjustedEnumerations);
-
-                return new LinkedHashSet<>(adjustedPatterns);
+                return multiPatterns;
             }
 
-            return Collections.emptySet();
+            return Collections.emptyList();
         }
+    }
+
+    private List<String> getPatterns(Facet facet) {
+        final LinkedHashSet<String> patterns = facet.patternList();
+        final String pattern = facet.pattern();
+        addIfNotNullOrEmpty(patterns, pattern, String::isEmpty);
+        if (!patterns.isEmpty()) {
+            return patterns.stream()
+                    .filter(p -> isValidRegexp(p))
+                    .map(p -> replaceRegexp(p))
+                    .distinct()
+                    .collect(Collectors.toList());
+        }
+        return new ArrayList<>();
+    }
+
+    private List<String> getEnumerations(Facet facet) {
+        final LinkedHashSet<String> enumerations = facet.enumerationList();
+        final String enumeration = facet.enumeration();
+        addIfNotNullOrEmpty(enumerations, enumeration, String::isEmpty);
+        if (!enumerations.isEmpty()) {
+            return enumerations.stream()
+                    .filter(p -> p != null && !p.isEmpty())
+                    .map(p -> escapeRegexp(p))
+                    .distinct()
+                    .collect(Collectors.toList());
+        }
+        return Collections.EMPTY_LIST;
     }
 
     static boolean isEqualsOrNull(String optionsNamespace, String actualTargetNamespace) {
@@ -298,17 +323,17 @@ public class Processor {
         return actualTargetNamespace.startsWith(optionsNamespace);
     }
 
-    static void addIfNotNull(List<String> list, String item) {
-        if (item != null) {
-            list.add(item);
+    static <C extends Collection<T>, T> void addIfNotNullOrEmpty(C collection, T item, Predicate<T> isEmpty) {
+        if (item != null && !isEmpty.test(item)) {
+            collection.add(item);
         }
     }
 
-    static void addAllIfNotNull(List<String> dest, List<String> source) {
+    static <T> void addAllIfNotNullOrEmpty(Collection<T> dest, Collection<T> source, Predicate<T> isEmpty) {
         if (source != null && !source.isEmpty()) {
-            for (String s : source) {
-                if (s != null) {
-                    dest.add(s);
+            for (T t : source) {
+                if (t != null && !isEmpty.test(t)) {
+                    dest.add(t);
                 }
             }
         }

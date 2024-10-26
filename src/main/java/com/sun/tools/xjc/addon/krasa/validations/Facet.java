@@ -3,7 +3,7 @@ package com.sun.tools.xjc.addon.krasa.validations;
 import com.sun.xml.xsom.XSFacet;
 import com.sun.xml.xsom.XSSimpleType;
 import java.math.BigDecimal;
-import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,7 +58,7 @@ class Facet {
         return getStringFacet(XSFacet.FACET_PATTERN);
     }
 
-    List<String> patternList() {
+    LinkedHashSet<String> patternList() {
         return getMultipleStringFacets(XSFacet.FACET_PATTERN);
     }
 
@@ -66,19 +66,19 @@ class Facet {
         return getStringFacet(XSFacet.FACET_ENUMERATION);
     }
 
-    List<String> enumerationList() {
+    LinkedHashSet<String> enumerationList() {
         return getMultipleStringFacets(XSFacet.FACET_ENUMERATION);
     }
 
-    private List<String> getMultipleStringFacets(String param) {
+    private LinkedHashSet<String> getMultipleStringFacets(String param) {
         final List<XSFacet> facets = simpleType.getFacets(param);
         if (facets != null) {
             return facets.stream()
                     .map(facet -> facet.getValue().value)
                     .filter(v -> v != null && !v.isEmpty())
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toCollection(LinkedHashSet::new));
         }
-        return Collections.emptyList();
+        return new LinkedHashSet<>();
     }
 
     private String getStringFacet(String param) {

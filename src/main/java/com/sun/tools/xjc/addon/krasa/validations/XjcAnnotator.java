@@ -1,5 +1,6 @@
 package com.sun.tools.xjc.addon.krasa.validations;
 
+import com.sun.codemodel.JAnnotationArrayMember;
 import com.sun.codemodel.JAnnotationUse;
 import com.sun.codemodel.JFieldVar;
 import java.lang.annotation.Annotation;
@@ -32,6 +33,10 @@ class XjcAnnotator {
     public class Annotate {
         private final JAnnotationUse annotationUse;
         private final Map<String,String> parameterMap = new LinkedHashMap<>();
+
+        public Annotate(JAnnotationUse annotationUse) {
+            this.annotationUse = annotationUse;
+        }
 
         public Annotate(Class<? extends Annotation> annotation) {
             if (annotationSet.add(annotation)) {
@@ -106,6 +111,24 @@ class XjcAnnotator {
             }
         }
 
+        public MultipleAnnotation multipleAnnotationContainer(String paramName) {
+            JAnnotationArrayMember array = annotationUse.paramArray(paramName);
+            return new MultipleAnnotation(array);
+        }
+
+        public class MultipleAnnotation {
+            private final JAnnotationArrayMember array;
+
+            public MultipleAnnotation(JAnnotationArrayMember array) {
+                this.array = array;
+            }
+
+            public Annotate annotate(Class<? extends Annotation> annotationClass) {
+                JAnnotationUse annotationUse = array.annotate(annotationClass);
+                return new Annotate(annotationUse);
+            }
+
+        }
     }
 
 }
