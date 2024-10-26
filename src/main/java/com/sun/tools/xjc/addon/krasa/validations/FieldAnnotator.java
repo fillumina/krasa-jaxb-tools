@@ -172,7 +172,7 @@ class FieldAnnotator {
      * If a type definition with patterns has a base type with patterns the two different set of
      * patterns are not alternatives (OR) but equally mandatory (AND) so a @Pattern.List
      * must be used.
-     * 
+     *
      * see https://www.w3.org/TR/2011/CR-xmlschema11-2-20110721/datatypes.html#rf-pattern
      */
     void addPatternListAnnotation(List<List<String>> multiPatterns) {
@@ -180,18 +180,18 @@ class FieldAnnotator {
                 .annotate(annotationFactory.getPatternListClass())
                 .multipleAnnotationContainer(VALUE);
 
-        for (List<String> p : multiPatterns) {
-            switch (p.size()) {
+        for (List<String> patterns : multiPatterns) {
+            switch (patterns.size()) {
                 case 0:
                     // do nothing
                     break;
                 case 1:
                     multi.annotate(annotationFactory.getPatternClass())
-                            .param(REGEXP, p.get(0))
+                            .param(REGEXP, patterns.get(0))
                             .log();
                     break;
                 default:
-                    String pattern = consolidatePatterns(p);
+                    String pattern = consolidatePatterns(patterns);
                     multi.annotate(annotationFactory.getPatternClass())
                             .param(REGEXP, pattern)
                             .log();
