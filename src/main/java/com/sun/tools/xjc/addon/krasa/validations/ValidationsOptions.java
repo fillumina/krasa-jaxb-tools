@@ -20,6 +20,8 @@ public class ValidationsOptions {
     private final String notNullCustomMessageText;
     private final boolean validationCollection;
     private final ValidationsAnnotation annotationFactory;
+    private final boolean validIn;
+    private final boolean validOut;
 
     public void logActualOptions() {
         if (verbose) {
@@ -89,6 +91,14 @@ public class ValidationsOptions {
         return annotationFactory;
     }
 
+    public boolean isValidIn() {
+        return validIn;
+    }
+
+    public boolean isValidOut() {
+        return validOut;
+    }
+
     public static class Builder {
         private String targetNamespace = null;
         private boolean verbose = false;
@@ -100,6 +110,8 @@ public class ValidationsOptions {
         private String notNullCustomMessageText = null;
         private boolean validationCollection = false;
         private ValidationsAnnotation annotationFactory = ValidationsAnnotation.JAVAX;
+        private boolean validIn = true;
+        private boolean validOut = true;
 
         private Builder() {
         }
@@ -190,11 +202,21 @@ public class ValidationsOptions {
             return this;
         }
 
+        public Builder validIn(final boolean value) {
+            this.validIn = value;
+            return this;
+        }
+
+        public Builder validOut(final boolean value) {
+            this.validOut = value;
+            return this;
+        }
+
         public ValidationsOptions build() {
             return new com.sun.tools.xjc.addon.krasa.validations.ValidationsOptions(targetNamespace,
                     verbose, allNumericConstraints, notNullAnnotations, notNullCustomMessage,
                     notNullPrefixFieldName, notNullPrefixClassName, notNullCustomMessageText,
-                    validationCollection, annotationFactory);
+                    validationCollection, annotationFactory, validIn, validOut);
         }
     }
 
@@ -207,7 +229,9 @@ public class ValidationsOptions {
             final boolean notNullCustomMessage, final boolean notNullPrefixFieldName,
             final boolean notNullPrefixClassName, final String notNullCustomMessageText,
             final boolean validationCollection,
-            final ValidationsAnnotation annotationFactory) {
+            final ValidationsAnnotation annotationFactory,
+            final boolean validIn,
+            final boolean validOut) {
         this.targetNamespace = targetNamespace;
         this.verbose = verbose;
         this.allNumericConstraints = allNumericConstraints;
@@ -218,6 +242,8 @@ public class ValidationsOptions {
         this.notNullCustomMessageText = notNullCustomMessageText;
         this.validationCollection = validationCollection;
         this.annotationFactory = annotationFactory;
+        this.validIn = validIn;
+        this.validOut = validOut;
     }
 
 }

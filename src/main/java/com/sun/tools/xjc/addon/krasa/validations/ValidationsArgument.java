@@ -112,7 +112,15 @@ public enum ValidationsArgument {
     generateServiceValidationAnnotations(
             String.class,
             "used by cxf-codegen to performs validation on fields annotated with @Valid",
-            (p,v) -> null, // read by ValidSEIGenerator
+            (p,v) -> {
+                if ("in".equalsIgnoreCase(v)) {
+                    p.validOut(false);
+                } else if ("out".equalsIgnoreCase(v)) {
+                    p.validIn(false);
+                }
+                //log("'" + policy + "' parsed as " + "in = " + validIn + ", out = " + validOut);
+                return null;
+            }, // read by ValidSEIGenerator
             (p) -> null);
 
     // parameter type
