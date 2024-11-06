@@ -1,21 +1,20 @@
 package com.sun.tools.xjc.addon.krasa;
 
-import com.sun.tools.xjc.addon.krasa.validations.ValidationsArgument;
-import java.util.List;
-import java.util.Map;
-import javax.validation.Valid;
-import javax.xml.namespace.QName;
+import com.sun.tools.xjc.BadCommandLineException;
+import com.sun.tools.xjc.addon.krasa.validations.ProcessorForJavaModel;
+import com.sun.tools.xjc.addon.krasa.validations.ValidationsOptions;
 import org.apache.cxf.helpers.CastUtils;
 import org.apache.cxf.tools.common.ToolConstants;
 import org.apache.cxf.tools.common.ToolContext;
 import org.apache.cxf.tools.common.ToolException;
-import org.apache.cxf.tools.common.model.JAnnotation;
-import org.apache.cxf.tools.common.model.JavaInterface;
-import org.apache.cxf.tools.common.model.JavaMethod;
 import org.apache.cxf.tools.common.model.JavaModel;
-import org.apache.cxf.tools.common.model.JavaParameter;
 import org.apache.cxf.tools.wsdlto.frontend.jaxws.generators.SEIGenerator;
 import org.apache.cxf.tools.wsdlto.frontend.jaxws.processor.WSDLToJavaProcessor;
+
+import javax.validation.Valid;
+import javax.xml.namespace.QName;
+import java.util.Arrays;
+import java.util.Map;
 
 /**
  * Performs validation on fields annotated with @{@link Valid} annotation.
@@ -26,15 +25,6 @@ import org.apache.cxf.tools.wsdlto.frontend.jaxws.processor.WSDLToJavaProcessor;
  * @author Vojtěch Krása
  */
 public class ValidSEIGenerator extends SEIGenerator {
-    private static final String NAME = ValidSEIGenerator.class.getSimpleName();
-    private static final String LOG_PREFIX = NAME + ": ";
-	private static final String VALID_PARAM = "VALID_PARAM";
-	private static final String VALID_RETURN = "VALID_RETURN";
-    private static final JAnnotation VALID_ANNOTATION_CLASS = new JAnnotation(Valid.class);
-
-	private boolean validIn = true;
-	private boolean validOut = true;
-    private boolean verbose = false;
 
     @Override
 	public String getName() {
@@ -43,69 +33,38 @@ public class ValidSEIGenerator extends SEIGenerator {
 
 	@Override
 	public void generate(ToolContext ctx) throws ToolException {
-		parseArguments(ctx);
+		ValidationsOptions validationsOptions = parseArguments(ctx);
+
+		ProcessorForJavaModel processorForJavaModel = new ProcessorForJavaModel(validationsOptions);
 
 		Map<QName, JavaModel> map = CastUtils.cast((Map<?, ?>) ctx.get(WSDLToJavaProcessor.MODEL_MAP));
-		for (JavaModel javaModel : map.values()) {
-			Map<String, JavaInterface> interfaces = javaModel.getInterfaces();
-
-			for (JavaInterface intf : interfaces.values()) {
-				intf.addImport(Valid.class.getCanonicalName());
-
-                List<JavaMethod> methods = intf.getMethods();
-				for (JavaMethod method : methods) {
-					List<JavaParameter> parameters = method.getParameters();
-					if (validOut) {
-                        log("adding annotation to " + method.getSignature());
-						method.addAnnotation(VALID_RETURN, VALID_ANNOTATION_CLASS);
-					}
-					for (JavaParameter param : parameters) {
-						if (validIn && (param.isIN() || param.isINOUT())) {
-                            log("adding in " + param.getName());
-							param.addAnnotation(VALID_PARAM, VALID_ANNOTATION_CLASS);
-						}
-						if (validOut && (param.isOUT() || param.isINOUT())) {
-                            log("adding out " + param.getName());
-							param.addAnnotation(VALID_RETURN, VALID_ANNOTATION_CLASS);
-						}
-					}
-				}
-			}
-		}
+		map
+				.values()
+				.forEach(processorForJavaModel::process);
 
 		super.generate(ctx);
 	}
 
-	private void parseArguments(ToolContext ctx) {
+	private ValidationsOptions parseArguments(ToolContext ctx) throws ToolException {
+		ValidationsOptions.Builder optionsBuilder = ValidationsOptions.builder();
+
         String[] xjcArgs = (String[]) ctx.get(ToolConstants.CFG_XJC_ARGS);
 		if (xjcArgs != null) {
-			for (String arg : xjcArgs) {
-				String[] parts = arg.split("=");
-				if (parts.length == 2 &&
-                        parts[0].contains(ValidationsArgument.generateServiceValidationAnnotations.name())) {
-					parseValidationPolicy(parts[1]);
-				}
-                if (arg.contains("verbose") && !arg.contains("false")) {
-                    verbose = true;
-                    log("set verbose=true");
+			System.err.println("xjcArgs: \n" + Arrays.deepToString(xjcArgs));
+
+			Arrays.stream(xjcArgs).forEachOrdered(xjcArg -> {
+                try {
+                    optionsBuilder.parseArgument(xjcArg);
+                } catch (BadCommandLineException e) {
+                    throw new ToolException("Unable to parse XJC Arguments when generating Java Interfaces. Options given: " + Arrays.deepToString(xjcArgs), e);
                 }
-			}
+            });
 		}
-	}
 
-	void parseValidationPolicy(String policy) {
-        String lcPolicy = policy.toLowerCase();
-		if ("in".equals(lcPolicy)) {
-			validOut = false;
-		} else if ("out".equals(lcPolicy)) {
-			validIn = false;
-		}
-        log("'" + policy + "' parsed as " + "in = " + validIn + ", out = " + validOut);
-	}
+		ValidationsOptions validationsOptions = optionsBuilder.build();
 
-    void log(String message) {
-        if (verbose) {
-            System.out.println(LOG_PREFIX + message);
-        }
-    }
+		validationsOptions.logActualOptions();
+
+		return validationsOptions;
+	}
 }
