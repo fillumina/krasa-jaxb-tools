@@ -111,7 +111,7 @@ public enum ValidationsArgument {
     // it's just a placeholder that will be read directly by ValidSEIGenerator
     generateServiceValidationAnnotations(
             String.class,
-            "used by cxf-codegen to performs validation on fields annotated with @Valid",
+            "used by cxf-codegen to perform validations on fields annotated with @Valid",
             (p,v) -> {
                 if ("in".equalsIgnoreCase(v)) {
                     p.validOut(false);
