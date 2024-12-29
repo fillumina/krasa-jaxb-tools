@@ -55,6 +55,13 @@ public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
         this(folderName, namespace, false);
     }
 
+    /**
+     *
+     * @param folderName the folder name containing the xsd and the -annotation.txt files
+     * @param namespace the namespace used in the xsd
+     * @param separateAnnotation if there are different -annotation.txt files for each annotation
+     *                           (javax or jakarta).
+     */
     public RunXJC2MojoTestHelper(String folderName, String namespace, boolean separateAnnotation) {
         this.folderName = folderName;
         this.namespace = namespace;

@@ -10,4 +10,16 @@ public class ValidTest extends RunXJC2MojoTestHelper {
         super("valid", "a");
     }
 
+    @Override
+    public void checkJakarta() throws Exception {
+        withElement("ContentListType")
+                .assertAnnotationNotPresent(ValidationsAnnotation.JAVAX);
+    }
+
+    @Override
+    public void checkJavax() throws Exception {
+        withElement("ContentListType")
+                .assertAnnotationNotPresent(ValidationsAnnotation.JAKARTA);
+    }
+
 }

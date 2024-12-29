@@ -50,6 +50,7 @@ public class ValidSEIGenerator extends SEIGenerator {
 			Map<String, JavaInterface> interfaces = javaModel.getInterfaces();
 
 			for (JavaInterface intf : interfaces.values()) {
+                // TODO check that!
 				intf.addImport(Valid.class.getCanonicalName());
 
                 List<JavaMethod> methods = intf.getMethods();

@@ -21,6 +21,19 @@ public class ArtifactTester {
         this.lines = lines;
     }
 
+    public void assertAnnotationNotPresent(ValidationsAnnotation annotation) {
+        final String annotationString = annotation.name().toLowerCase();
+        final String check = "import " + annotationString + ".validation";
+        for (int i=0,l=lines.size(); i<l; i++) {
+            String line = lines.get(i);
+            if (line.startsWith(check)) {
+                throw new AssertionError("line " + i + " contains unwanted annotation type: " +
+                        annotationString + " -> '" + line + "'");
+            }
+        }
+    }
+
+
     /**
      * Check if the given simple annotation name is present in the include statement.
      *
