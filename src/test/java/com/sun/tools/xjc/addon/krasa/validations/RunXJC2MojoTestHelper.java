@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import junit.framework.TestResult;
 import org.apache.maven.project.MavenProject;
 import org.jvnet.jaxb2.maven2.AbstractXJC2Mojo;
 import org.jvnet.jaxb2.maven2.test.RunXJC2Mojo;
@@ -37,6 +38,9 @@ import org.jvnet.jaxb2.maven2.test.RunXJC2Mojo;
  * Testing helper for generated classes. It uses XJC to compile the given XSD into java classes
  * (but doesn't compile them) that can be tested.
  *
+ * Each test will be executed twice: once witht the JAVAX validation and the other time
+ * with the JAKARTA one.
+ *
  * NOTE: We cannot use reflection here because RunXJC2Mojo acts on the generation phase and the
  * generated artifacts are not compiled.
  *
@@ -44,7 +48,9 @@ import org.jvnet.jaxb2.maven2.test.RunXJC2Mojo;
  */
 public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
 
-    private static final Set<String> executions = new HashSet<>();
+    /** Contains ths the executed test names. */
+    protected static final Set<String> executions = new HashSet<>();
+    protected static final Set<String> executedTests = new HashSet<>();
 
     private final String folderName;
     private final String namespace;
@@ -103,12 +109,27 @@ public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
                 .getOptionList();
     }
 
-    // artifact creation happens before test executions!
+    /** Execute the current test twice: once for each beckend (Javax and Jackarta). */
     @Override
-    public synchronized final void setUp() throws Exception {
-        generateAndCheckJakarta();
-        generateAndCheckJavax();
+    public void run(TestResult result) {
+        String name = getName();
+        final String simpleName = getClass().getSimpleName();
+        if (!"testExecute".equals(name) &&
+                !("testZDefault".equals(name) &&
+                executions.contains(simpleName))) {
+            generateAndCheckJakarta();
+            super.run(result);
+
+            generateAndCheckJavax();
+            super.run(result);
+
+            executions.add(simpleName);
+            executedTests.add(simpleName + "." + name);
+        }
     }
+
+    /** Default test to execute if none provided. */
+    public void testZDefault() {}
 
     /** @return comma separated values or a single one */
     public final String getNamespace() {
@@ -169,9 +190,7 @@ public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
     }
 
     private void generateClasses() throws Exception {
-        if (executions.add(getExecutionName())) {
-            super.testExecute();
-        }
+        super.testExecute();
     }
 
     private final synchronized void checkAnnotationsInResourceFile() {
@@ -346,6 +365,17 @@ public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
             ns = File.separator + (ns.trim().isEmpty() ? "generated" : ns);
         }
         return getGeneratedDirectory().getAbsolutePath() + ns + File.separator;
+    }
+
+    // It's a dirty little trick to change the name of the called method in the log
+    @Override
+    public String getName() {
+        if (validationAnnotation == null) {
+            // it's called by run() to get the function name to call
+            return super.getName();
+        }
+        // it's called by descritpor after the function name has been determined
+        return super.getName() + " " + validationAnnotation.name();
     }
 
 }

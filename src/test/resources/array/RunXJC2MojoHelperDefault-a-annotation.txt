@@ -1,0 +1,4 @@
+Array
+    arrayOfBytes
+        @NotNull
+        @Size(max = 18)
