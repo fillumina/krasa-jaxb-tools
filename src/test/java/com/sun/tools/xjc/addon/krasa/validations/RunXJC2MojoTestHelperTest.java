@@ -26,14 +26,4 @@ public class RunXJC2MojoTestHelperTest extends RunXJC2MojoTestHelper {
         super.run(result);
     }
 
-    @Override
-    public void checkJakarta() throws Exception {
-        super.checkJakarta();
-    }
-
-    @Override
-    public void checkJavax() throws Exception {
-        super.checkJavax();
-    }
-
 }
