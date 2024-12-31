@@ -5,10 +5,10 @@ import java.util.regex.Pattern;
 /**
  * Created on 15.02.16.
  */
-public class EnumerationTest extends RunXJC2MojoTestHelper {
+public class EnumerationTest extends AnnotationCheckerTestHelper {
 
     public EnumerationTest() {
-        super("enumeration", "a");
+        super("enumeration", "a", "NaturalPerson");
     }
 
     public void test() throws ClassNotFoundException {

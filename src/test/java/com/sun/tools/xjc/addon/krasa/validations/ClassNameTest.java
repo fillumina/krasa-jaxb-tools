@@ -2,10 +2,10 @@ package com.sun.tools.xjc.addon.krasa.validations;
 
 import java.util.List;
 
-public class ClassNameTest extends RunXJC2MojoTestHelper {
+public class ClassNameTest extends AnnotationCheckerTestHelper {
 
     public ClassNameTest() {
-        super("notNull", "a", true);
+        super("notNull", "a", true, "NotNullType");
     }
 
     @Override

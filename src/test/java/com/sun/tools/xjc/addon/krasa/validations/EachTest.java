@@ -4,12 +4,12 @@ import java.util.List;
 
 /**
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
-public class EachTest extends RunXJC2MojoTestHelper {
+public class EachTest extends AnnotationCheckerTestHelper {
 
     public EachTest() {
-        super("each", "a");
+        super("each", "a", "EachType");
     }
 
     @Override

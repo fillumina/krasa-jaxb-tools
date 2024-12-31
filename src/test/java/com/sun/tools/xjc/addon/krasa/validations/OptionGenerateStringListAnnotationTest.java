@@ -7,10 +7,10 @@ import java.util.List;
  *
  * @author Francesco Illuminati
  */
-public class OptionGenerateStringListAnnotationTest extends RunXJC2MojoTestHelper {
+public class OptionGenerateStringListAnnotationTest extends AnnotationCheckerTestHelper {
 
     public OptionGenerateStringListAnnotationTest() {
-        super("options", "a");
+        super("options", "a", "OptionsType");
     }
 
     @Override

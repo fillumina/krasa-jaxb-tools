@@ -1,9 +1,9 @@
 package com.sun.tools.xjc.addon.krasa.validations;
 
-public class ChoiceTest extends RunXJC2MojoTestHelper {
+public class ChoiceTest extends AnnotationCheckerTestHelper {
 
     public ChoiceTest() {
-        super("choices", "a");
+        super("choices", "a", "Choices");
     }
 
     public void test() {

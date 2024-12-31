@@ -4,10 +4,10 @@ package com.sun.tools.xjc.addon.krasa.validations;
  *
  * @author Francesco Illuminati
  */
-public class StringsTest extends RunXJC2MojoTestHelper {
+public class StringsTest extends AnnotationCheckerTestHelper {
 
     public StringsTest() {
-        super("strings", "a");
+        super("strings", "a", "Strings");
     }
 
     public void test() throws ClassNotFoundException {

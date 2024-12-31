@@ -5,10 +5,10 @@ package com.sun.tools.xjc.addon.krasa.validations;
  * @see https://github.com/jirutka/validator-collection
  * @author Francesco Illuminati
  */
-public class ListsTest extends RunXJC2MojoTestHelper {
+public class ListsTest extends AnnotationCheckerTestHelper {
 
     public ListsTest() {
-        super("lists", "a");
+        super("lists", "a", "AddressType,Container");
     }
 
     public void testContainer() throws ClassNotFoundException {

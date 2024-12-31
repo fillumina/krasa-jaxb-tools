@@ -7,10 +7,10 @@ import java.math.BigInteger;
  *
  * @author Francesco Illuminati
  */
-public class NumbersTest extends RunXJC2MojoTestHelper {
+public class NumbersTest extends AnnotationCheckerTestHelper {
 
     public NumbersTest() {
-        super("numbers", "a");
+        super("numbers", "a", "Numbers");
     }
 
     public void test() throws ClassNotFoundException {

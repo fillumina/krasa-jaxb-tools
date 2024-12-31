@@ -1,9 +1,9 @@
 package com.sun.tools.xjc.addon.krasa.validations;
 
-public class RepeatingPatternTest extends RunXJC2MojoTestHelper {
+public class RepeatingPatternTest extends AnnotationCheckerTestHelper {
 
     public RepeatingPatternTest() {
-        super("repeatingPatterns", "a");
+        super("repeatingPatterns", "a", "RepeatingPatternListType");
     }
 
 }

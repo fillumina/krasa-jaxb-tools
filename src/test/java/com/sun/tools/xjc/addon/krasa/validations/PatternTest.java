@@ -1,9 +1,9 @@
 package com.sun.tools.xjc.addon.krasa.validations;
 
-public class PatternTest extends RunXJC2MojoTestHelper {
+public class PatternTest extends AnnotationCheckerTestHelper {
 
     public PatternTest() {
-        super("pattern", "a");
+        super("pattern", "a", "ProcessContainer");
     }
 
 }

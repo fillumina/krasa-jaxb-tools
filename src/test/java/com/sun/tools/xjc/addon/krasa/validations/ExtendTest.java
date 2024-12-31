@@ -7,10 +7,10 @@ package com.sun.tools.xjc.addon.krasa.validations;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-public class ExtendTest extends RunXJC2MojoTestHelper {
+public class ExtendTest extends AnnotationCheckerTestHelper {
 
     public ExtendTest() {
-        super("extend", "a");
+        super("extend", "a", "AComplexType");
     }
 
 }

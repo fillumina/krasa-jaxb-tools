@@ -2,11 +2,11 @@ package com.sun.tools.xjc.addon.krasa.validations;
 
 import java.util.List;
 
-public class NotNullBase extends RunXJC2MojoTestHelper {
+public class NotNullBase extends AnnotationCheckerTestHelper {
     private Object notNullAnnotationsCustomMessage = false; // default
 
     public NotNullBase(Object notNullAnnotationsCustomMessage) {
-        super("notNull", "a", true);
+        super("notNull", "a", true, "NotNullType");
         this.notNullAnnotationsCustomMessage = notNullAnnotationsCustomMessage;
     }
 

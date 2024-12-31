@@ -1,9 +1,9 @@
 package com.sun.tools.xjc.addon.krasa.validations;
 
-public class ComplexTest extends RunXJC2MojoTestHelper {
+public class ComplexTest extends AnnotationCheckerTestHelper {
 
     public ComplexTest() {
-        super("abase", "", false);
+        super("abase", "", false, "AddressType");
     }
 
     public void testNotNullAndSizeMax() {

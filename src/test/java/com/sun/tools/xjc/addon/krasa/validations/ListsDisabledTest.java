@@ -2,10 +2,10 @@ package com.sun.tools.xjc.addon.krasa.validations;
 
 import java.util.List;
 
-public class ListsDisabledTest extends RunXJC2MojoTestHelper {
+public class ListsDisabledTest extends AnnotationCheckerTestHelper {
 
     public ListsDisabledTest() {
-        super("lists", "a");
+        super("lists", "a", "AddressType,Container");
     }
 
     @Override

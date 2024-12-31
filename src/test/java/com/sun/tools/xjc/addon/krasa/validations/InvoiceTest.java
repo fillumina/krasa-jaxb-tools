@@ -7,10 +7,10 @@ package com.sun.tools.xjc.addon.krasa.validations;
  *
  * @author Francesco Illuminati
  */
-public class InvoiceTest extends RunXJC2MojoTestHelper {
+public class InvoiceTest extends AnnotationCheckerTestHelper {
 
     public InvoiceTest() {
-        super("invoice", "a");
+        super("invoice", "a", "Invoice");
     }
 
     public void test() throws ClassNotFoundException {

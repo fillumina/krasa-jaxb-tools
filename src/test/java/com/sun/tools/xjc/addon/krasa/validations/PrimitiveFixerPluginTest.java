@@ -7,10 +7,10 @@ import java.util.List;
  *
  * @author Francesco Illuminati
  */
-public class PrimitiveFixerPluginTest extends RunXJC2MojoTestHelper {
+public class PrimitiveFixerPluginTest extends AnnotationCheckerTestHelper {
 
     public PrimitiveFixerPluginTest() {
-        super("primitive", "a");
+        super("primitive", "a", "Primitive");
     }
 
     @Override

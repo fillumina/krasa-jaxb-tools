@@ -4,7 +4,7 @@ import java.util.List;
 
 /**
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public class TargetBase extends RunXJC2MojoTestHelper {
     private final String targetNamespace;

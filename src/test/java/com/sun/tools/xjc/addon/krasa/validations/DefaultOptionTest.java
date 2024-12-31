@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Test default parameters
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public class DefaultOptionTest extends RunXJC2MojoTestHelper {
 

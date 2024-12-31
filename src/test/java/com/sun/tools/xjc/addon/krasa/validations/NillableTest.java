@@ -1,9 +1,9 @@
 package com.sun.tools.xjc.addon.krasa.validations;
 
-public class NillableTest extends RunXJC2MojoTestHelper {
+public class NillableTest extends AnnotationCheckerTestHelper {
 
     public NillableTest() {
-        super("nillable", "a");
+        super("nillable", "a", "Nillable");
     }
 
     public void test() throws ClassNotFoundException {

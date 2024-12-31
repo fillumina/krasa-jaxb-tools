@@ -4,12 +4,12 @@ import java.util.List;
 
 /**
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
-public class EachDisabledTest extends RunXJC2MojoTestHelper {
+public class EachDisabledTest extends AnnotationCheckerTestHelper {
 
     public EachDisabledTest() {
-        super("each", "a");
+        super("each", "a", "EachType");
     }
 
     @Override

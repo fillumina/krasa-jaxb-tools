@@ -1,9 +1,9 @@
 package com.sun.tools.xjc.addon.krasa.validations;
 
-public class ArrayTest extends RunXJC2MojoTestHelper {
+public class ArrayTest extends AnnotationCheckerTestHelper {
 
     public ArrayTest() {
-        super("array", "a");
+        super("array", "a", "Array");
     }
 
     public void test() throws ClassNotFoundException {

@@ -1,9 +1,9 @@
 package com.sun.tools.xjc.addon.krasa.validations;
 
-public class MultiplePatternTest extends RunXJC2MojoTestHelper {
+public class MultiplePatternTest extends AnnotationCheckerTestHelper {
 
     public MultiplePatternTest() {
-        super("multiplePatterns", "a");
+        super("multiplePatterns", "a", "Multipattern");
     }
 
     public void test() throws ClassNotFoundException {

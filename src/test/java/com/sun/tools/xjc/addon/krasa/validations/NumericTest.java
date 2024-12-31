@@ -4,10 +4,10 @@ package com.sun.tools.xjc.addon.krasa.validations;
  *
  * @author Francesco Illuminati
  */
-public class NumericTest extends RunXJC2MojoTestHelper {
+public class NumericTest extends AnnotationCheckerTestHelper {
 
     public NumericTest() {
-        super("numeric", "a");
+        super("numeric", "a", "Numeric");
     }
 
 }

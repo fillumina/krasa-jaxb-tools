@@ -6,10 +6,10 @@ import java.util.List;
  *
  * @author Francesco Illuminati
  */
-public class NumericAllConstraintsTest extends RunXJC2MojoTestHelper {
+public class NumericAllConstraintsTest extends AnnotationCheckerTestHelper {
 
     public NumericAllConstraintsTest() {
-        super("numericAllConstraints", "a");
+        super("numericAllConstraints", "a", "NumericAllConstraints");
     }
 
     @Override
