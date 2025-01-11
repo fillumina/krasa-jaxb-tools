@@ -354,7 +354,8 @@ public class Processor {
     static String replaceRegexp(String pattern) {
         return pattern
                 .replace("\\i", "[_:A-Za-z]")
-                .replace("\\c", "[-._:A-Za-z0-9]");
+                .replace("\\c", "[-._:A-Za-z0-9]")
+                .replace("{IsBasicLatin}", "{InBasicLatin}");
     }
 
     String notNullMessage(ClassOutline classOutline, JFieldVar field) {

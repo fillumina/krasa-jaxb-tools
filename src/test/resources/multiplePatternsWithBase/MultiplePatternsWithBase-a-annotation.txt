@@ -6,7 +6,7 @@ MultiPatternWithBase
     multiPatternInheritSingleBase
         @Pattern.List({@Pattern(regexp = "([0-3])|([7-9])"), @Pattern(regexp = "[Y-Z]")})
     multiplePatternsWithBase
-        @Pattern.List({@Pattern(regexp = "([0-9])|([A-B])"), @Pattern(regexp = "[Y-Z]")})
+        @Pattern.List({@Pattern(regexp = "([0-9])|([A-B])"), @Pattern(regexp = "[Y-Z]\\p{InBasicLatin}")})
     singlePattern
         @Pattern(regexp = "[0-3]")
     singlePatternInheritMultiBase

@@ -35,7 +35,7 @@
 
     <xsd:simpleType name="patternListBase">
         <xsd:restriction base="xsd:string">
-            <xsd:pattern value="[Y-Z]" />
+            <xsd:pattern value="[Y-Z]\p{IsBasicLatin}" />
         </xsd:restriction>
     </xsd:simpleType>
 
