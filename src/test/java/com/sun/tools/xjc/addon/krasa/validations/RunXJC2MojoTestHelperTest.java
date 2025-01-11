@@ -1,5 +1,6 @@
 package com.sun.tools.xjc.addon.krasa.validations;
 
+import com.sun.tools.xjc.addon.krasa.validations.RunXJC2MojoTestHelper;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import junit.framework.TestResult;

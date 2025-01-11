@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  *
  * @author Francesco Illuminati
  */
-enum ValidationsAnnotation {
+public enum ValidationsAnnotation {
 
     JAVAX {
         @Override

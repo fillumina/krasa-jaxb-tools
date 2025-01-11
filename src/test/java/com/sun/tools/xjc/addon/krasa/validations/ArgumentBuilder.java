@@ -8,7 +8,7 @@ import java.util.List;
  *
  * @author Francesco Illuminati
  */
-class ArgumentBuilder {
+public class ArgumentBuilder {
 
     public static ArgumentBuilder builder() {
         return new ArgumentBuilder();

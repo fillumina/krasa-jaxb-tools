@@ -1,5 +1,6 @@
 package com.sun.tools.xjc.addon.krasa.validations;
 
+import com.sun.tools.xjc.addon.krasa.validations.NotNullAnnotationCustomMessageType;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;

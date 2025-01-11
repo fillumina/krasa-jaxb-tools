@@ -4,7 +4,7 @@ package com.sun.tools.xjc.addon.krasa.validations;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-class ValidSEIGeneratorTestHelper extends CxfJavaGeneratorTestHelper {
+public class ValidSEIGeneratorTestHelper extends CxfJavaGeneratorTestHelper {
     private static final String INPUT_WSDL = "/hello.wsdl";
     private static final String CLASS_FILE = "com/example/weather/WeatherServicePortType.java";
 

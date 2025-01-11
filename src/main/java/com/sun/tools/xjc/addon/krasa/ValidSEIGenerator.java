@@ -105,7 +105,9 @@ public class ValidSEIGenerator extends SEIGenerator {
                 try {
                     optionsBuilder.parseArgument(xjcArg);
                 } catch (BadCommandLineException e) {
-                    throw new ToolException("Unable to parse XJC Arguments when generating Java Interfaces. Options given: " + Arrays.deepToString(xjcArgs), e);
+                    throw new ToolException(
+                            "Unable to parse XJC Arguments when generating Java Interfaces. Options given: " +
+                                    Arrays.deepToString(xjcArgs), e);
                 }
             });
 		}

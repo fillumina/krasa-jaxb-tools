@@ -1,5 +1,7 @@
 package com.sun.tools.xjc.addon.krasa.validations;
 
+import com.sun.tools.xjc.addon.krasa.validations.RunXJC2MojoTestHelper;
+
 /**
  *
  * Make it sure that the default test is executed if no other is present.

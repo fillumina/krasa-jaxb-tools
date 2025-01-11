@@ -18,6 +18,8 @@ package com.sun.tools.xjc.addon.krasa.validations;
 import com.sun.tools.xjc.BadCommandLineException;
 import com.sun.tools.xjc.Options;
 import com.sun.tools.xjc.addon.krasa.JaxbValidationsPlugin;
+import com.sun.tools.xjc.addon.krasa.validations.ValidationsArgument;
+import com.sun.tools.xjc.addon.krasa.validations.ValidationsOptions;
 import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
