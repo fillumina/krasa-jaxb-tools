@@ -3,18 +3,19 @@ package com.sun.tools.xjc.addon.krasa.validations;
 import java.util.List;
 
 /**
+ * Assert annotations on a declaration (might be fields, methods or classes).
  *
  * @author Francesco Illuminati
  */
-public class ClassTester {
+public class DeclarationTester<P> {
 
-    final ArtifactTester parent;
+    final ArtifactTester<P> parent;
     final String filename;
     final String attributeName;
     final String definition;
     final List<String> annotationList;
 
-    public ClassTester(ArtifactTester parent, String filename,
+    public DeclarationTester(ArtifactTester<P> parent, String filename,
             String attributeName, String definition, List<String> annotationList) {
         this.parent = parent;
         this.filename = filename;
@@ -23,11 +24,11 @@ public class ClassTester {
         this.annotationList = annotationList;
     }
 
-    public ArtifactTester end() {
+    public ArtifactTester<P> end() {
         return parent;
     }
 
-    public ClassTester assertClass(Class<?> clazz) {
+    public DeclarationTester<P> assertClass(Class<?> clazz) {
         String className = clazz.getSimpleName();
         if (!definition.contains(className + " ")) {
             throw new AssertionError("attribute " + attributeName +
@@ -37,25 +38,25 @@ public class ClassTester {
         return this;
     }
 
-    public ClassTester assertAnnotationNotPresent(String annotation) {
+    public DeclarationTester<P> assertAnnotationNotPresent(String annotation) {
         long counter = annotationList.stream()
                 .filter(l -> l.trim().startsWith("@" + annotation)).count();
         if (counter != 0) {
             throw new AssertionError("annotation " + annotation +
-                    " of attribute " + attributeName + " in " + filename + " found");
+                    " of declaration " + attributeName + " in " + filename + " found");
         }
         return this;
     }
 
-    public AnnotationTester withAnnotation(String annotation) {
+    public AnnotationTester<P> withAnnotation(String annotation) {
         String line = annotationList.stream()
                 .filter(l -> l.trim().startsWith("@" + annotation)).findFirst()
                 .orElseThrow(() -> new AssertionError("annotation " + annotation +
                         " of attribute " + attributeName + " in " + filename + " not found "));
-        return new AnnotationTester(this, line, annotation);
+        return new AnnotationTester<P>(this, line, annotation);
     }
 
-    public ClassTester assertNoAnnotationsPresent() {
+    public DeclarationTester<P> assertNoAnnotationsPresent() {
         if (!annotationList.isEmpty()) {
             throw new AssertionError("attribute " + attributeName +
                     " in " + filename + " contains annotations: " + annotationList.toString());
@@ -63,7 +64,7 @@ public class ClassTester {
         return this;
     }
 
-    public ClassTester assertType(String type) {
+    public DeclarationTester<P> assertType(String type) {
         if (!definition.contains(type + " ")) {
             throw new AssertionError("attribute " + attributeName +
                     " is not of type " + type + " but: " + definition);

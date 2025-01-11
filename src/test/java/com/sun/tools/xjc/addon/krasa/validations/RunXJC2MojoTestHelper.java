@@ -193,9 +193,8 @@ public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
         super.testExecute();
     }
 
-    private final synchronized void checkAnnotationsInResourceFile() {
-        String namespace = getNamespace();
-        String[] nsArray = namespace.split(",");
+    private void checkAnnotationsInResourceFile() {
+        String[] nsArray = getNamespace().split(",");
         for (String ns : nsArray) {
             String annotatonFilename = getAnnotationFileName(ns);
             Path filename = Paths.get(getGeneratedDirectory().getAbsolutePath() +
@@ -247,7 +246,8 @@ public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
                     !name.startsWith("package-info") &&
                     !name.startsWith("ObjectFactory")) {
                 String filename = name.replace(".java", "");
-                ArtifactTester artifactTester = withElement(ns, filename);
+                ArtifactTester<RunXJC2MojoTestHelper> artifactTester =
+                        withElement(ns, filename);
                 buf.append(filename).append(System.lineSeparator());
                 List<String> attributeList = artifactTester.getAllFields();
                 Collections.sort(attributeList);
@@ -316,10 +316,8 @@ public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
      * @param elementName The name of the root element created (the java class name created by JAXB).
      * @see #getNamespace()
      */
-    public ArtifactTester withElement(String elementName) {
-        final String filename = elementName + ".java";
-        List<String> lines = readFile(getNamespace(), filename);
-        return new ArtifactTester(filename, lines, this);
+    public ArtifactTester<RunXJC2MojoTestHelper> withElement(String elementName) {
+        return withElement(getNamespace(), elementName);
     }
 
     /**
@@ -329,10 +327,10 @@ public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
      * @param elementName the name of the element without the namespace part
      * @return a tester
      */
-    public ArtifactTester withElement(String namespace, String elementName) {
+    public ArtifactTester<RunXJC2MojoTestHelper> withElement(String namespace, String elementName) {
         final String filename = elementName + ".java";
         List<String> lines = readFile(namespace, filename);
-        return new ArtifactTester(filename, lines, this);
+        return new ArtifactTester(filename, lines, getAnnotation(), this);
     }
 
     private List<String> readFile(String ns, String filename) {

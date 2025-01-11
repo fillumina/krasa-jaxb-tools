@@ -8,14 +8,14 @@ import java.util.Objects;
  *
  * @author Francesco Illuminati
  */
-public class AnnotationTester {
+public class AnnotationTester<P> {
 
-    private final ClassTester parent;
+    private final DeclarationTester<P> parent;
     private final String line;
     private final String annotation;
     private final Map<String, String> parameterMap = new HashMap<>();
 
-    public AnnotationTester(ClassTester parent, String line,
+    public AnnotationTester(DeclarationTester<P> parent, String line,
             String annotationName) {
         this.parent = parent;
         this.line = line;
@@ -42,11 +42,11 @@ public class AnnotationTester {
         }
     }
 
-    public ClassTester end() {
+    public DeclarationTester<P> end() {
         return parent;
     }
 
-    public ClassTester assertNoParameters() {
+    public DeclarationTester<P> assertNoParameters() {
         if (!parameterMap.isEmpty()) {
             throw new AssertionError("annotation " + annotation +
                     " of attribute " + parent.attributeName +
@@ -55,12 +55,12 @@ public class AnnotationTester {
         return parent;
     }
 
-    public ClassTester assertValue(Object value) {
+    public DeclarationTester<P> assertValue(Object value) {
         assertParam("value", value);
         return parent;
     }
 
-    public AnnotationTester assertParam(String name, Object value) {
+    public AnnotationTester<P> assertParam(String name, Object value) {
         Objects.requireNonNull(value, "parameter " + name + " value cannot be null");
         String v = parameterMap.get(name);
         if (v == null) {

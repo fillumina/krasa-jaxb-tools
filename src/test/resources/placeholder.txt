@@ -1,0 +1,1 @@
+This file is needed by PathUtil to get the full path of the target directory.

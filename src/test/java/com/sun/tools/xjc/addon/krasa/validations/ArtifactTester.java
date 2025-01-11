@@ -5,20 +5,24 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Check an XJC generated class for annotations, field types and annotation parameters.
+ * Load a class textually and allows to assert its content.
  *
  * @author Francesco Illuminati
  */
-public class ArtifactTester {
+public class ArtifactTester<P> {
 
     private final String filename;
     private final List<String> lines;
-    private final RunXJC2MojoTestHelper outer;
+    private final ValidationsAnnotation validationsAnnotation;
+    private final P parent;
 
-    ArtifactTester(String filename, List<String> lines, final RunXJC2MojoTestHelper outer) {
-        this.outer = outer;
+    ArtifactTester(String filename, List<String> lines,
+            ValidationsAnnotation validationsAnnotation,
+            P parent) {
         this.filename = filename;
         this.lines = lines;
+        this.validationsAnnotation = validationsAnnotation;
+        this.parent = parent;
     }
 
     public void assertAnnotationNotPresent(ValidationsAnnotation annotation) {
@@ -33,6 +37,9 @@ public class ArtifactTester {
         }
     }
 
+    public ArtifactTester<P> assertImport(Class<?> clazz) {
+        return assertImportCanonicalName(clazz.getCanonicalName());
+    }
 
     /**
      * Check if the given simple annotation name is present in the include statement.
@@ -40,8 +47,8 @@ public class ArtifactTester {
      * @param simpleName the simple name of the class to check (i.e. 'Valid').
      * @return a tester
      */
-    public ArtifactTester assertImportSimpleName(String simpleName) throws ClassNotFoundException {
-        String canonicalName = outer.getAnnotation().getCanonicalClassName(simpleName);
+    public ArtifactTester<P> assertImportSimpleName(String simpleName) throws ClassNotFoundException {
+        String canonicalName = validationsAnnotation.getCanonicalClassName(simpleName);
         return assertImportCanonicalName(canonicalName);
     }
 
@@ -51,7 +58,7 @@ public class ArtifactTester {
      * @param canonicalName the canonical name of the class to check (i.e. 'javax.validation.constraints.DecimalMin')
      * @return a tester
      */
-    public ArtifactTester assertImportCanonicalName(String canonicalName) {
+    public ArtifactTester<P> assertImportCanonicalName(String canonicalName) {
         Objects.requireNonNull(canonicalName);
         if (!canonicalName.contains(".")) {
             throw new AssertionError("the name passed doesn't seem to be a canonical name: " + canonicalName);
@@ -65,20 +72,33 @@ public class ArtifactTester {
     /**
      * Check annotations relative to the class.
      */
-    public ClassTester classAnnotations() {
+    public DeclarationTester<P> classAnnotations() {
         final String clazzName = filename.replace(".java", "");
-        int line = getLineForClass(clazzName);
+        int line = getLineForClass(clazzName, "public class ");
         List<String> annotationList = getFieldAnnotations(clazzName, line);
         String definition = lines.get(line);
-        return new ClassTester(this, filename, clazzName, definition, annotationList);
+        return new DeclarationTester<>(this, filename, clazzName, definition, annotationList);
     }
 
-    /** Check a specific field. */
-    public ClassTester withField(String fieldName) {
+    public DeclarationTester<P> withField(String fieldName) {
         int line = getLineForField(fieldName);
         List<String> annotationList = getFieldAnnotations(fieldName, line);
         String definition = lines.get(line);
-        return new ClassTester(this, filename, fieldName, definition, annotationList);
+        return new DeclarationTester<>(this, filename, fieldName, definition, annotationList);
+    }
+
+    public DeclarationTester<P> withMethod(String methodName) {
+        int line = getLineForMethod(methodName);
+        List<String> annotationList = getFieldAnnotations(methodName, line);
+        String definition = lines.get(line);
+        return new DeclarationTester<>(this, filename, methodName, definition, annotationList);
+    }
+
+    public DeclarationTester<P> withParameter(String parameterName) {
+        int line = getLineForParameter(parameterName);
+        List<String> annotationList = getFieldAnnotations(parameterName, line);
+        String definition = lines.get(line);
+        return new DeclarationTester<>(this, filename, parameterName, definition, annotationList);
     }
 
     /**
@@ -104,24 +124,44 @@ public class ArtifactTester {
     }
 
     private List<String> getFieldAnnotations(String fieldName, int line) {
-        int prevAttribute = prevFieldLine(fieldName, line);
+        int prevAttribute = prevLine(fieldName, line);
         List<String> annotationList = lines.subList(prevAttribute, line);
         return annotationList;
     }
 
     /** Allows for fluid interface: go back to test helper. */
-    public RunXJC2MojoTestHelper end() {
-        return outer;
+    public P end() {
+        return parent;
     }
 
-    private int getLineForClass(String className) {
+    private int getLineForClass(String className, String startingWith) {
         for (int i = 0, l = lines.size(); i < l; i++) {
             String line = lines.get(i).trim();
-            if (line.startsWith("public class " + className)) {
+            if (line.startsWith(startingWith + className)) {
                 return i;
             }
         }
         throw new AssertionError("attribute " + className + " not found in file " + filename);
+    }
+
+    private int getLineForMethod(String methodName) {
+        for (int i = 0, l = lines.size(); i < l; i++) {
+            String line = lines.get(i).trim();
+            if (line.endsWith(methodName + "(")) {
+                return i;
+            }
+        }
+        throw new AssertionError("method " + methodName + " not found in file " + filename);
+    }
+
+    private int getLineForParameter(String parameterName) {
+        for (int i = 0, l = lines.size(); i < l; i++) {
+            String line = lines.get(i).trim();
+            if (line.endsWith(parameterName)) {
+                return i;
+            }
+        }
+        throw new AssertionError("method " + parameterName + " not found in file " + filename);
     }
 
     private int getLineForField(String fieldName) {
@@ -134,10 +174,11 @@ public class ArtifactTester {
         throw new AssertionError("attribute " + fieldName + " not found in file " + filename);
     }
 
-    private int prevFieldLine(String fieldName, int fieldLine) {
+    private int prevLine(String fieldName, int fieldLine) {
         for (int i = fieldLine - 1; i >= 0; i--) {
             String line = lines.get(i).trim();
-            if (line.trim().isEmpty() || line.startsWith("public ") || line.startsWith("protected ")) {
+            if (line.trim().isEmpty() || line.startsWith("public ") ||
+                    line.startsWith("protected ") || line.startsWith("*/")) {
                 return i + 1;
             }
         }

@@ -112,16 +112,27 @@ public enum ValidationsArgument {
     generateServiceValidationAnnotations(
             String.class,
             "used by cxf-codegen to perform validations on fields annotated with @Valid",
+            // I prefer to be very explicit here instead of relaying on defaults
             (p,v) -> {
                 if ("in".equalsIgnoreCase(v)) {
+                    p.validIn(true);
                     p.validOut(false);
                 } else if ("out".equalsIgnoreCase(v)) {
+                    p.validOut(true);
                     p.validIn(false);
+                } else if ("inout".equalsIgnoreCase(v)) {
+                    p.validOut(true);
+                    p.validIn(true);
                 }
                 //log("'" + policy + "' parsed as " + "in = " + validIn + ", out = " + validOut);
                 return null;
             }, // read by ValidSEIGenerator
-            (p) -> null);
+            (p) -> {
+                if (p.isValidIn() && p.isValidOut()) return "inOut";
+                if (p.isValidIn()) return "in";
+                if (p.isValidOut()) return "out";
+                return "none";
+            });
 
     // parameter type
     private final Class<?> type;

@@ -1,8 +1,7 @@
 package com.sun.tools.xjc.addon.krasa.validations;
 
-import org.apache.cxf.tools.common.model.JavaInterface;
-
 import java.lang.annotation.Annotation;
+import org.apache.cxf.tools.common.model.JavaInterface;
 
 public class ProcessorForJavaInterface {
     private final Class<? extends Annotation> validClass;
