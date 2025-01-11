@@ -13,7 +13,9 @@ import org.xml.sax.SAXException;
 
 /**
  * Substitute all primitive types with their respective boxed types (i.e. int → Integer)
- *
+ * <br>
+ * The plugin is configured in {@code /resources/META-INF/services/com.sun.tools.xjc.Plugin} .
+ * 
  * @author Vojtěch Krása
  */
 public class PrimitiveFixerPlugin extends Plugin {

@@ -15,6 +15,8 @@ import org.xml.sax.ErrorHandler;
 /**
  * Add <a href="https://jcp.org/en/jsr/detail?id=380">JSR 380 Bean Validation 2.0 Annotations</a>
  * to a  Java™ Architecture for XML Binding (JAXB) XJC generated classes.
+ * <br>
+ * The plugin is configured in {@code /resources/META-INF/services/com.sun.tools.xjc.Plugin} .
  *
  * @author Francesco Illuminati
  * @author Vojtěch Krása
