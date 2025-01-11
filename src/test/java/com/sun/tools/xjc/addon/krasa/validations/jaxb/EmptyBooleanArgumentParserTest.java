@@ -1,5 +1,8 @@
-package com.sun.tools.xjc.addon.krasa.validations;
+package com.sun.tools.xjc.addon.krasa.validations.jaxb;
 
+import com.sun.tools.xjc.addon.krasa.validations.ArgumentBuilder;
+import com.sun.tools.xjc.addon.krasa.validations.RunXJC2MojoTestHelper;
+import com.sun.tools.xjc.addon.krasa.validations.ValidationsArgument;
 import java.util.List;
 
 /**

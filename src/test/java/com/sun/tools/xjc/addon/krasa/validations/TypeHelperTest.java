@@ -15,7 +15,6 @@
  */
 package com.sun.tools.xjc.addon.krasa.validations;
 
-import com.sun.tools.xjc.addon.krasa.validations.FieldHelper;
 import java.math.BigDecimal;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
@@ -23,7 +22,7 @@ import org.junit.Test;
 
 /**
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public class TypeHelperTest {
 

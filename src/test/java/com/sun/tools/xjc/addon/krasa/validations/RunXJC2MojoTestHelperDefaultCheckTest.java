@@ -1,6 +1,5 @@
 package com.sun.tools.xjc.addon.krasa.validations;
 
-import com.sun.tools.xjc.addon.krasa.validations.RunXJC2MojoTestHelper;
 import junit.framework.TestCase;
 import static junit.framework.TestCase.assertTrue;
 

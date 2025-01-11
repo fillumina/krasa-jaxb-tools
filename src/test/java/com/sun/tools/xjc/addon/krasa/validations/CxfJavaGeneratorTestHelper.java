@@ -1,8 +1,5 @@
 package com.sun.tools.xjc.addon.krasa.validations;
 
-import com.sun.tools.xjc.addon.krasa.validations.ArtifactTester;
-import com.sun.tools.xjc.addon.krasa.validations.ValidationsAnnotation;
-import com.sun.tools.xjc.addon.krasa.validations.ValidationsArgument;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

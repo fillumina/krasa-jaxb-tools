@@ -15,8 +15,6 @@
  */
 package com.sun.tools.xjc.addon.krasa.validations;
 
-import com.sun.tools.xjc.addon.krasa.validations.ValidationsAnnotation;
-import com.sun.tools.xjc.addon.krasa.validations.ValidationsOptions;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

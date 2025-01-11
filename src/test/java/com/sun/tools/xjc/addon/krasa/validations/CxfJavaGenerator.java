@@ -1,7 +1,5 @@
 package com.sun.tools.xjc.addon.krasa.validations;
 
-import com.sun.tools.xjc.addon.krasa.validations.ValidationsAnnotation;
-import com.sun.tools.xjc.addon.krasa.validations.ValidationsArgument;
 import org.apache.cxf.tools.common.CommandInterfaceUtils;
 import org.apache.cxf.tools.common.ToolConstants;
 import org.apache.cxf.tools.common.ToolContext;

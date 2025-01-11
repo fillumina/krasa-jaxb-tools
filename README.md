@@ -4,17 +4,17 @@
 
 This project defines 2 XJC and 1 CXF plugins:
 
-- `Jsr308Annotations` a XJC plugin that adds Bean Validation 2.0 or [JSR 380](https://jcp.org/en/jsr/detail?id=380[The Java Community Process(SM) Program - JSRs: Java Specification Requests - detail JSR# 380](https://jcp.org/en/jsr/detail?id=380)) validations suporting both `javax` or `jakarta` package
+- `Jsr308Annotations` a XJC plugin that adds Bean Validation 2.0 or [JSR 380](https://jcp.org/en/jsr/detail?id=380[The Java Community Process(SM) Program - JSRs: Java Specification Requests - detail JSR# 380](https://jcp.org/en/jsr/detail?id=380)) validations suporting both `javax` or `jakarta` packages
 
 - `ReplacePrimitives`  a XJC plugin that replaces the generated primitives with the corresponding boxed types (i.e. `int` -> `Integer`)
 
-- an [Apache Cxf plugin](https://cxf.apache.org/docs/tools.html) that adds the `javax` or `jakarta` `@Valid` annotation to the methods and the parameters (both optionally) of the generated Port Type interface. This plugin is also configured using the `JSR308Annotations` name.
+- an [Apache Cxf plugin](https://cxf.apache.org/docs/tools.html) that adds the `javax` or `jakarta` `@Valid` annotation to the methods and the parameters (both optionally) of the generated Port Type interface. This plugin is configured using the same `JSR308Annotations` name.
 
 ## Example of usage
 
 There are 2 example projects containing many different plugins and configurations available for reference:
 
-- [GitHub - fillumina/krasa-jaxb-tools-jdk21-example: Examples of usage of krasa-jaxb-tools using latest jakarta technologies (Java 21)](https://github.com/fillumina/krasa-jaxb-tools-jdk21-example) as the name suggests it's compiled with **JDK 21** and provides working examples of many different plugins using both XJC and CXF configured with both `javax` and `jakarta` packages using the latest versions available.
+- [GitHub - fillumina/krasa-jaxb-tools-jdk21-example: Examples of usage of krasa-jaxb-tools using latest technologies (Java 21)](https://github.com/fillumina/krasa-jaxb-tools-jdk21-example) as the name suggests it's compiled with **JDK 21** and provides working examples of many different plugins using both XJC and CXF configured with both `javax` and `jakarta` packages using the latest versions available.
 
 - [GitHub - fillumina/krasa-jaxb-tools-example: Sample project for https://github.com/fillumina/krasa-jaxb-tools](https://github.com/fillumina/krasa-jaxb-tools-example) uses **JDK 8** and provides examples using the latest versions of plugins and dependencies available for that java version.
 
@@ -30,9 +30,7 @@ Version
 
 - `2.3.4` bug fix release:
   
-  - fix [Issue #17](https://github.com/fillumina/krasa-jaxb-tools/issues/17) where `@DecimalMin` and `@DecimalMax` superfluous annotations were added to
-    numeric java types. A new argument has been created `generateAllNumericConstraints` in case
-    all constraints would be needed (even superflous ones).
+  - fix [Issue #17](https://github.com/fillumina/krasa-jaxb-tools/issues/17) where `@DecimalMin` and `@DecimalMax` superfluous annotations were added to numeric java types. A new argument has been created `generateAllNumericConstraints` in case all constraints would be needed (even superflous ones).
 
 - `2.3.3` bug fix release:
   
@@ -148,5 +146,3 @@ Generates:
 ## TODO
 
 - change the plugin name to `Jsr380Annotations` because it's now about the Java Specification Request 308. Being a breaking change it should cause the version to jump to 2.5
-  
-  

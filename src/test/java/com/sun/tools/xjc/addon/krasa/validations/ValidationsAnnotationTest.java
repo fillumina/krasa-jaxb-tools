@@ -1,12 +1,11 @@
 package com.sun.tools.xjc.addon.krasa.validations;
 
-import com.sun.tools.xjc.addon.krasa.validations.ValidationsAnnotation;
 import static junit.framework.TestCase.assertEquals;
 import org.junit.Test;
 
 /**
  *
- * @author Francesco Illuminati 
+ * @author Francesco Illuminati
  */
 public class ValidationsAnnotationTest {
 

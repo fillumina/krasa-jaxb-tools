@@ -15,10 +15,6 @@
  */
 package com.sun.tools.xjc.addon.krasa.validations;
 
-import com.sun.tools.xjc.addon.krasa.validations.ArgumentBuilder;
-import com.sun.tools.xjc.addon.krasa.validations.ArtifactTester;
-import com.sun.tools.xjc.addon.krasa.validations.ValidationsAnnotation;
-import com.sun.tools.xjc.addon.krasa.validations.ValidationsArgument;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
