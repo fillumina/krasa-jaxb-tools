@@ -5,6 +5,8 @@ import com.sun.tools.xjc.addon.krasa.JaxbValidationsPlugin;
 import java.util.Objects;
 
 /**
+ * Set the options using the included builder and then create an immutable option bean to
+ * be passed around.
  *
  * @author Francesco Illuminati
  */

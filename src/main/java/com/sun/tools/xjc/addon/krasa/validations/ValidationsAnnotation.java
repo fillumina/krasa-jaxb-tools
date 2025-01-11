@@ -8,6 +8,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
+ * The plugins defined here supports both javax and jakarta validation packages, this enum
+ * helps managing them both in a unified way.
  *
  * @author Francesco Illuminati
  */
