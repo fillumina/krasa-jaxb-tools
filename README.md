@@ -161,11 +161,11 @@ The plugin generates sources annotated with the following Java Bean Validation 2
 
 ## Note on submitting issues and bugfixes
 
-Any issue report or bug fix is extremely welcome but to help me understand the problem and reduce the time to publish the fix I ask to comply to these roles:
+Any issue reported or bug fix is *extremely* welcome but to help me understand the problem and reduce the time to publish the fix I kindly ask to comply to these roles:
 
-- **Issues** should contain a detailed description **and an example** to show how and when the code is failing (the example is typically a simple github project).
+- **Issues** should contain a detailed description **and an example** to show how and when the code is failing. It might be a failing test or a simple github project.
 
-- **Fixes** should contain a test that proves the solution of the problem (and the test should be present in a previous commit to the fix to show it fails). It is appreciated that the solution contains as little refactoring as possible and is focuses only on fixing the issue. Each fix should focus on a specific issue.
+- **Fixes** should contain a test that proves the solution of the problem (and the test should be present in a previous commit to the fix to show that it fails). It is appreciated that the solution contains as little refactoring as possible and is focuses only on fixing the issue. Each fix should focus on a specific issue.
 
 ## TODO
 
