@@ -9,9 +9,9 @@ import java.util.List;
  *
  * @author Francesco Illuminati
  */
-public class EachDisabledTest extends AnnotationCheckerTestHelper {
+public class EachGenerateListAnnotationDisabledTest extends AnnotationCheckerTestHelper {
 
-    public EachDisabledTest() {
+    public EachGenerateListAnnotationDisabledTest() {
         super("each", "a", "EachType");
     }
 
