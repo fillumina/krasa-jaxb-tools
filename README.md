@@ -161,12 +161,12 @@ The plugin generates sources annotated with the following Java Bean Validation 2
 
 ## Note on submitting issues and bugfixes
 
-Any issue reported or bug fix is *extremely* welcome but to help me understand the problem and reduce the time to publish the fix I kindly ask to comply to these roles:
+Any issue or bug fix reported is *extremely* welcome but to help me understand the problem and reduce the time to publish the fix I kindly ask to comply to these roles:
 
 - **Issues** should contain a detailed description **and an example** to show how and when the code is failing. It might be a failing test or a simple github project.
 
-- **Fixes** should contain a test that proves the solution of the problem (and the test should be present in a previous commit to the fix to show that it fails). It is appreciated that the solution contains as little refactoring as possible and is focuses only on fixing the issue. Each fix should focus on a specific issue.
+- **Fixes** should contain a test that proves the solution to the problem (and the test should be present in a previous commit to the fix to show that it fails). It is appreciated that the solution contains as *little refactoring* as possible and is focused only on *fixing one issue*. Each fix should focus on one specific issue.
 
 ## TODO
 
-- change the plugin name to `Jsr380Annotations` because it's now about the Java Specification Request 380. Being a breaking change it should cause the version to jump to 2.5
+- change the plugin name to `Jsr380Annotations` because it's now about the Java Specification Request 380. Being a breaking change it should cause the version to jump to 2.4.
