@@ -110,7 +110,7 @@ public enum ValidationsArgument {
             "generates github.com/jirutka/validator-collection annotations",
             (p,v) -> setBoolean(v, r -> p.validationCollection(r)),
             (p) -> p.isValidationCollection()),
-    // it's just a placeholder that will be read directly by ValidSEIGenerator
+    // used by ValidSEIGenerator
     generateServiceValidationAnnotations(
             String.class,
             "used by cxf-codegen to perform validations on fields annotated with @Valid",

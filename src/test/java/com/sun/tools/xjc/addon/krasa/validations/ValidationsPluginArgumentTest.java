@@ -28,8 +28,8 @@ import org.junit.Test;
  * @author Francesco Illuminati
  */
 public class ValidationsPluginArgumentTest {
-    private JaxbValidationsPlugin plugin;
-    private Options opt;
+    private final JaxbValidationsPlugin plugin;
+    private final Options opt;
 
     public ValidationsPluginArgumentTest() {
         plugin = new JaxbValidationsPlugin();
