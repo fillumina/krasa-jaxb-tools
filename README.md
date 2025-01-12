@@ -23,7 +23,7 @@ JDK 1.8 Support
 
 The project is bounded to support **Java 8** (**JDK 1.8**) because of some old projects still requiring it. All dependencies are selected from the latest available versions still supporting that.
 
-Version
+Versions
 ----------------
 
 - `2.3.6` various fixes and improvements:
