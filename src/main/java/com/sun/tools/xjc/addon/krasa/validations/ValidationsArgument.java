@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
- * Parse the arguments passed to the plugin and initialize the {@see ValidationsOptions}
+ * Parse the arguments passed to the plugin and initialize the {@link ValidationsOptions}
  * accordingly.
  *
  * @author Francesco Illuminati
