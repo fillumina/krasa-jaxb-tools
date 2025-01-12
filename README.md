@@ -4,7 +4,7 @@
 
 This project defines 2 XJC and 1 CXF plugins:
 
-- `Jsr308Annotations` a XJC plugin that adds Bean Validation 2.0 or [JSR 380](https://jcp.org/en/jsr/detail?id=380[The Java Community Process(SM) Program - JSRs: Java Specification Requests - detail JSR# 380](https://jcp.org/en/jsr/detail?id=380)) validations suporting both `javax` or `jakarta` packages
+- `Jsr308Annotations` a XJC plugin that adds Bean Validation 2.0 or [JSR 380](https://jcp.org/en/jsr/detail?id=380) validations suporting both `javax` or `jakarta` packages
 
 - `ReplacePrimitives`  a XJC plugin that replaces the generated primitives with the corresponding boxed types (i.e. `int` -> `Integer`)
 
