@@ -1,0 +1,41 @@
+NumericAllConstraints
+    abyte
+        @NotNull
+    adecimal
+        @NotNull
+    aint
+        @NotNull
+    ainteger
+        @NotNull
+    along
+        @NotNull
+    anegativeInteger
+        @DecimalMax(value = "-1", inclusive = true)
+        @NotNull
+    anonNegativeInteger
+        @DecimalMin(value = "0", inclusive = true)
+        @NotNull
+    anonPositiveInteger
+        @DecimalMax(value = "0", inclusive = true)
+        @NotNull
+    apositiveInteger
+        @DecimalMin(value = "1", inclusive = true)
+        @NotNull
+    ashort
+        @NotNull
+    aunsignedByte
+        @DecimalMax(value = "255", inclusive = true)
+        @DecimalMin(value = "0", inclusive = true)
+        @NotNull
+    aunsignedInt
+        @DecimalMax(value = "4294967295", inclusive = true)
+        @DecimalMin(value = "0", inclusive = true)
+        @NotNull
+    aunsignedLong
+        @DecimalMax(value = "18446744073709551615", inclusive = true)
+        @DecimalMin(value = "0", inclusive = true)
+        @NotNull
+    aunsignedShort
+        @DecimalMax(value = "65535", inclusive = true)
+        @DecimalMin(value = "0", inclusive = true)
+        @NotNull

@@ -9,9 +9,9 @@ import java.util.List;
  *
  * @author Francesco Illuminati
  */
-public class NumericAllConstraintsTest extends AnnotationCheckerTestHelper {
+public class NumericAllConstraintsEnabledTest extends AnnotationCheckerTestHelper {
 
-    public NumericAllConstraintsTest() {
+    public NumericAllConstraintsEnabledTest() {
         super("numericAllConstraints", "a", "NumericAllConstraints");
     }
 
@@ -19,9 +19,6 @@ public class NumericAllConstraintsTest extends AnnotationCheckerTestHelper {
     public List<String> getArgs() {
         return ArgumentBuilder.builder()
                 .add(ValidationsArgument.generateAllNumericConstraints, true)
-                .add(ValidationsArgument.generateNotNullAnnotations, true)
-                .add(ValidationsArgument.generateListAnnotations, true)
-                .add(ValidationsArgument.targetNamespace, getNamespace())
                 .add(ValidationsArgument.validationAnnotations, getAnnotation().name())
                 .getOptionList();
     }
