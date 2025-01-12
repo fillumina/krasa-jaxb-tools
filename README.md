@@ -85,16 +85,20 @@ Options
 
 - `verbose` (boolean, default=`false`) print verbose messages to output
   example: `-XJsr303Annotations:verbose=true`
-- `validationAnnotations` (`javax` | `jakarta`, default=`javax`): selects the library to use for annotations
+- `validationAnnotations` (`javax` | `jakarta`, default=`javax`): selects the library to use for validation annotations
   example: `-XJsr303Annotations:validationAnnotations=javax`
-- `targetNamespace` (string): adds @Valid annotation to all elements with given namespace
+- `targetNamespace` (string): adds @Valid annotation only if the element has the given namespace
   example: `-XJsr303Annotations:targetNamespace=a`
 - `generateNotNullAnnotations` (boolean, default=`true`): adds a `@NotNull` annotation if an element has `minOccours` not 0, is `required` or is not `nillable`.
   examples: `-XJsr303Annotations:generateNotNullAnnotations=true`
-- `notNullAnnotationsCustomMessages` (boolean or string, default=`false`): values are `true`, `FieldName`, `ClassName`, or an *actual message* (see further explanation down below).
+- `notNullAnnotationsCustomMessages` (boolean or string, default=`false`): values are `true`, `FieldName`, `ClassName`, or an *actual message* (see further explanation in a note down below)
+  example: `-XJsr303Annotations:notNullAnnotationsCustomMessages=ClassName`
 - `generateListAnnotations` (boolean, optional, default `false`) generates [validator-collection annotations](https://github.com/jirutka/validator-collection) annotations
+  example: `-XJsr303Annotations:generateListAnnotations=true`
 - `generateServiceValidationAnnotations` (string, accepts: `in`, `out`, `inout`, works with  `apache-cxf` only) adds `@Valid` annotations to respective message direction (in, out or both).
+  example: `-XJsr303Annotations:generateServiceValidationAnnotations=inout`
 - `generateAllNumericConstraints` (boolean, defaults to `false`) generates all `@DecimalMin` and `@DecimalMax` even those regarding the natural boudaries of the referred java type.
+  example: `-XJsr303Annotations:generateAllNumericConstraints=true`
 
 ### Notes
 
@@ -104,33 +108,33 @@ Options
 
 #### About `notNullAnnotationsCustomMessages`
 
-**`@NotNull`**'s default validation message is not always helpful, so it can be customized with **-XJsr303Annotations:notNullAnnotationsCustomMessages=OPTION** where **OPTION** is one of the following:
+**`@NotNull`** default validation message is not always helpful, so it can be customized with **-XJsr303Annotations:notNullAnnotationsCustomMessages=OPTION** where **OPTION** is one of the following:
 
 - `false` default: no custom message
 - `true` message is present but equivalent to the default: **"{javax.validation.constraints.NotNull.message}"**
 - `FieldName` field name is prefixed to the default message: **"fieldName {javax.validation.constraints.NotNull.message}"**
 - `ClassName` class and field name are prefixed to the default message: **"ClassName.fieldName {javax.validation.constraints.NotNull.message}"**
-- `other-non-empty-text` arbitrary message, with substitutable, case-sensitive parameters `{ClassName}` and `{FieldName}`: **"Class {ClassName} field {FieldName} non-null"**
+- `other-non-empty-text` arbitrary message, with substitutable, case-sensitive parameters `{ClassName}` and `{FieldName}`, i.e.: **"Class {ClassName} field {FieldName} non-null"**
 
 #### About `generateServiceValidationAnnotations`
 
-Bean validation policy can be customized with `-XJsr303Annotations:generateServiceValidationAnnotations=OPTION` where OPTION is one of the following:
+Bean validation policy can be customized with `-XJsr303Annotations:generateServiceValidationAnnotations=OPTION` where OPTION is one of the following (the option is case insensitive):
 
 - `InOut` (default: validate requests and responses)
 - `In` (validate only requests)
 - `Out` (validate only responses)
 
-Using this option requires to specify krasa as front end generator (See example in https://github.com/fillumina/krasa-jaxb-tools-example )
+Using this option requires to specify `krasa` as front end generator in the CXF plugin with the option `-frontend krasa` (See example in [krasa-jaxb-tools-example/krasa-cxf-codegen-plugin-example/pom.xml at master · fillumina/krasa-jaxb-tools-example · GitHub](https://github.com/fillumina/krasa-jaxb-tools-example/blob/master/krasa-cxf-codegen-plugin-example/pom.xml) )
 
 #### About `ReplacePrimitives`
 
-That is a different plugin within this same packakge and replaces primitive types with boxed ones. It's enabled in the [krasa-cxf-codegen-plugin-example](https://github.com/fillumina/krasa-jaxb-tools-example/blob/master/krasa-cxf-codegen-plugin-example/pom.xml) project as an example.
+That is a different plugin within this same packakge that can be enabled with the option `-XReplacePrimitives`.  It replaces primitive types with boxed ones (`int` -> `Integer`). It's enabled in the [krasa-cxf-codegen-plugin-example](https://github.com/fillumina/krasa-jaxb-tools-example/blob/master/krasa-cxf-codegen-plugin-example/pom.xml) project as an example.
 **WARNING:** must be defined before XhashCode or Xequals.
 
 Supported Annotations
 ----------------
 
-Generates:
+The plugin generates sources annotated with the following Java Bean Validation 2.0 (JSR 380) annotations (with either `javax` or `jakarta` packages depending on the configuration, see `-XJsr303Annotations:validationAnnotations=javax`):
 
 - `@Valid` annotation for all complex types, can be further restricted to generate only for types from defined schema: `-XJsr303Annotations:targetNamespace=http://www.foo.com/bar`
 - `@NotNull` annotation for objects that has a MinOccur value >= 1 or for required attributes
@@ -145,4 +149,4 @@ Generates:
 
 ## TODO
 
-- change the plugin name to `Jsr380Annotations` because it's now about the Java Specification Request 308. Being a breaking change it should cause the version to jump to 2.5
+- change the plugin name to `Jsr380Annotations` because it's now about the Java Specification Request 380. Being a breaking change it should cause the version to jump to 2.5
