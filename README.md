@@ -8,7 +8,7 @@ This project defines 2 XJC and 1 CXF plugins:
 
 - `ReplacePrimitives`  a XJC plugin that replaces the generated primitives with the corresponding boxed types (i.e. `int` -> `Integer`)
 
-- an [Apache Cxf plugin](https://cxf.apache.org/docs/tools.html) that adds the `javax` or `jakarta` `@Valid` annotation to the methods and the parameters (both optionally) of the generated Port Type interface. This plugin is configured using the same `JSR308Annotations` name.
+- an [Apache Cxf plugin](https://cxf.apache.org/docs/tools.html) that adds the `javax` or `jakarta` `@Valid` annotation to the SOAP methods and their parameters (both optionally) of the generated Port Type interface. This plugin is configured using the same `JSR308Annotations` name.
 
 ## Example of usage
 
