@@ -17,12 +17,7 @@ import com.sun.xml.xsom.impl.AttributeUseImpl;
 import com.sun.xml.xsom.impl.ElementDecl;
 import com.sun.xml.xsom.impl.SimpleTypeImpl;
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -266,7 +261,7 @@ public class Processor {
                 if (baseType instanceof XSRestrictionSimpleType) {
                     Facet baseFacet = new Facet((XSRestrictionSimpleType) baseType);
 
-                    addIfNotNullOrEmpty(multiPatterns, getPatterns(baseFacet), Collection::isEmpty);
+                    addIfNotNullOrEmpty(multiPatterns, getPatterns(baseFacet).stream().filter(pattern -> !patterns.contains(pattern)).collect(Collectors.toList()), Collection::isEmpty);
                     addAllIfNotNullOrEmpty(multiEnumerations, getEnumerations(baseFacet), String::isEmpty);
                 }
             }

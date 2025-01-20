@@ -1,0 +1,3 @@
+PatternWithBase
+    patternWithBase
+        @Pattern(regexp = "([0-3])|([7-9])*")

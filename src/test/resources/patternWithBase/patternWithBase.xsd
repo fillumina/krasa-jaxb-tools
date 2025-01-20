@@ -1,0 +1,26 @@
+<xsd:schema
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="a"
+    xmlns:a="a"
+    elementFormDefault="qualified">
+
+    <xsd:element name="patternwithbase" type="a:PatternWithBase"/>
+
+    <xsd:complexType name="PatternWithBase">
+        <xsd:sequence>
+            <xsd:element name="patternWithBase" type="a:PatternWithSize" minOccurs="0" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:simpleType name="PatternWithSize">
+        <xsd:restriction base="a:BasePatternType" />
+    </xsd:simpleType>
+
+    <xsd:simpleType name="BasePatternType">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern
+                    value="([0-3])|([7-9])*" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+</xsd:schema>
