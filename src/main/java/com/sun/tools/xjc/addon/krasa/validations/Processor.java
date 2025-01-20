@@ -261,7 +261,10 @@ public class Processor {
                 if (baseType instanceof XSRestrictionSimpleType) {
                     Facet baseFacet = new Facet((XSRestrictionSimpleType) baseType);
 
-                    addIfNotNullOrEmpty(multiPatterns, getPatterns(baseFacet).stream().filter(pattern -> !patterns.contains(pattern)).collect(Collectors.toList()), Collection::isEmpty);
+                    List<String> nonDuplicatedPattern = getPatterns(baseFacet).stream()
+                            .filter(pattern -> !patterns.contains(pattern))
+                            .collect(Collectors.toList());
+                    addIfNotNullOrEmpty(multiPatterns, nonDuplicatedPattern, Collection::isEmpty);
                     addAllIfNotNullOrEmpty(multiEnumerations, getEnumerations(baseFacet), String::isEmpty);
                 }
             }
