@@ -26,6 +26,12 @@ The project is bounded to support **Java 8** (**JDK 1.8**) because of some old p
 Versions
 ----------------
 
+- `2.3.7` fix duplicate pattern and critical vulnerability on dependency
+  
+  - duplicated regex pattern and enumeration fix (thanks to Niklas Neesen)
+  
+  - CVE-2025-23184 on dependency org.apache.cxf:cxf-tools-wsdlto-frontend-jaxws:3.5.9
+
 - `2.3.6` various fixes and improvements:
   
   - allow numeric annotations to String generated values
