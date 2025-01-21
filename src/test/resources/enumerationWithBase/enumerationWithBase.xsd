@@ -1,0 +1,29 @@
+<xsd:schema
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="a"
+    xmlns:a="a"
+    elementFormDefault="qualified">
+
+    <xsd:element name="enumerationwithbase" type="a:EnumerationWithBase"/>
+
+    <xsd:complexType name="EnumerationWithBase">
+        <xsd:sequence>
+            <xsd:element name="enumerationWithBase" type="a:age" minOccurs="0" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:simpleType name="age">
+        <xsd:restriction base="a:BaseEnumerationType" />
+    </xsd:simpleType>
+
+    <xsd:simpleType name="BaseEnumerationType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="0 (toddler)"/>
+            <xsd:enumeration value="1-5"/>
+            <xsd:enumeration value="5-12"/>
+            <xsd:enumeration value="12-18"/>
+            <xsd:enumeration value="18+"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+</xsd:schema>

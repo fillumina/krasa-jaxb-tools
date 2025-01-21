@@ -17,9 +17,10 @@ import com.sun.xml.xsom.impl.AttributeUseImpl;
 import com.sun.xml.xsom.impl.ElementDecl;
 import com.sun.xml.xsom.impl.SimpleTypeImpl;
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  *
@@ -228,13 +229,13 @@ public class Processor {
                 if (fieldHelper.isString()) {
                     annotator.addSizeAnnotation(facet.minLength(), facet.maxLength(), facet.length());
 
-                    List<List<String>> patternSet = gatherRegexpAndEnumeration(facet, simpleType);
+                    LinkedHashSet<LinkedHashSet<String>> patternSet = gatherRegexpAndEnumeration(facet, simpleType);
                     annotator.addPatterns(patternSet);
                 }
             } else if (fieldHelper.isStringList() && options.isValidationCollection()) {
                 annotator.addEachSizeAnnotation(facet.minLength(), facet.maxLength());
 
-                List<List<String>> patternSet = gatherRegexpAndEnumeration(facet, simpleType);
+                LinkedHashSet<LinkedHashSet<String>> patternSet = gatherRegexpAndEnumeration(facet, simpleType);
                 annotator.addEachPatterns(patternSet);
             }
         }
@@ -245,15 +246,15 @@ public class Processor {
          * Collect REGEXP and ENUMERATION types on parents.
          * ENUMERATION is treated as a pattern with fixed value
          */
-        private List<List<String>> gatherRegexpAndEnumeration(Facet facet, XSSimpleType simpleType) {
+        private LinkedHashSet<LinkedHashSet<String>> gatherRegexpAndEnumeration(Facet facet, XSSimpleType simpleType) {
 
-            final List<List<String>> multiPatterns = new ArrayList<>();
-            final Set<String> multiEnumerations = new LinkedHashSet<>();
+            final LinkedHashSet<LinkedHashSet<String>> multiPatterns = new LinkedHashSet<>();
+            final LinkedHashSet<String> multiEnumerations = new LinkedHashSet<>();
 
-            final List<String> patterns = getPatterns(facet);
+            final LinkedHashSet<String> patterns = getPatterns(facet);
             multiPatterns.add(patterns);
 
-            final List<String> enumerations = getEnumerations(facet);
+            final LinkedHashSet<String> enumerations = getEnumerations(facet);
             addAllIfNotNullOrEmpty(multiEnumerations, enumerations, String::isEmpty);
 
             XSSimpleType baseType = simpleType;
@@ -261,30 +262,26 @@ public class Processor {
                 if (baseType instanceof XSRestrictionSimpleType) {
                     Facet baseFacet = new Facet((XSRestrictionSimpleType) baseType);
 
-                    List<String> nonDuplicatedPattern = getPatterns(baseFacet).stream()
-                            .filter(pattern -> !patterns.contains(pattern))
-                            .collect(Collectors.toList());
-                    addIfNotNullOrEmpty(multiPatterns, nonDuplicatedPattern, Collection::isEmpty);
+                    addIfNotNullOrEmpty(multiPatterns, getPatterns(baseFacet), Collection::isEmpty);
                     addAllIfNotNullOrEmpty(multiEnumerations, getEnumerations(baseFacet), String::isEmpty);
                 }
             }
 
             if (! (multiPatterns.isEmpty() && multiEnumerations.isEmpty()) ) {
-                List<String> enumerationList = (List<String>) new ArrayList<>(multiEnumerations);
                 if (multiPatterns.size() > 1) {
-                    addIfNotNullOrEmpty(multiPatterns, enumerationList, Collection::isEmpty);
+                    addIfNotNullOrEmpty(multiPatterns, multiEnumerations, Collection::isEmpty);
                 } else {
-                    multiPatterns.get(0).addAll(enumerationList);
+                    multiPatterns.iterator().next().addAll(multiEnumerations);
                 }
 
                 return multiPatterns;
             }
 
-            return Collections.emptyList();
+            return multiPatterns;
         }
     }
 
-    private List<String> getPatterns(Facet facet) {
+    private LinkedHashSet<String> getPatterns(Facet facet) {
         final LinkedHashSet<String> patterns = facet.patternList();
         final String pattern = facet.pattern();
         addIfNotNullOrEmpty(patterns, pattern, String::isEmpty);
@@ -292,13 +289,12 @@ public class Processor {
             return patterns.stream()
                     .filter(p -> isValidRegexp(p))
                     .map(p -> replaceRegexp(p))
-                    .distinct()
-                    .collect(Collectors.toList());
+                    .collect(LinkedHashSet::new, LinkedHashSet::add, LinkedHashSet::addAll);
         }
-        return new ArrayList<>();
+        return patterns;
     }
 
-    private List<String> getEnumerations(Facet facet) {
+    private LinkedHashSet<String> getEnumerations(Facet facet) {
         final LinkedHashSet<String> enumerations = facet.enumerationList();
         final String enumeration = facet.enumeration();
         addIfNotNullOrEmpty(enumerations, enumeration, String::isEmpty);
@@ -306,10 +302,9 @@ public class Processor {
             return enumerations.stream()
                     .filter(p -> p != null && !p.isEmpty())
                     .map(p -> escapeRegexp(p))
-                    .distinct()
-                    .collect(Collectors.toList());
+                    .collect(LinkedHashSet::new, LinkedHashSet::add, LinkedHashSet::addAll);
         }
-        return Collections.EMPTY_LIST;
+        return enumerations;
     }
 
     static boolean isEqualsOrNull(String optionsNamespace, String actualTargetNamespace) {

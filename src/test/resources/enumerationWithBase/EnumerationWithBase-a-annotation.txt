@@ -1,0 +1,3 @@
+EnumerationWithBase
+    enumerationWithBase
+        @Pattern(regexp = "(\\Q0 (toddler)\\E)|(\\Q1-5\\E)|(\\Q5-12\\E)|(\\Q12-18\\E)|(\\Q18+\\E)")
