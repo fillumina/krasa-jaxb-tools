@@ -3,6 +3,8 @@ package com.sun.tools.xjc.addon.krasa.validations;
 import com.sun.codemodel.JAnnotationArrayMember;
 import com.sun.codemodel.JAnnotationUse;
 import com.sun.codemodel.JFieldVar;
+import jakarta.validation.constraints.Pattern;
+
 import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -39,7 +41,8 @@ class XjcAnnotator {
         }
 
         public Annotate(Class<? extends Annotation> annotation) {
-            if (annotationSet.add(annotation)) {
+            // @Pattern is allowed multiple times
+            if (annotationSet.add(annotation) || annotation.equals(Pattern.class) || annotation.equals(javax.validation.constraints.Pattern.class)) {
                 annotationUse = field.annotate(annotation);
             } else {
                 this.annotationUse = null;

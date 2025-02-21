@@ -1,0 +1,94 @@
+<xsd:schema
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="a"
+    xmlns:a="a"
+    elementFormDefault="qualified">
+
+    <xsd:element name="basedmultipattern" type="a:MultiplePatternsWithMultiPatternWithBaseTest"/>
+
+    <xsd:complexType name="MultiplePatternsWithMultiPatternWithBaseTest">
+        <xsd:sequence>
+            <xsd:element maxOccurs="1" minOccurs="0"
+                         name="multiplePatternsWithBase" type="a:patternList"/>
+
+            <xsd:element maxOccurs="1" minOccurs="0"
+                         name="singlePattern" type="a:singlePattern"/>
+            <xsd:element maxOccurs="1" minOccurs="0"
+                         name="singlePatternInheritSingleBase" type="a:singlePatternInheritSingleBase"/>
+            <xsd:element maxOccurs="1" minOccurs="0"
+                         name="singlePatternInheritMultiBase" type="a:singlePatternInheritMultiBase"/>
+            <xsd:element maxOccurs="1" minOccurs="0"
+                         name="multiPattern" type="a:multiPattern"/>
+            <xsd:element maxOccurs="1" minOccurs="0"
+                         name="multiPatternInheritSingleBase" type="a:multiPatternInheritSingleBase"/>
+            <xsd:element maxOccurs="1" minOccurs="0"
+                         name="multiPatternInheritMultiBase" type="a:multiPatternInheritMultiBase"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:simpleType name="patternList">
+        <xsd:restriction base="a:patternListBase">
+            <xsd:pattern value="[0-9]" />
+            <xsd:pattern value="[A-B]" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="patternListBase">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[Y-Z]\p{IsBasicLatin}" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="singlePattern">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[0-3]" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="singlePatternInheritSingleBase">
+        <xsd:restriction base="a:singlePatternBase">
+            <xsd:pattern value="[0-3]" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="singlePatternInheritMultiBase">
+        <xsd:restriction base="a:multiPatternBase">
+            <xsd:pattern value="[0-3]" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="multiPattern">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[0-3]" />
+            <xsd:pattern value="[7-9]" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="multiPatternInheritSingleBase">
+        <xsd:restriction base="a:singlePatternBase">
+            <xsd:pattern value="[0-3]" />
+            <xsd:pattern value="[7-9]" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="multiPatternInheritMultiBase">
+        <xsd:restriction base="a:multiPatternBase">
+            <xsd:pattern value="[0-3]" />
+            <xsd:pattern value="[7-9]" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="singlePatternBase">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[Y-Z]" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="multiPatternBase">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[U-W]" />
+            <xsd:pattern value="[J-L]" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+</xsd:schema>
