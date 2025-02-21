@@ -31,6 +31,11 @@ public enum ValidationsArgument {
             },
             // getter:
             (p) ->  p.getTargetNamespace()),
+    multiPattern(
+            Boolean.class,
+            "uses a multiple javax validation @Pattern instead of @Pattern.List",
+            (p, v) -> setBoolean(v, r -> p.multiPattern(r)),
+            p -> p.isMultiPattern()),
     generateAllNumericConstraints(
             Boolean.class,
             "adds @DecinalMin and @DecimalMax annotations even if within the range of the java type",

@@ -13,6 +13,7 @@ import java.util.Objects;
 public class ValidationsOptions {
     // set default values in Builder not here
     private final String targetNamespace;
+    private boolean multiPattern = false;
     private final boolean verbose;
     private final boolean allNumericConstraints;
     private final boolean notNullAnnotations;
@@ -55,6 +56,10 @@ public class ValidationsOptions {
 
     public String getTargetNamespace() {
         return targetNamespace;
+    }
+
+    public boolean isMultiPattern() {
+        return multiPattern;
     }
 
     public boolean isVerbose() {
@@ -103,6 +108,7 @@ public class ValidationsOptions {
 
     public static class Builder {
         private String targetNamespace = null;
+        private boolean multiPattern = false;
         private boolean verbose = false;
         private boolean allNumericConstraints = false;
         private boolean notNullAnnotations = true;
@@ -156,6 +162,11 @@ public class ValidationsOptions {
 
         public Builder targetNamespace(final String value) {
             this.targetNamespace = value;
+            return this;
+        }
+
+        public Builder multiPattern(final boolean value) {
+            this.multiPattern = value;
             return this;
         }
 
@@ -215,7 +226,7 @@ public class ValidationsOptions {
         }
 
         public ValidationsOptions build() {
-            return new com.sun.tools.xjc.addon.krasa.validations.ValidationsOptions(targetNamespace,
+            return new com.sun.tools.xjc.addon.krasa.validations.ValidationsOptions(targetNamespace, multiPattern,
                     verbose, allNumericConstraints, notNullAnnotations, notNullCustomMessage,
                     notNullPrefixFieldName, notNullPrefixClassName, notNullCustomMessageText,
                     validationCollection, annotationFactory, validIn, validOut);
@@ -226,7 +237,7 @@ public class ValidationsOptions {
         return new ValidationsOptions.Builder();
     }
 
-    private ValidationsOptions(final String targetNamespace, final boolean verbose,
+    private ValidationsOptions(final String targetNamespace, final boolean multiPattern, final boolean verbose,
             final boolean allNumericConstraints, final boolean notNullAnnotations,
             final boolean notNullCustomMessage, final boolean notNullPrefixFieldName,
             final boolean notNullPrefixClassName, final String notNullCustomMessageText,
@@ -235,6 +246,7 @@ public class ValidationsOptions {
             final boolean validIn,
             final boolean validOut) {
         this.targetNamespace = targetNamespace;
+        this.multiPattern = multiPattern;
         this.verbose = verbose;
         this.allNumericConstraints = allNumericConstraints;
         this.notNullAnnotations = notNullAnnotations;

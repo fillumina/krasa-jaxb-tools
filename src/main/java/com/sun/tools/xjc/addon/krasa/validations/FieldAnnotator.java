@@ -2,18 +2,14 @@ package com.sun.tools.xjc.addon.krasa.validations;
 
 import com.sun.codemodel.JFieldVar;
 import com.sun.tools.xjc.outline.ClassOutline;
-import cz.jirutka.validator.collection.constraints.EachDecimalMax;
-import cz.jirutka.validator.collection.constraints.EachDecimalMin;
-import cz.jirutka.validator.collection.constraints.EachDigits;
-import cz.jirutka.validator.collection.constraints.EachPattern;
-import cz.jirutka.validator.collection.constraints.EachSize;
+import cz.jirutka.validator.collection.constraints.*;
+
 import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 
 /**
- *
  * @author Francesco Illuminati
  */
 class FieldAnnotator {
@@ -144,17 +140,18 @@ class FieldAnnotator {
         }
     }
 
-    void addPatterns(List<List<String>> patterns) {
-        addMultiPatternAnnotations(annotationFactory.getPatternClass(), patterns);
+    void addPatterns(List<List<String>> patterns, boolean multiPattern) {
+        addMultiPatternAnnotations(annotationFactory.getPatternClass(), patterns, multiPattern);
     }
 
-    void addEachPatterns(List<List<String>> patterns) {
-        addMultiPatternAnnotations(EachPattern.class, patterns);
+    void addEachPatterns(List<List<String>> patterns, boolean multiPattern) {
+        addMultiPatternAnnotations(EachPattern.class, patterns, multiPattern);
     }
 
     private void addMultiPatternAnnotations(
             Class<? extends Annotation> annotation,
-            List<List<String>> multiPatterns) {
+            List<List<String>> multiPatterns,
+            boolean multiPattern) {
         switch (multiPatterns.size()) {
             case 0:
                 // do nothing at all
@@ -163,7 +160,11 @@ class FieldAnnotator {
                 addPatternAnnotations(annotation, multiPatterns.get(0));
                 break;
             default:
-                addPatternListAnnotation(multiPatterns);
+                if (multiPattern) {
+                    multiPatterns.forEach(p -> addPatternAnnotations(annotation, p));
+                } else {
+                    addPatternListAnnotation(multiPatterns);
+                }
         }
     }
 
@@ -172,7 +173,7 @@ class FieldAnnotator {
      * If a type definition with patterns has a base type with patterns the two different set of
      * patterns are not alternatives (OR) but equally mandatory (AND) so a @Pattern.List
      * must be used.
-     *
+     * <p>
      * see https://www.w3.org/TR/2011/CR-xmlschema11-2-20110721/datatypes.html#rf-pattern
      */
     void addPatternListAnnotation(List<List<String>> multiPatterns) {
@@ -214,7 +215,9 @@ class FieldAnnotator {
         }
     }
 
-    /** Add all the patterns (A, B, C) as options in a single one (A|B|C). */
+    /**
+     * Add all the patterns (A, B, C) as options in a single one (A|B|C).
+     */
     private void addPatternAnnotation(Class<? extends Annotation> annotation, Collection<String> patterns) {
         String regexp = consolidatePatterns(patterns);
         addSinglePatternAnnotation(annotation, regexp);
