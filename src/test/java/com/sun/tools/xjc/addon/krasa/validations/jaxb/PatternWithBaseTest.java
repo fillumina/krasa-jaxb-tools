@@ -2,9 +2,9 @@ package com.sun.tools.xjc.addon.krasa.validations.jaxb;
 
 import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerTestHelper;
 
-public class PatternWithBase extends AnnotationCheckerTestHelper {
+public class PatternWithBaseTest extends AnnotationCheckerTestHelper {
 
-    public PatternWithBase() {
+    public PatternWithBaseTest() {
         super("patternWithBase", "a", "PatternWithBase");
     }
 

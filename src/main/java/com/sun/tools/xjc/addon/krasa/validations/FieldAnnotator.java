@@ -7,7 +7,8 @@ import cz.jirutka.validator.collection.constraints.*;
 import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
 import java.util.Collection;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * @author Francesco Illuminati
@@ -140,24 +141,24 @@ class FieldAnnotator {
         }
     }
 
-    void addPatterns(List<List<String>> patterns, boolean multiPattern) {
+    void addPatterns(LinkedHashSet<LinkedHashSet<String>> patterns, boolean multiPattern) {
         addMultiPatternAnnotations(annotationFactory.getPatternClass(), patterns, multiPattern);
     }
 
-    void addEachPatterns(List<List<String>> patterns, boolean multiPattern) {
+    void addEachPatterns(LinkedHashSet<LinkedHashSet<String>> patterns, boolean multiPattern) {
         addMultiPatternAnnotations(EachPattern.class, patterns, multiPattern);
     }
 
     private void addMultiPatternAnnotations(
             Class<? extends Annotation> annotation,
-            List<List<String>> multiPatterns,
+            LinkedHashSet<LinkedHashSet<String>> multiPatterns,
             boolean multiPattern) {
         switch (multiPatterns.size()) {
             case 0:
                 // do nothing at all
                 break;
             case 1:
-                addPatternAnnotations(annotation, multiPatterns.get(0));
+                addPatternAnnotations(annotation, multiPatterns.iterator().next());
                 break;
             default:
                 if (multiPattern) {
@@ -176,19 +177,19 @@ class FieldAnnotator {
      * <p>
      * see https://www.w3.org/TR/2011/CR-xmlschema11-2-20110721/datatypes.html#rf-pattern
      */
-    void addPatternListAnnotation(List<List<String>> multiPatterns) {
+    void addPatternListAnnotation(LinkedHashSet<LinkedHashSet<String>> multiPatterns) {
         XjcAnnotator.Annotate.MultipleAnnotation multi = xjcAnnotator
                 .annotate(annotationFactory.getPatternListClass())
                 .multipleAnnotationContainer(VALUE);
 
-        for (List<String> patterns : multiPatterns) {
+        for (Set<String> patterns : multiPatterns) {
             switch (patterns.size()) {
                 case 0:
                     // do nothing
                     break;
                 case 1:
                     multi.annotate(annotationFactory.getPatternClass())
-                            .param(REGEXP, patterns.get(0))
+                            .param(REGEXP, patterns.iterator().next())
                             .log();
                     break;
                 default:
