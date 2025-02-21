@@ -1,4 +1,4 @@
-MultiPatternWithBase
+MultiplePatternsWithMultiPatternWithBaseTest
     multiPattern
         @Pattern(regexp = "([0-3])|([7-9])")
     multiPatternInheritMultiBase

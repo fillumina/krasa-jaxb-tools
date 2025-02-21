@@ -9,7 +9,7 @@ import java.util.List;
 public class MultiplePatternsWithMultiPatternWithBaseTest extends AnnotationCheckerTestHelper {
 
     public MultiplePatternsWithMultiPatternWithBaseTest() {
-        super("multiplePatternsWithMultiPatternWithBase", "a", "MultiPatternWithBase");
+        super("multiplePatternsWithMultiPatternWithBase", "a", "MultiplePatternsWithMultiPatternWithBaseTest");
     }
 
 
