@@ -1,0 +1,20 @@
+MultiplePatternsWithMultiPatternWithBaseTest
+    multiPattern
+        @Pattern(regexp = "([0-3])|([7-9])")
+    multiPatternInheritMultiBase
+        @Pattern(regexp = "([0-3])|([7-9])")
+        @Pattern(regexp = "([U-W])|([J-L])")
+    multiPatternInheritSingleBase
+        @Pattern(regexp = "([0-3])|([7-9])")
+        @Pattern(regexp = "[Y-Z]")
+    multiplePatternsWithBase
+        @Pattern(regexp = "([0-9])|([A-B])")
+        @Pattern(regexp = "[Y-Z]\\p{InBasicLatin}")
+    singlePattern
+        @Pattern(regexp = "[0-3]")
+    singlePatternInheritMultiBase
+        @Pattern(regexp = "([U-W])|([J-L])")
+        @Pattern(regexp = "[0-3]")
+    singlePatternInheritSingleBase
+        @Pattern(regexp = "[0-3]")
+        @Pattern(regexp = "[Y-Z]")

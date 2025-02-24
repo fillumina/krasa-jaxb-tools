@@ -33,6 +33,7 @@ public class ValidationsOptionsTest {
         assertFalse(options.isNotNullPrefixClassName());
         assertFalse(options.isNotNullPrefixFieldName());
         assertTrue(options.isNotNullAnnotations());
+        assertFalse(options.isMultiPattern());
         assertFalse(options.isVerbose());
         assertFalse(options.isValidationCollection());
         assertEquals(ValidationsAnnotation.JAVAX, options.getAnnotationFactory());
@@ -45,6 +46,24 @@ public class ValidationsOptionsTest {
                 .build();
 
         assertEquals("something.there", options.getTargetNamespace());
+    }
+
+    @Test
+    public void shouldSetMultiPatternTrue() {
+        ValidationsOptions options = ValidationsOptions.builder()
+                .multiPattern(true)
+                .build();
+
+        assertTrue(options.isMultiPattern());
+    }
+
+    @Test
+    public void shouldSetMultiPatternFalse() {
+        ValidationsOptions options = ValidationsOptions.builder()
+                .multiPattern(false)
+                .build();
+
+        assertFalse(options.isMultiPattern());
     }
 
     @Test

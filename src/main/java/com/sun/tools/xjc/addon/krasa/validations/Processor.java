@@ -13,9 +13,8 @@ import com.sun.xml.xsom.XSRestrictionSimpleType;
 import com.sun.xml.xsom.XSSimpleType;
 import com.sun.xml.xsom.XSTerm;
 import com.sun.xml.xsom.XSType;
-import com.sun.xml.xsom.impl.AttributeUseImpl;
-import com.sun.xml.xsom.impl.ElementDecl;
-import com.sun.xml.xsom.impl.SimpleTypeImpl;
+import com.sun.xml.xsom.impl.*;
+
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -230,13 +229,13 @@ public class Processor {
                     annotator.addSizeAnnotation(facet.minLength(), facet.maxLength(), facet.length());
 
                     LinkedHashSet<LinkedHashSet<String>> patternSet = gatherRegexpAndEnumeration(facet, simpleType);
-                    annotator.addPatterns(patternSet);
+                    annotator.addPatterns(patternSet, options.isMultiPattern());
                 }
             } else if (fieldHelper.isStringList() && options.isValidationCollection()) {
                 annotator.addEachSizeAnnotation(facet.minLength(), facet.maxLength());
 
                 LinkedHashSet<LinkedHashSet<String>> patternSet = gatherRegexpAndEnumeration(facet, simpleType);
-                annotator.addEachPatterns(patternSet);
+                annotator.addEachPatterns(patternSet, options.isMultiPattern());
             }
         }
 
