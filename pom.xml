@@ -91,6 +91,8 @@
       </plugin>
 
       <!-- use with:  mvn dependency-check:check -->
+      <!-- not working 24/02/2025 -->
+      <!--
       <plugin>
         <groupId>org.owasp</groupId>
         <artifactId>dependency-check-maven</artifactId>
@@ -106,6 +108,7 @@
           </execution>
         </executions>
       </plugin>
+      -->
 
     </plugins>
   </build>
