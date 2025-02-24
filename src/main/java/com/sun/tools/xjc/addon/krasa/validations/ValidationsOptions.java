@@ -13,7 +13,7 @@ import java.util.Objects;
 public class ValidationsOptions {
     // set default values in Builder not here
     private final String targetNamespace;
-    private boolean multiPattern;
+    private final boolean multiPattern;
     private final boolean verbose;
     private final boolean allNumericConstraints;
     private final boolean notNullAnnotations;
