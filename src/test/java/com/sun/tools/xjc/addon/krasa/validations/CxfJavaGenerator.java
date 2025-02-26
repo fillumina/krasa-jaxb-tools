@@ -27,7 +27,8 @@ public class CxfJavaGenerator extends WSDLToJava {
                 new String[] {
                     ValidationsArgument.validationAnnotations.withValue(ValidationsAnnotation.JAVAX.name()),
                     ValidationsArgument.generateServiceValidationAnnotations.withValue("InOut")
-                }, "xcf").execute();
+                },
+                "xcf").execute();
     }
 
     private final String[] xjcArgs;

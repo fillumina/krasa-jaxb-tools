@@ -12,7 +12,6 @@ import com.sun.xml.xsom.impl.AttributeUseImpl;
 import com.sun.xml.xsom.impl.ElementDecl;
 import com.sun.xml.xsom.impl.ModelGroupImpl;
 import com.sun.xml.xsom.impl.SimpleTypeImpl;
-
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -72,27 +71,35 @@ public class Processor {
             }
         }
 
-        /**
-         * parses xsd:element
-         */
         private void processElement(CElementPropertyInfo property) {
             String propertyName = property.getName(false);
 
             XSParticle particle = (XSParticle) property.getSchemaComponent();
             XSTerm term = particle.getTerm();
+            final JFieldVar field = classOutline.implClass.fields().get(propertyName);
+            FieldAnnotator annotator =
+                    new FieldAnnotator(field, options.getAnnotationFactory(), logger);
 
-            // @Valid annotation for specific choice-element
             if (term instanceof ModelGroupImpl) {
-                final JFieldVar field = classOutline.implClass.fields().get(propertyName);
-                FieldAnnotator annotator = new FieldAnnotator(field, options.getAnnotationFactory(), logger);
-
-                annotator.addValidAnnotation();
+                processModelGroupIml(annotator);
+            } else if (term instanceof ElementDecl) {
+                processElementDecl(property, field, particle, (ElementDecl) term, annotator);
             }
+        }
 
-            if (!(term instanceof ElementDecl)) {
-                return;
-            }
-            ElementDecl element = (ElementDecl) term;
+        private void processModelGroupIml(FieldAnnotator annotator) {
+            annotator.addValidAnnotation();
+        }
+
+        /**
+         * parses xsd:element
+         */
+        private void processElementDecl(
+                CElementPropertyInfo property,
+                JFieldVar field,
+                XSParticle particle,
+                ElementDecl element,
+                FieldAnnotator annotator) {
 
             final int minOccurs = particle.getMinOccurs().intValue();
             final int maxOccurs = particle.getMaxOccurs().intValue();
@@ -100,12 +107,8 @@ public class Processor {
             final boolean nillable = element.isNillable() || property.isCollectionNillable();
             final String targetNamespace = element.getOwnerSchema().getTargetNamespace();
 
-            final JFieldVar field = classOutline.implClass.fields().get(propertyName);
             final XSType elementType = element.getType();
             final boolean isComplexType = !(elementType instanceof XSSimpleType);
-
-            FieldAnnotator annotator =
-                    new FieldAnnotator(field, options.getAnnotationFactory(), logger);
 
             // minOccurs > 0 and required == false means the attribute is part of a <xsd:choice>
             // and @NotNull should not be added so only required quilifies to add @NotNull
