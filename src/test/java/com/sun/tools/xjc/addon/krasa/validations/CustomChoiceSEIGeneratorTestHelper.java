@@ -1,5 +1,7 @@
 package com.sun.tools.xjc.addon.krasa.validations;
 
+import com.sun.tools.xjc.addon.krasa.JaxbValidationsPlugin;
+
 /**
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
@@ -22,11 +24,13 @@ public class CustomChoiceSEIGeneratorTestHelper extends CxfJavaGeneratorTestHelp
     private static String[] generateXjcArgs(ValidationsAnnotation validationsAnnotation, String inout) {
         if (inout != null) {
             return new String[]{
+                    JaxbValidationsPlugin.PLUGIN_OPTION_NAME,
                     ValidationsArgument.validationAnnotations.withValue(validationsAnnotation.name()),
                     ValidationsArgument.generateServiceValidationAnnotations.withValue(inout)
             };
         } else {
             return new String[]{
+                    JaxbValidationsPlugin.PLUGIN_OPTION_NAME,
                     ValidationsArgument.generateNotNullAnnotations.withValue("true"),
                     ValidationsArgument.validationAnnotations.withValue(validationsAnnotation.name()),
             };
