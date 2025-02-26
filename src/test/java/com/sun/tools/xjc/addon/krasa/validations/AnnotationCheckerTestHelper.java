@@ -36,11 +36,10 @@ public class AnnotationCheckerTestHelper extends RunXJC2MojoTestHelper {
                         .assertAnnotationNotPresent(ValidationsAnnotation.JAKARTA));
     }
 
-    private Stream<String> streamOfElementNames() {
-        if (elementName.contains(",")) {
-            return Stream.of(elementName.split(","));
-        }
-        return Stream.of(elementName);
+    Stream<String> streamOfElementNames() {
+        return Stream.of(elementName.split(","))
+                .map(s -> s.trim())
+                .filter(s -> s != null && !s.isEmpty());
     }
 
 }
