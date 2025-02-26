@@ -7,13 +7,11 @@ import com.sun.tools.xjc.model.CPropertyInfo;
 import com.sun.tools.xjc.model.CValuePropertyInfo;
 import com.sun.tools.xjc.outline.ClassOutline;
 import com.sun.tools.xjc.outline.Outline;
-import com.sun.xml.xsom.XSComponent;
-import com.sun.xml.xsom.XSParticle;
-import com.sun.xml.xsom.XSRestrictionSimpleType;
-import com.sun.xml.xsom.XSSimpleType;
-import com.sun.xml.xsom.XSTerm;
-import com.sun.xml.xsom.XSType;
-import com.sun.xml.xsom.impl.*;
+import com.sun.xml.xsom.*;
+import com.sun.xml.xsom.impl.AttributeUseImpl;
+import com.sun.xml.xsom.impl.ElementDecl;
+import com.sun.xml.xsom.impl.ModelGroupImpl;
+import com.sun.xml.xsom.impl.SimpleTypeImpl;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;
@@ -22,7 +20,6 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /**
- *
  * @author Francesco Illuminati
  */
 public class Processor {
@@ -83,6 +80,15 @@ public class Processor {
 
             XSParticle particle = (XSParticle) property.getSchemaComponent();
             XSTerm term = particle.getTerm();
+
+            // @Valid annotation for specific choice-element
+            if (term instanceof ModelGroupImpl) {
+                final JFieldVar field = classOutline.implClass.fields().get(propertyName);
+                FieldAnnotator annotator = new FieldAnnotator(field, options.getAnnotationFactory(), logger);
+
+                annotator.addValidAnnotation();
+            }
+
             if (!(term instanceof ElementDecl)) {
                 return;
             }
@@ -110,7 +116,7 @@ public class Processor {
 
             if ((property.isCollection() || isComplexType) &&
                     isEqualsOrNull(options.getTargetNamespace(),
-                            targetNamespace))  {
+                            targetNamespace)) {
                 annotator.addValidAnnotation();
             }
 
@@ -172,7 +178,7 @@ public class Processor {
 
         /**
          * parses values
-         *
+         * <p>
          * NOTE: needed to process complexTypes extending a simpleType
          */
         private void processAttribute(CValuePropertyInfo property) {
@@ -240,7 +246,6 @@ public class Processor {
         }
 
 
-
         /**
          * Collect REGEXP and ENUMERATION types on parents.
          * ENUMERATION is treated as a pattern with fixed value
@@ -266,7 +271,7 @@ public class Processor {
                 }
             }
 
-            if (! (multiPatterns.isEmpty() && multiEnumerations.isEmpty()) ) {
+            if (!(multiPatterns.isEmpty() && multiEnumerations.isEmpty())) {
                 if (multiPatterns.size() > 1) {
                     addIfNotNullOrEmpty(multiPatterns, multiEnumerations, Collection::isEmpty);
                 } else {
@@ -332,7 +337,7 @@ public class Processor {
     }
 
     /*
-	 * \Q indicates begin of quoted regex text, \E indicates end of quoted regex text
+     * \Q indicates begin of quoted regex text, \E indicates end of quoted regex text
      */
     static String escapeRegexp(String pattern) {
         return java.util.regex.Pattern.quote(pattern);
