@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://example.com/customChoiceWeather"
+             targetNamespace="http://example.com/customChoiceWeather">
+
+    <types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://example.com/customChoiceWeather">
+            <element name="Weather" type="string"/>
+            <element name="Location" type="tns:LocationType"/>
+            <element name="City" type="tns:City"/>
+            <element name="State" type="tns:State"/>
+            <complexType name="LocationType">
+                <sequence>
+                    <choice>
+                        <element name="City" type="tns:City"/>
+                        <element name="State" type="tns:State"/>
+                    </choice>
+                </sequence>
+            </complexType>
+            <complexType name="City">
+                <sequence>
+                    <element name="Street" type="string">
+                        <simpleType>
+                            <restriction base="string">
+                                <minLength value="1"/>
+                                <maxLength value="160"/>
+                            </restriction>
+                        </simpleType>
+                </element>
+                    <element name="HouseNumber" type="string"/>
+                </sequence>
+            </complexType>
+            <complexType name="State">
+                <sequence>
+                    <element name="Name" type="string"/>
+                </sequence>
+            </complexType>
+        </schema>
+    </types>
+
+    <message name="GetCustomChoiceWeatherRequest">
+        <part name="City" element="tns:Location"/>
+    </message>
+    <message name="GetCustomChoiceWeatherResponse">
+        <part name="Weather" element="tns:Weather"/>
+    </message>
+
+    <portType name="WeatherServicePortType">
+        <operation name="GetCustomChoiceWeather">
+            <input message="tns:GetCustomChoiceWeatherRequest"/>
+            <output message="tns:GetCustomChoiceWeatherResponse"/>
+        </operation>
+    </portType>
+
+    <binding name="WeatherServiceSoapBinding" type="tns:WeatherServicePortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="GetCustomChoiceWeather">
+            <soap:operation soapAction="http://example.com/weather/GetCustomChoiceWeather"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+
+    <service name="WeatherService">
+        <port name="WeatherServicePort" binding="tns:WeatherServiceSoapBinding">
+            <soap:address location="http://example.com/weather/service"/>
+        </port>
+    </service>
+
+</definitions>
