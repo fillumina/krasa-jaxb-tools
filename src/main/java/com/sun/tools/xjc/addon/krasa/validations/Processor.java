@@ -1,19 +1,17 @@
 package com.sun.tools.xjc.addon.krasa.validations;
 
 import com.sun.codemodel.JFieldVar;
+import com.sun.tools.xjc.addon.krasa.validations.*;
 import com.sun.tools.xjc.model.CAttributePropertyInfo;
 import com.sun.tools.xjc.model.CElementPropertyInfo;
 import com.sun.tools.xjc.model.CPropertyInfo;
 import com.sun.tools.xjc.model.CValuePropertyInfo;
 import com.sun.tools.xjc.outline.ClassOutline;
 import com.sun.tools.xjc.outline.Outline;
-import com.sun.xml.xsom.XSComponent;
-import com.sun.xml.xsom.XSParticle;
-import com.sun.xml.xsom.XSRestrictionSimpleType;
-import com.sun.xml.xsom.XSSimpleType;
-import com.sun.xml.xsom.XSTerm;
-import com.sun.xml.xsom.XSType;
-import com.sun.xml.xsom.impl.*;
+import com.sun.xml.xsom.*;
+import com.sun.xml.xsom.impl.AttributeUseImpl;
+import com.sun.xml.xsom.impl.ElementDecl;
+import com.sun.xml.xsom.impl.SimpleTypeImpl;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;
@@ -256,15 +254,7 @@ public class Processor {
             final LinkedHashSet<String> enumerations = getEnumerations(facet);
             addAllIfNotNullOrEmpty(multiEnumerations, enumerations, String::isEmpty);
 
-            XSSimpleType baseType = simpleType;
-            while ((baseType = baseType.getSimpleBaseType()) != null) {
-                if (baseType instanceof XSRestrictionSimpleType) {
-                    Facet baseFacet = new Facet((XSRestrictionSimpleType) baseType);
-
-                    addIfNotNullOrEmpty(multiPatterns, getPatterns(baseFacet), Collection::isEmpty);
-                    addAllIfNotNullOrEmpty(multiEnumerations, getEnumerations(baseFacet), String::isEmpty);
-                }
-            }
+            gatherPatternsFromBaseClasses(multiPatterns, multiEnumerations, simpleType);
 
             if (! (multiPatterns.isEmpty() && multiEnumerations.isEmpty()) ) {
                 if (multiPatterns.size() > 1) {
@@ -277,6 +267,33 @@ public class Processor {
             }
 
             return multiPatterns;
+        }
+
+        private void gatherPatternsFromBaseClasses(LinkedHashSet<LinkedHashSet<String>> multiPatterns,
+                                                   LinkedHashSet<String> multiEnumerations,
+                                                   XSSimpleType type) {
+            XSSimpleType baseType = type.getSimpleBaseType();
+            if (baseType  != null) {
+                gatherPatternsFromType(multiPatterns, multiEnumerations, baseType);
+                gatherPatternsFromBaseClasses(multiPatterns, multiEnumerations, baseType);
+            }
+            XSListSimpleType listType = type.getBaseListType();
+            if (listType != null) {
+                XSSimpleType itemType = listType.getItemType();
+                if (itemType != null) {
+                    gatherPatternsFromType(multiPatterns, multiEnumerations, itemType);
+                    gatherPatternsFromBaseClasses(multiPatterns, multiEnumerations, itemType);
+                }
+            }
+        }
+
+        private void gatherPatternsFromType(LinkedHashSet<LinkedHashSet<String>> multiPatterns, LinkedHashSet<String> multiEnumerations, XSSimpleType baseType) {
+            if (baseType instanceof XSRestrictionSimpleType) {
+                Facet baseFacet = new Facet(baseType);
+
+                addIfNotNullOrEmpty(multiPatterns, getPatterns(baseFacet), Collection::isEmpty);
+                addAllIfNotNullOrEmpty(multiEnumerations, getEnumerations(baseFacet), String::isEmpty);
+            }
         }
     }
 
