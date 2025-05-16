@@ -8,7 +8,7 @@ import java.nio.file.Paths;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
-class PathUtil {
+public class PathUtil {
     private static final String PLACEHOLDER = "/placeholder.txt";
 
     public static String getAbsolutePathOfGeneratedTestSourcesDirectory() {

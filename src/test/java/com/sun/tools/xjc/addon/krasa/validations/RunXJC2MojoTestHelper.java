@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 import junit.framework.TestResult;
 import org.apache.maven.project.MavenProject;
 import org.jvnet.jaxb2.maven2.AbstractXJC2Mojo;
+import org.jvnet.jaxb2.maven2.ResourceEntry;
 import org.jvnet.jaxb2.maven2.test.RunXJC2Mojo;
 
 /**
@@ -56,6 +57,7 @@ public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
     private final String namespace;
     private final boolean separateAnnotation;
     private ValidationsAnnotation validationAnnotation;
+    private ResourceEntry[] bindings;
 
     public RunXJC2MojoTestHelper(String folderName, String namespace) {
         this(folderName, namespace, false);
@@ -80,6 +82,11 @@ public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
     /** Override to test JAKARTA annotated code generation */
     public void checkJakarta() throws Exception {}
 
+    /** Override to provide bindings */
+    public File getBindingDirectory() {
+        return null;
+    }
+
     @Override
     public File getGeneratedDirectory() {
         return new File(getBaseDir(), "target/generated-sources/" + folderName);
@@ -96,7 +103,12 @@ public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
         mojo.setProject(new MavenProject());
         mojo.setForceRegenerate(true);
         mojo.setExtension(true);
-    }
+
+        File bindingDirectory = getBindingDirectory();
+        if (bindingDirectory != null) {
+            mojo.setBindingDirectory(bindingDirectory);
+        }
+	}
 
     // test with all options enabled.
     @Override
