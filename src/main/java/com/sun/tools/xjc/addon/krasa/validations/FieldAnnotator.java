@@ -3,7 +3,6 @@ package com.sun.tools.xjc.addon.krasa.validations;
 import com.sun.codemodel.JFieldVar;
 import com.sun.tools.xjc.outline.ClassOutline;
 import cz.jirutka.validator.collection.constraints.*;
-
 import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
 import java.util.Collection;
