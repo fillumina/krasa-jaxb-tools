@@ -7,11 +7,14 @@ import com.sun.tools.xjc.model.CPropertyInfo;
 import com.sun.tools.xjc.model.CValuePropertyInfo;
 import com.sun.tools.xjc.outline.ClassOutline;
 import com.sun.tools.xjc.outline.Outline;
-import com.sun.xml.xsom.*;
-import com.sun.xml.xsom.impl.AttributeUseImpl;
-import com.sun.xml.xsom.impl.ElementDecl;
-import com.sun.xml.xsom.impl.ModelGroupImpl;
-import com.sun.xml.xsom.impl.SimpleTypeImpl;
+import com.sun.xml.xsom.XSComponent;
+import com.sun.xml.xsom.XSListSimpleType;
+import com.sun.xml.xsom.XSParticle;
+import com.sun.xml.xsom.XSRestrictionSimpleType;
+import com.sun.xml.xsom.XSSimpleType;
+import com.sun.xml.xsom.XSTerm;
+import com.sun.xml.xsom.XSType;
+import com.sun.xml.xsom.impl.*;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -19,6 +22,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /**
+ *
  * @author Francesco Illuminati
  */
 public class Processor {
@@ -71,6 +75,9 @@ public class Processor {
             }
         }
 
+        /**
+         * parses xsd:element
+         */
         private void processElement(CElementPropertyInfo property) {
             String propertyName = property.getName(false);
 
@@ -119,7 +126,7 @@ public class Processor {
 
             if ((property.isCollection() || isComplexType) &&
                     isEqualsOrNull(options.getTargetNamespace(),
-                            targetNamespace)) {
+                            targetNamespace))  {
                 annotator.addValidAnnotation();
             }
 
@@ -181,7 +188,7 @@ public class Processor {
 
         /**
          * parses values
-         * <p>
+         *
          * NOTE: needed to process complexTypes extending a simpleType
          */
         private void processAttribute(CValuePropertyInfo property) {
@@ -259,7 +266,9 @@ public class Processor {
             final LinkedHashSet<String> multiEnumerations = new LinkedHashSet<>();
 
             final LinkedHashSet<String> patterns = getPatterns(facet);
-            multiPatterns.add(patterns);
+            if (!patterns.isEmpty()) {
+                multiPatterns.add(patterns);
+            }
 
             final LinkedHashSet<String> enumerations = getEnumerations(facet);
             addAllIfNotNullOrEmpty(multiEnumerations, enumerations, String::isEmpty);
@@ -274,17 +283,51 @@ public class Processor {
                 }
             }
 
-            if (!(multiPatterns.isEmpty() && multiEnumerations.isEmpty())) {
+            // new code
+            gatherPatternsFromBaseClasses(multiPatterns, multiEnumerations, simpleType);
+
+            if (! (multiPatterns.isEmpty() && multiEnumerations.isEmpty()) ) {
                 if (multiPatterns.size() > 1) {
                     addIfNotNullOrEmpty(multiPatterns, multiEnumerations, Collection::isEmpty);
-                } else {
+                } else if (!multiEnumerations.isEmpty()) {
+                    if (multiPatterns.isEmpty()) {
+                        multiPatterns.add(new LinkedHashSet<>());
+                    }
                     multiPatterns.iterator().next().addAll(multiEnumerations);
                 }
-
-                return multiPatterns;
             }
 
             return multiPatterns;
+        }
+
+        // new code
+        private void gatherPatternsFromBaseClasses(LinkedHashSet<LinkedHashSet<String>> multiPatterns,
+                                                   LinkedHashSet<String> multiEnumerations,
+                                                   XSSimpleType type) {
+            XSSimpleType baseType = type.getSimpleBaseType();
+            if (baseType  != null) {
+                gatherPatternsFromType(multiPatterns, multiEnumerations, baseType);
+                gatherPatternsFromBaseClasses(multiPatterns, multiEnumerations, baseType);
+            }
+            XSListSimpleType listType = type.getBaseListType();
+            if (listType != null) {
+                XSSimpleType itemType = listType.getItemType();
+                if (itemType != null) {
+                    gatherPatternsFromType(multiPatterns, multiEnumerations, itemType);
+                    gatherPatternsFromBaseClasses(multiPatterns, multiEnumerations, itemType);
+                }
+            }
+        }
+
+        // new code
+        private void gatherPatternsFromType(LinkedHashSet<LinkedHashSet<String>> multiPatterns,
+                LinkedHashSet<String> multiEnumerations, XSSimpleType baseType) {
+            if (baseType instanceof XSRestrictionSimpleType) {
+                Facet baseFacet = new Facet(baseType);
+
+                addIfNotNullOrEmpty(multiPatterns, getPatterns(baseFacet), Collection::isEmpty);
+                addAllIfNotNullOrEmpty(multiEnumerations, getEnumerations(baseFacet), String::isEmpty);
+            }
         }
     }
 

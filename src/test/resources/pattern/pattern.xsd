@@ -11,6 +11,7 @@
         <xsd:sequence>
           <xsd:element name="Process" type="a:ProcessType"/>
           <xsd:element name="SupplierGln" type="a:GlnType"/>
+          <xsd:element name="SomeList" type="a:ListOfCustomType"/>
         </xsd:sequence>
     </xsd:complexType>
   </xsd:element>
@@ -28,6 +29,16 @@
     <xsd:restriction base="xsd:string">
       <xsd:maxLength value="14"/>
     </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="CustomType">
+      <xsd:restriction base="xsd:string">
+          <xsd:pattern value="[SsOoMmEe_RrGgXxPp]+"/>
+      </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="ListOfCustomType">
+      <xsd:list itemType="a:CustomType"/>
   </xsd:simpleType>
 
 </xsd:schema>
