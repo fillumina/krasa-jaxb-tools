@@ -80,6 +80,11 @@ public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
     /** Override to test JAKARTA annotated code generation */
     public void checkJakarta() throws Exception {}
 
+    /** Override to provide bindings */
+    public File getBindingDirectory() {
+        return null;
+    }
+
     @Override
     public File getGeneratedDirectory() {
         return new File(getBaseDir(), "target/generated-sources/" + folderName);
@@ -96,7 +101,12 @@ public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
         mojo.setProject(new MavenProject());
         mojo.setForceRegenerate(true);
         mojo.setExtension(true);
-    }
+
+        File bindingDirectory = getBindingDirectory();
+        if (bindingDirectory != null) {
+            mojo.setBindingDirectory(bindingDirectory);
+        }
+	}
 
     // test with all options enabled.
     @Override
