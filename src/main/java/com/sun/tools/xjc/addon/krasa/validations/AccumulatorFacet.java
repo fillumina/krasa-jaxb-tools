@@ -10,6 +10,11 @@ import java.util.LinkedHashSet;
  */
 public class AccumulatorFacet extends AbstractFacet {
 
+    public final static AccumulatorFacet EMPTY = new AccumulatorFacet() {
+        @Override
+        public void apply(AbstractFacet facet) {}
+    };
+
     private AccumulatorFacet itemFacet;
 
     private Integer minLength;

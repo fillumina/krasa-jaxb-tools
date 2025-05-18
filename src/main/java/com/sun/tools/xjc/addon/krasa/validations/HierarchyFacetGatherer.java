@@ -15,7 +15,11 @@ import java.util.LinkedHashSet;
 public class HierarchyFacetGatherer {
 
     public static AccumulatorFacet gatherRestrictions(XSSimpleType type) {
-        final AccumulatorFacet facet = gatherFacets(type);
+        if (type == null) {
+            return AccumulatorFacet.EMPTY;
+        }
+        AccumulatorFacet facet = new AccumulatorFacet();
+        navigateUpTheHierarcy(facet, type);
         consolildatePatterns(facet);
         return facet;
     }
@@ -35,14 +39,6 @@ public class HierarchyFacetGatherer {
             }
         }
 
-    }
-
-    private static AccumulatorFacet gatherFacets(XSSimpleType type) {
-        AccumulatorFacet facet = new AccumulatorFacet();
-        if (type != null) {
-            navigateUpTheHierarcy(facet, type);
-        }
-        return facet;
     }
 
     private static void navigateUpTheHierarcy(AccumulatorFacet facet, XSSimpleType type) {
