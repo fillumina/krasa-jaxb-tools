@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 import junit.framework.TestResult;
 import org.apache.maven.project.MavenProject;
 import org.jvnet.jaxb2.maven2.AbstractXJC2Mojo;
+import org.jvnet.jaxb2.maven2.ResourceEntry;
 import org.jvnet.jaxb2.maven2.test.RunXJC2Mojo;
 
 /**
@@ -56,6 +57,7 @@ public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
     private final String namespace;
     private final boolean separateAnnotation;
     private ValidationsAnnotation validationAnnotation;
+    private ResourceEntry[] bindings;
 
     public RunXJC2MojoTestHelper(String folderName, String namespace) {
         this(folderName, namespace, false);
