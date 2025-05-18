@@ -8,6 +8,7 @@ import java.util.LinkedHashSet;
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */
+@SuppressWarnings("LocalVariableHidesMemberVariable")
 public class AccumulatorFacet extends AbstractFacet {
 
     public final static AccumulatorFacet EMPTY = new AccumulatorFacet() {
@@ -35,67 +36,67 @@ public class AccumulatorFacet extends AbstractFacet {
     private final LinkedHashSet<String> multiEnumerations = new LinkedHashSet<>();
 
     public void apply(AbstractFacet facet) {
-        Integer minLength = facet.minLength();
+        final Integer minLength = facet.minLength();
         if (minLength != null) {
             this.minLength = minLength;
         }
 
-        Integer maxLength = facet.maxLength();
+        final Integer maxLength = facet.maxLength();
         if (maxLength != null) {
             this.maxLength = maxLength;
         }
 
-        Integer length = facet.length();
+        final Integer length = facet.length();
         if (length != null) {
             this.length = length;
         }
 
-        Integer totalDigits = facet.totalDigits();
+        final Integer totalDigits = facet.totalDigits();
         if (totalDigits != null) {
             this.totalDigits = totalDigits;
         }
 
-        Integer fractionDigits = facet.fractionDigits();
+        final Integer fractionDigits = facet.fractionDigits();
         if (fractionDigits != null) {
             this.fractionDigits = fractionDigits;
         }
 
-        BigDecimal minInclusive = facet.minInclusive();
+        final BigDecimal minInclusive = facet.minInclusive();
         if (minInclusive != null) {
             this.minInclusive = minInclusive;
         }
 
-        BigDecimal minExclusive = facet.minExclusive();
+        final BigDecimal minExclusive = facet.minExclusive();
         if (minExclusive != null) {
             this.minExclusive = minExclusive;
         }
 
-        BigDecimal maxInclusive = facet.maxInclusive();
+        final BigDecimal maxInclusive = facet.maxInclusive();
         if (maxInclusive != null) {
             this.maxInclusive = maxInclusive;
         }
 
-        BigDecimal maxExclusive = facet.maxExclusive();
+        final BigDecimal maxExclusive = facet.maxExclusive();
         if (maxExclusive != null) {
             this.maxExclusive  = maxExclusive;
         }
 
-        String pattern = facet.pattern();
+        final String pattern = facet.pattern();
         if (pattern != null) {
             this.pattern = pattern;
         }
 
-        LinkedHashSet<String> patternList = facet.patternList();
+        final LinkedHashSet<String> patternList = facet.patternList();
         if (patternList != null) {
             this.patternList = patternList;
         }
 
-        String enumeration = facet.enumeration();
+        final String enumeration = facet.enumeration();
         if (enumeration != null) {
             this.enumeration = enumeration;
         }
 
-        LinkedHashSet<String> enumerationList = facet.enumerationList();
+        final LinkedHashSet<String> enumerationList = facet.enumerationList();
         if (enumerationList != null) {
             this.enumerationList = enumerationList;
         }
