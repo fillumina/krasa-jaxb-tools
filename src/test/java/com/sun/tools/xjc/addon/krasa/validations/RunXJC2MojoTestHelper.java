@@ -225,7 +225,9 @@ public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
 
         if (expected.size() != actual.size()) {
             throw new AssertionError("wrong number of annotations in " + getExecutionName() +
-                    " expected:" + expected.size() + " actual:" + actual.size());
+                    " expected:" + expected.size() + " actual:" + actual.size() +
+                    " generated file: " + filename.toString() +
+                    " test file: " + annotationFilename);
         }
 
         for (int i=0,l=expected.size(); i<l; i++) {

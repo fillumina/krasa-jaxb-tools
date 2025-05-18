@@ -7,25 +7,27 @@
     <xsd:element name="container">
         <xsd:complexType>
             <xsd:sequence>
-                <xsd:element name="listOfString" type="a:LongStringNotNull" 
-                             minOccurs="0" maxOccurs="5"/>   
-                
-                <xsd:element name="listOfAddress" type="a:AddressType" 
+                <xsd:element name="listOfNotNullString" type="a:LongStringNotNull"
+                             minOccurs="0" maxOccurs="5"/>
+
+                <xsd:element name="listOfAddress" type="a:AddressType"
                              minOccurs="3" maxOccurs="7"/>
-                
+
                 <xsd:element name="listOfPercentage" type="a:Percentage"
                              minOccurs="2" maxOccurs="4"/>
+                <xsd:element name="listOfString" type="a:ListOfStringType"/>
+                <xsd:element name="derivedListOfInteger" type="a:DerivedListOfIntegerType"/>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
-    
+
     <xsd:simpleType name="LongStringNotNull">
         <xsd:restriction base="xsd:normalizedString">
             <xsd:minLength value="1"/>
             <xsd:maxLength value="500"/>
         </xsd:restriction>
     </xsd:simpleType>
-    
+
     <xsd:simpleType name="Percentage">
         <xsd:restriction base="xsd:decimal">
             <xsd:totalDigits value="3"/>
@@ -34,7 +36,7 @@
             <xsd:maxInclusive value="100.00"/>
         </xsd:restriction>
     </xsd:simpleType>
-    
+
     <xsd:complexType name="AddressType">
         <xsd:sequence>
             <xsd:element name="Name" type="xsd:normalizedString"/>
@@ -47,7 +49,21 @@
             </xsd:element>
         </xsd:sequence>
     </xsd:complexType>
-    
+
+    <xsd:simpleType name="ListOfStringType">
+        <!-- lists a space delimited, not repeating items: 'one two threee' -->
+        <xsd:list itemType="xsd:string"/>
+    </xsd:simpleType>
+
+    <xsd:simpleType name='DerivedListOfIntegerType'>
+      <xsd:restriction base='a:ListOfIntegerType'>
+        <xsd:maxLength value='5'/>
+      </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="ListOfIntegerType">
+        <xsd:list itemType="xsd:integer"/>
+    </xsd:simpleType>
 
 </xsd:schema>
 

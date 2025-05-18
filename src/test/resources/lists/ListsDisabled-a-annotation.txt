@@ -4,14 +4,21 @@ AddressType
     name
         @NotNull
 Container
+    derivedListOfInteger
+        @NotNull
+        @Size(max = 5)
+        @Valid
     listOfAddress
         @NotNull
         @Size(min = 3, max = 7)
+        @Valid
+    listOfNotNullString
+        @Size(min = 0, max = 5)
         @Valid
     listOfPercentage
         @NotNull
         @Size(min = 2, max = 4)
         @Valid
     listOfString
-        @Size(min = 0, max = 5)
+        @NotNull
         @Valid

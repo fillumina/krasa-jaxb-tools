@@ -8,9 +8,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
+ * NOTE it might be mistaken because it refers to the name of the containing object. Don't use
+ *
  *
  * @author Francesco Illuminati
  */
+@Deprecated
 class FieldHelper {
     private final JFieldVar field;
 

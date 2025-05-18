@@ -18,7 +18,7 @@ public class ListsTest extends AnnotationCheckerTestHelper {
                 .assertImportSimpleName("Valid")
                 .assertImportSimpleName("Size")
                 .assertImportSimpleName("NotNull")
-                .withField("listOfString")
+                .withField("listOfNotNullString")
                         .withAnnotation("Valid").assertNoParameters()
                         .withAnnotation("Size")
                             .assertParam("min", 0)

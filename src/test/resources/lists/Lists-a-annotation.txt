@@ -4,9 +4,17 @@ AddressType
     name
         @NotNull
 Container
+    derivedListOfInteger
+        @NotNull
+        @Size(max = 5)
+        @Valid
     listOfAddress
         @NotNull
         @Size(min = 3, max = 7)
+        @Valid
+    listOfNotNullString
+        @EachSize(min = 1, max = 500)
+        @Size(min = 0, max = 5)
         @Valid
     listOfPercentage
         @EachDecimalMax(value = "100.00", inclusive = true)
@@ -16,6 +24,5 @@ Container
         @Size(min = 2, max = 4)
         @Valid
     listOfString
-        @EachSize(min = 1, max = 500)
-        @Size(min = 0, max = 5)
+        @NotNull
         @Valid

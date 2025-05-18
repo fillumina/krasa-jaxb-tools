@@ -61,39 +61,46 @@ AddressTypeSupportNonCity
 AgeRecommendedDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\Qmonths\\E)|(\\Qyears\\E)")
     value
         @DecimalMin(value = "1", inclusive = true)
 AgeRecommendedUnitOfMeasure
 AirFlowDisplacementDimension
     unitOfMeasure
+        @Pattern(regexp = "(\\Qcubic_feet_per_minute\\E)|(\\Qcubic_feet_per_hour\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 AirFlowDisplacementUnitOfMeasure
 AmperageDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\Qamps\\E)|(\\Qkiloamps\\E)|(\\Qmicroamps\\E)|(\\Qmilliamps\\E)|(\\Qnanoamps\\E)|(\\Qpicoamps\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 AmperageUnitOfMeasure
 ApertureDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "\\Qf\\E")
     value
         @Digits(integer = 12, fraction = 2)
 ApertureUnitOfMeasure
 AreaDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\Qsquare-in\\E)|(\\Qsquare-ft\\E)|(\\Qsquare-cm\\E)|(\\Qsquare-m\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 AreaDimensionOptionalUnit
     unitOfMeasure
+        @Pattern(regexp = "(\\Qsquare-in\\E)|(\\Qsquare-ft\\E)|(\\Qsquare-cm\\E)|(\\Qsquare-m\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 AreaUnitOfMeasure
 AssemblyTimeDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\Qminutes\\E)|(\\Qhours\\E)|(\\Qdays\\E)|(\\Qweeks\\E)|(\\Qmonths\\E)|(\\Qyears\\E)")
     value
         @DecimalMin(value = "1", inclusive = true)
 AssemblyTimeUnitOfMeasure
@@ -116,22 +123,26 @@ BatteryCellTypeValues
 BatteryLifeDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\Qminutes\\E)|(\\Qhours\\E)|(\\Qdays\\E)|(\\Qweeks\\E)|(\\Qmonths\\E)|(\\Qyears\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 BatteryPowerDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\Qmilliamp_hours\\E)|(\\Qamp_hours\\E)|(\\Qvolt_amperes\\E)|(\\Qwatt_hours\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 BatteryPowerIntegerDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\Qmilliamp_hours\\E)|(\\Qamp_hours\\E)|(\\Qvolt_amperes\\E)|(\\Qwatt_hours\\E)")
     value
         @DecimalMin(value = "1", inclusive = true)
 BatteryPowerUnitOfMeasure
 BurnTimeDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\Qminutes\\E)|(\\Qhours\\E)|(\\Qcycles\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 BurnTimeUnitOfMeasure
@@ -151,6 +162,7 @@ CharacterDataType
 ClothingSizeDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\QIN\\E)|(\\QCM\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 ClothingSizeUnitOfMeasure
@@ -163,21 +175,25 @@ ConditionInfo
 ContinuousShootingDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "\\Qframes\\E")
     value
         @DecimalMin(value = "1", inclusive = true)
 ContinuousShootingUnitOfMeasure
 CurencyDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\QUYU\\E)|(\\QVEF\\E)|(\\QVND\\E)|(\\QYER\\E)|(\\QZAR\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 CurrencyAmount
     currency
+        @Pattern(regexp = "(\\QPLN\\E)|(\\QAED\\E)|(\\QSAR\\E)|(\\QEGP\\E)")
     value
         @Digits(integer = 20, fraction = 2)
 CurrentDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\QmA\\E)|(\\QA\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 CurrentUnitOfMeasure
@@ -187,6 +203,7 @@ Customer
         @Size(min = 0)
         @Valid
     email
+        @Pattern(regexp = "[^@]+@[^@\\.]+(\\.[^@\\.]+)+")
         @Valid
     familyName
         @Size(max = 50)
@@ -207,6 +224,7 @@ DataTransferUnitOfMeasure
 DateIntegerDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\Qdays\\E)|(\\Qweeks\\E)|(\\Qmonths\\E)|(\\Qyears\\E)")
     value
         @DecimalMin(value = "1", inclusive = true)
 DateUnitOfMeasure
@@ -228,6 +246,7 @@ DatedPrice
 DegreeDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\Qdegrees\\E)|(\\Qmicroradian\\E)|(\\Qarc_minute\\E)|(\\Qarc_sec\\E)|(\\Qmilliradian\\E)|(\\Qradians\\E)|(\\Qturns\\E)|(\\Qrevolutions\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 DegreeUnitOfMeasure
@@ -239,12 +258,15 @@ EmailAddressType
 EnergyConsumptionDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\Qkilowatt_hours\\E)|(\\Qbtu\\E)|(\\Qkilowatts\\E)|(\\Qwatt_hours\\E)|(\\Qbtus\\E)|(\\Qcubic_meters\\E)|(\\Qcubic_feet\\E)|(\\Qjoules\\E)|(\\Qmilliamp_hours\\E)|(\\Qmilliampere_hour\\E)|(\\Qmilliampere_second\\E)")
+        @Size(max = 50)
     value
         @Digits(integer = 12, fraction = 2)
 EnergyConsumptionUnitOfMeasure
 EnergyDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\QBTU\\E)|(\\Qwatts\\E)|(\\Qjoules\\E)|(\\Qkilojoules\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 EnergyUnitOfMeasure
@@ -252,17 +274,20 @@ FocalLengthDimension
 ForceDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\Qnewtons\\E)|(\\QNewton\\E)|(\\Qpounds\\E)|(\\Qkilograms\\E)|(\\QPSI\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 ForceUnitOfMeasure
 FrequencyDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\QHz\\E)|(\\QKHz\\E)|(\\QMHz\\E)|(\\QGHz\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 FrequencyIntegerDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\QHz\\E)|(\\QKHz\\E)|(\\QMHz\\E)|(\\QGHz\\E)")
     value
         @DecimalMin(value = "1", inclusive = true)
 FrequencyUnitOfMeasure
@@ -276,6 +301,7 @@ GraduationInterval
 HardnessDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\Qbrinnell\\E)|(\\Qvickers\\E)|(\\Qrockwell_a\\E)|(\\Qrockwell_b\\E)|(\\Qrockwell_c\\E)|(\\Qrockwell_d\\E)|(\\Qshore_a\\E)|(\\Qshore_b\\E)|(\\Qshore_c\\E)|(\\Qshore_d\\E)|(\\Qshore_do\\E)|(\\Qshore_e\\E)|(\\Qshore_m\\E)|(\\Qshore_o\\E)|(\\Qshore_oo\\E)|(\\Qshore_ooo\\E)|(\\Qshore_ooo_s\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 HardnessUnitOfMeasure
@@ -284,12 +310,14 @@ IdentityPackageType
 JewelryLengthDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\QMM\\E)|(\\QCM\\E)|(\\QIN\\E)")
     value
         @Digits(integer = 12, fraction = 4)
 JewelryLengthUnitOfMeasure
 JewelryWeightDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\QGR\\E)|(\\QKG\\E)|(\\QOZ\\E)|(\\QLB\\E)|(\\QCARATS\\E)|(\\QDWT\\E)")
     value
         @Digits(integer = 12, fraction = 4)
 JewelryWeightUnitOfMeasure
@@ -297,21 +325,25 @@ LanguageStringType
 LengthDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\QMM\\E)|(\\QCM\\E)|(\\QM\\E)|(\\QIN\\E)|(\\QFT\\E)|(\\Qinches\\E)|(\\Qfeet\\E)|(\\Qmeters\\E)|(\\Qdecimeters\\E)|(\\Qcentimeters\\E)|(\\Qmillimeters\\E)|(\\Qmicrometers\\E)|(\\Qnanometers\\E)|(\\Qpicometers\\E)|(\\Qhundredths_inches\\E)|(\\Qyards\\E)|(\\Qangstrom\\E)|(\\Qmils\\E)|(\\Qmiles\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 LengthDimensionOptionalUnit
     unitOfMeasure
+        @Pattern(regexp = "(\\QMM\\E)|(\\QCM\\E)|(\\QM\\E)|(\\QIN\\E)|(\\QFT\\E)|(\\Qinches\\E)|(\\Qfeet\\E)|(\\Qmeters\\E)|(\\Qdecimeters\\E)|(\\Qcentimeters\\E)|(\\Qmillimeters\\E)|(\\Qmicrometers\\E)|(\\Qnanometers\\E)|(\\Qpicometers\\E)|(\\Qhundredths_inches\\E)|(\\Qyards\\E)|(\\Qangstrom\\E)|(\\Qmils\\E)|(\\Qmiles\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 LengthIntegerDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\QMM\\E)|(\\QCM\\E)|(\\QM\\E)|(\\QIN\\E)|(\\QFT\\E)|(\\Qinches\\E)|(\\Qfeet\\E)|(\\Qmeters\\E)|(\\Qdecimeters\\E)|(\\Qcentimeters\\E)|(\\Qmillimeters\\E)|(\\Qmicrometers\\E)|(\\Qnanometers\\E)|(\\Qpicometers\\E)|(\\Qhundredths_inches\\E)|(\\Qyards\\E)|(\\Qangstrom\\E)|(\\Qmils\\E)|(\\Qmiles\\E)")
     value
         @DecimalMin(value = "1", inclusive = true)
 LengthUnitOfMeasure
 LensFixedFocalLengthDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\QMM\\E)|(\\QCM\\E)|(\\QM\\E)|(\\Qmeters\\E)|(\\Qcentimeters\\E)|(\\Qmillimeters\\E)|(\\Qangstrom\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 LoyaltyCustomAttribute
@@ -322,33 +354,39 @@ LoyaltyCustomAttribute
 LuminanceDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "\\Qlumens\\E")
     value
         @Digits(integer = 12, fraction = 2)
 LuminanceIntegerDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "\\Qlumens\\E")
     value
         @DecimalMin(value = "0", inclusive = true)
 LuminancePositiveIntegerDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "\\Qlumens\\E")
     value
         @DecimalMin(value = "1", inclusive = true)
 LuminanceUnitOfMeasure
 LuminiousIntensityDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "\\Qcandela\\E")
     value
         @Digits(integer = 12, fraction = 2)
 LuminousIntensityUnitOfMeasure
 MemorySizeDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\QTB\\E)|(\\QGB\\E)|(\\QMB\\E)|(\\QKB\\E)|(\\QKO\\E)|(\\QMO\\E)|(\\QGO\\E)|(\\QTO\\E)|(\\Qbytes\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 MemorySizeIntegerDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\QTB\\E)|(\\QGB\\E)|(\\QMB\\E)|(\\QKB\\E)|(\\QKO\\E)|(\\QMO\\E)|(\\QGO\\E)|(\\QTO\\E)|(\\Qbytes\\E)")
     value
         @DecimalMin(value = "1", inclusive = true)
         @Digits(integer = 12, fraction = 0)
@@ -356,6 +394,7 @@ MemorySizeUnitOfMeasure
 MillimeterDecimalDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "\\Qmillimeters\\E")
     value
         @DecimalMin(value = "0.00", inclusive = true)
         @Digits(integer = 12, fraction = 2)
@@ -363,6 +402,7 @@ MillimeterUnitOfMeasure
 MinimumAgeRecommendedDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\Qmonths\\E)|(\\Qyears\\E)")
     value
         @DecimalMin(value = "0", inclusive = true)
 NameValuePair
@@ -375,21 +415,25 @@ NameValuePair
 NoiseLevelDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\QdBA\\E)|(\\Qdecibels\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 NoiseLevelUnitOfMeasure
 OpticalPowerDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "\\Qdiopters\\E")
     value
         @Digits(integer = 12, fraction = 2)
 OpticalPowerUnitOfMeasure
 OptionalLengthIntegerDimension
     unitOfMeasure
+        @Pattern(regexp = "(\\QMM\\E)|(\\QCM\\E)|(\\QM\\E)|(\\QIN\\E)|(\\QFT\\E)|(\\Qinches\\E)|(\\Qfeet\\E)|(\\Qmeters\\E)|(\\Qdecimeters\\E)|(\\Qcentimeters\\E)|(\\Qmillimeters\\E)|(\\Qmicrometers\\E)|(\\Qnanometers\\E)|(\\Qpicometers\\E)|(\\Qhundredths_inches\\E)|(\\Qyards\\E)|(\\Qangstrom\\E)|(\\Qmils\\E)|(\\Qmiles\\E)")
     value
         @DecimalMin(value = "1", inclusive = true)
 OptionalResolutionDimension
     unitOfMeasure
+        @Pattern(regexp = "(\\Qmegapixels\\E)|(\\Qpixels\\E)|(\\Qlines_per_inch\\E)")
     value
         @Size(min = 1, max = 50)
 PhoneNumberType
@@ -402,12 +446,14 @@ PhoneNumberType
 PixelDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\Qpixels\\E)|(\\QMP\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 PixelUnitOfMeasure
 PositiveCurrencyAmount
     currency
         @NotNull
+        @Pattern(regexp = "(\\QPLN\\E)|(\\QAED\\E)|(\\QSAR\\E)|(\\QEGP\\E)")
     value
         @DecimalMax(value = "99999999.99", inclusive = true)
         @DecimalMin(value = "0.00", inclusive = true)
@@ -415,24 +461,28 @@ PositiveCurrencyAmount
 PositiveNonZeroWeightDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\QGR\\E)|(\\QKG\\E)|(\\QOZ\\E)|(\\QLB\\E)|(\\QMG\\E)|(\\Qhundredths_pounds\\E)")
     value
         @DecimalMin(value = "0.00", inclusive = false)
         @Digits(integer = 12, fraction = 2)
 PositiveWeightDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\QGR\\E)|(\\QKG\\E)|(\\QOZ\\E)|(\\QLB\\E)|(\\QMG\\E)|(\\Qhundredths_pounds\\E)")
     value
         @DecimalMin(value = "0.00", inclusive = true)
         @Digits(integer = 12, fraction = 2)
 PowerDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\Qwatts\\E)|(\\Qkilowatts\\E)|(\\Qhorsepower\\E)|(\\Qwatts-per-sec\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 PowerUnitOfMeasure
 PressureDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\Qbars\\E)|(\\Qpsi\\E)|(\\Qpascal\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 PressureUnitOfMeasure
@@ -450,6 +500,7 @@ PromotionDataType
         @Size(min = 6, max = 12)
     type
         @NotNull
+        @Pattern(regexp = "(\\QPrincipal\\E)|(\\QShipping\\E)")
 RelatedProductID
     type
         @NotNull
@@ -460,12 +511,14 @@ RelatedProductID
 ResistanceDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "\\Qohms\\E")
     value
         @Digits(integer = 12, fraction = 2)
 ResistanceUnitOfMeasure
 ResolutionDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\Qmegapixels\\E)|(\\Qpixels\\E)|(\\Qlines_per_inch\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 ResolutionUnitOfMeasure
@@ -481,41 +534,49 @@ StoneCreationMethod
 StringLengthDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\QMM\\E)|(\\QCM\\E)|(\\QM\\E)|(\\QIN\\E)|(\\QFT\\E)|(\\Qinches\\E)|(\\Qfeet\\E)|(\\Qmeters\\E)|(\\Qdecimeters\\E)|(\\Qcentimeters\\E)|(\\Qmillimeters\\E)|(\\Qmicrometers\\E)|(\\Qnanometers\\E)|(\\Qpicometers\\E)|(\\Qhundredths_inches\\E)|(\\Qyards\\E)|(\\Qangstrom\\E)|(\\Qmils\\E)|(\\Qmiles\\E)")
     value
         @Size(min = 1, max = 50)
 StringLengthOptionalDimension
     unitOfMeasure
+        @Pattern(regexp = "(\\QMM\\E)|(\\QCM\\E)|(\\QM\\E)|(\\QIN\\E)|(\\QFT\\E)|(\\Qinches\\E)|(\\Qfeet\\E)|(\\Qmeters\\E)|(\\Qdecimeters\\E)|(\\Qcentimeters\\E)|(\\Qmillimeters\\E)|(\\Qmicrometers\\E)|(\\Qnanometers\\E)|(\\Qpicometers\\E)|(\\Qhundredths_inches\\E)|(\\Qyards\\E)|(\\Qangstrom\\E)|(\\Qmils\\E)|(\\Qmiles\\E)")
     value
         @Size(min = 1, max = 50)
 StringTemperatureDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\QC\\E)|(\\QF\\E)")
     value
         @Size(min = 1, max = 50)
 StringTimeDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\Qsec\\E)|(\\Qmin\\E)|(\\Qhr\\E)|(\\Qdays\\E)|(\\Qhours\\E)|(\\Qminutes\\E)|(\\Qseconds\\E)|(\\Qmilliseconds\\E)|(\\Qmicroseconds\\E)|(\\Qnanoseconds\\E)|(\\Qpicoseconds\\E)")
     value
         @Size(min = 1, max = 50)
 SubscriptionTermDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\Qdays\\E)|(\\Qweeks\\E)|(\\Qmonths\\E)|(\\Qyears\\E)")
     value
         @DecimalMin(value = "1", inclusive = true)
 SunProtectionDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "\\Qsun_protection_factor\\E")
     value
         @DecimalMin(value = "1", inclusive = true)
 SunProtectionUnitOfMeasure
 TemperatureDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\QC\\E)|(\\QF\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 TemperatureRatingDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\Qdegrees-celsius\\E)|(\\Qdegrees-fahrenheit\\E)|(\\Qkelvin\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 TemperatureRatingUnitOfMeasure
@@ -523,33 +584,40 @@ TemperatureUnitOfMeasure
 TimeDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\Qsec\\E)|(\\Qmin\\E)|(\\Qhr\\E)|(\\Qdays\\E)|(\\Qhours\\E)|(\\Qminutes\\E)|(\\Qseconds\\E)|(\\Qmilliseconds\\E)|(\\Qmicroseconds\\E)|(\\Qnanoseconds\\E)|(\\Qpicoseconds\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 TimeIntegerDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\Qsec\\E)|(\\Qmin\\E)|(\\Qhr\\E)|(\\Qdays\\E)|(\\Qhours\\E)|(\\Qminutes\\E)|(\\Qseconds\\E)|(\\Qmilliseconds\\E)|(\\Qmicroseconds\\E)|(\\Qnanoseconds\\E)|(\\Qpicoseconds\\E)")
     value
         @DecimalMin(value = "1", inclusive = true)
 TimeUnitOfMeasure
 TorqueType
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\Qfoot-lbs\\E)|(\\Qinch-lbs\\E)|(\\Qcentimeter_kilograms\\E)|(\\Qfoot_pounds\\E)|(\\Qinch_ounces\\E)|(\\Qinch_pounds\\E)|(\\Qkilonewtons\\E)|(\\Qkilograms_per_millimeter\\E)|(\\Qnewton_meters\\E)|(\\Qnewton_millimeters\\E)|(\\Qnewtons\\E)")
+        @Size(min = 1, max = 50)
     value
         @Digits(integer = 12, fraction = 2)
 TorqueUnitOfMeasure
 VoltageDecimalDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\Qvolts\\E)|(\\Qmillivolts\\E)|(\\Qmicrovolts\\E)|(\\Qnanovolts\\E)|(\\Qkilovolts\\E)")
     value
         @DecimalMin(value = "0.00", inclusive = true)
         @Digits(integer = 12, fraction = 2)
 VoltageIntegerDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\Qvolts\\E)|(\\Qmillivolts\\E)|(\\Qmicrovolts\\E)|(\\Qnanovolts\\E)|(\\Qkilovolts\\E)")
     value
         @DecimalMin(value = "1", inclusive = true)
 VoltageIntegerDimensionOptionalUnit
     unitOfMeasure
+        @Pattern(regexp = "(\\Qvolts\\E)|(\\Qmillivolts\\E)|(\\Qmicrovolts\\E)|(\\Qnanovolts\\E)|(\\Qkilovolts\\E)")
     value
         @DecimalMin(value = "1", inclusive = true)
 VoltageUnitOfMeasure
@@ -561,16 +629,19 @@ VolumeAndVolumeRateDimension
 VolumeDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\Qcubic-cm\\E)|(\\Qcubic-ft\\E)|(\\Qcubic-in\\E)|(\\Qcubic-m\\E)|(\\Qcubic-yd\\E)|(\\Qcup\\E)|(\\Qfluid-oz\\E)|(\\Qgallon\\E)|(\\Qliter\\E)|(\\Qmilliliter\\E)|(\\Qounce\\E)|(\\Qpint\\E)|(\\Qquart\\E)|(\\Qliters\\E)|(\\Qdeciliters\\E)|(\\Qcentiliters\\E)|(\\Qmilliliters\\E)|(\\Qmicroliters\\E)|(\\Qnanoliters\\E)|(\\Qpicoliters\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 VolumeIntegerDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\Qcubic-cm\\E)|(\\Qcubic-ft\\E)|(\\Qcubic-in\\E)|(\\Qcubic-m\\E)|(\\Qcubic-yd\\E)|(\\Qcup\\E)|(\\Qfluid-oz\\E)|(\\Qgallon\\E)|(\\Qliter\\E)|(\\Qmilliliter\\E)|(\\Qounce\\E)|(\\Qpint\\E)|(\\Qquart\\E)|(\\Qliters\\E)|(\\Qdeciliters\\E)|(\\Qcentiliters\\E)|(\\Qmilliliters\\E)|(\\Qmicroliters\\E)|(\\Qnanoliters\\E)|(\\Qpicoliters\\E)")
     value
         @DecimalMin(value = "1", inclusive = true)
 VolumeRateDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\Qmilliliters per second\\E)|(\\Qcentiliters per second\\E)|(\\Qliters per second\\E)|(\\Qmilliliters per minute\\E)|(\\Qliters per minute\\E)|(\\Qmicroliters per second\\E)|(\\Qnanoliters per second\\E)|(\\Qpicoliters per second\\E)|(\\Qmicroliters per minute\\E)|(\\Qnanoliters per minute\\E)|(\\Qpicoliters per minute\\E)|(\\Qgallons_per_day\\E)|(\\Qliters_per_day\\E)|(\\Qliters\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 VolumeRateUnitOfMeasure
@@ -578,26 +649,31 @@ VolumeUnitOfMeasure
 WattageDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\Qwatts\\E)|(\\Qkilowatts\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 WattageDimensionOptionalUnit
     unitOfMeasure
+        @Pattern(regexp = "(\\Qwatts\\E)|(\\Qkilowatts\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 WattageIntegerDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\Qwatts\\E)|(\\Qkilowatts\\E)")
     value
         @DecimalMin(value = "1", inclusive = true)
 WattageUnitOfMeasure
 WeightDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\QGR\\E)|(\\QKG\\E)|(\\QOZ\\E)|(\\QLB\\E)|(\\QMG\\E)|(\\Qhundredths_pounds\\E)")
     value
         @Digits(integer = 12, fraction = 2)
 WeightIntegerDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "(\\QGR\\E)|(\\QKG\\E)|(\\QOZ\\E)|(\\QLB\\E)|(\\QMG\\E)|(\\Qhundredths_pounds\\E)")
     value
         @DecimalMin(value = "1", inclusive = true)
 WeightRecommendationType
@@ -609,6 +685,7 @@ WeightUnitOfMeasure
 ZoomDimension
     unitOfMeasure
         @NotNull
+        @Pattern(regexp = "\\Qx\\E")
     value
         @DecimalMin(value = "1", inclusive = true)
 ZoomUnitOfMeasure
