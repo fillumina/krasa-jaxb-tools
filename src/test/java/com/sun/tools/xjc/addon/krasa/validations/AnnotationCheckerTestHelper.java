@@ -5,7 +5,7 @@ import java.util.stream.Stream;
 /**
  * Helper to test if there are JAVAX annotated classes in a JAKARTA production and vice versa.
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati
  */
 public class AnnotationCheckerTestHelper extends RunXJC2MojoTestHelper {
 

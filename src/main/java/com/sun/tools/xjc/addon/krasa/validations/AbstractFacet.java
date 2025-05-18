@@ -5,7 +5,7 @@ import java.util.LinkedHashSet;
 
 /**
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati
  */
 public abstract class AbstractFacet {
 

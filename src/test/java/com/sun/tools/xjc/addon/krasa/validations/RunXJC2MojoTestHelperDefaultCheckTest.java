@@ -10,7 +10,7 @@ import static junit.framework.TestCase.assertTrue;
  * <p>
  * It will <b>fail</b> if executed as a single test.
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati
  */
 public class RunXJC2MojoTestHelperDefaultCheckTest extends TestCase {
 

@@ -8,7 +8,7 @@ import org.apache.cxf.tools.wsdlto.WSDLToJava;
 /**
  * Instruct the Apache CXF to generate classes from a given WSDL
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati
  */
 public class CxfJavaGenerator extends WSDLToJava {
     private static final String INPUT_WSDL = "/hello.wsdl";

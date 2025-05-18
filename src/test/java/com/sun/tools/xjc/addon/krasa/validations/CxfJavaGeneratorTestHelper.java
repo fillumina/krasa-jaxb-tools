@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Use the Cxf to generate java classes and expose some test helper methods
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati
  */
 public class CxfJavaGeneratorTestHelper extends CxfJavaGenerator {
 

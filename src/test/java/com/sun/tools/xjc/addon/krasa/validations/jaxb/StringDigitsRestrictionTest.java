@@ -6,7 +6,7 @@ import com.sun.tools.xjc.addon.krasa.validations.RunXJC2MojoTestHelper;
  * Test the application of numeric restrictions to a decimal type converted to String.
  * Note that java allows those annotations on Strings.
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati
  */
 public class StringDigitsRestrictionTest extends RunXJC2MojoTestHelper {
 

@@ -7,7 +7,7 @@ import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerTestHelper;
  * ignores it.
  * Refer to <a href='https://github.com/fillumina/krasa-jaxb-tools/issues/16'>issue #16</a>.
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati
  */
 public class ExtendTest extends AnnotationCheckerTestHelper {
 

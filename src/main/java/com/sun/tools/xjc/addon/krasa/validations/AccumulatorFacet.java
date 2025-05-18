@@ -6,7 +6,7 @@ import java.util.LinkedHashSet;
 
 /**
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati
  */
 @SuppressWarnings("LocalVariableHidesMemberVariable")
 public class AccumulatorFacet extends AbstractFacet {

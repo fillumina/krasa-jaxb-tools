@@ -6,7 +6,7 @@ import java.util.Set;
 /**
  * Make it sure all defined tests are executed on both backends (Javax and Jakarta).
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati
  */
 public class RunXJC2MojoTestHelperMultipleTest extends RunXJC2MojoTestHelper {
 

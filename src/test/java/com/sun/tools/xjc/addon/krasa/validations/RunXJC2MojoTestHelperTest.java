@@ -8,7 +8,7 @@ import junit.framework.TestResult;
  *
  * Make it sure that the default test is executed if no other are present.
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati
  */
 public class RunXJC2MojoTestHelperTest extends RunXJC2MojoTestHelper {
 

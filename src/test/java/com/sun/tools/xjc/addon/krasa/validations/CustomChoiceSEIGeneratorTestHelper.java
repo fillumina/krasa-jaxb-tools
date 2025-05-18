@@ -3,7 +3,7 @@ package com.sun.tools.xjc.addon.krasa.validations;
 import com.sun.tools.xjc.addon.krasa.JaxbValidationsPlugin;
 
 /**
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati
  */
 public class CustomChoiceSEIGeneratorTestHelper extends CxfJavaGeneratorTestHelper {
     private static final String INPUT_WSDL = "/customChoice/customChoice.wsdl";

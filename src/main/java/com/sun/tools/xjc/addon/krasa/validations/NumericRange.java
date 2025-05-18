@@ -7,7 +7,7 @@ import java.util.Objects;
 
 /**
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati
  */
 class NumericRange {
     private static final Map<String, NumericRange> MAP = new HashMap<>();

@@ -5,7 +5,7 @@ import java.util.function.Predicate;
 
 /**
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati
  */
 class Utils {
 

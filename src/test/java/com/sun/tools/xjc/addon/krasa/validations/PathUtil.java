@@ -6,7 +6,7 @@ import java.nio.file.Paths;
 
 /**
  *
- * @author Francesco Illuminati <fillumina@gmail.com>
+ * @author Francesco Illuminati
  */
 public class PathUtil {
     private static final String PLACEHOLDER = "/placeholder.txt";
