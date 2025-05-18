@@ -159,9 +159,6 @@ public class Processor {
                         annotator.addEachDigitsAnnotation(simpleFacet.totalDigits(), simpleFacet.fractionDigits());
                         annotator.addEachDecimalMinAnnotation(simpleFacet.minInclusive(), simpleFacet.minExclusive());
                         annotator.addEachDecimalMaxAnnotation(simpleFacet.maxInclusive(), simpleFacet.maxExclusive());
-
-                        //TODO check if there are restrictions appliable for a collection up the hierarchy only!!
-                        //LinkedHashSet<LinkedHashSet<String>> patternSet = HierarchyFacetGatherer.gatherRegexpAndEnumeration(simpleFacet, simpleType);
                         annotator.addEachPatterns(simpleFacet.getMultiPatterns(), options.isMultiPattern());
                     }
                     if (facet.getItemFacet() != null) {
