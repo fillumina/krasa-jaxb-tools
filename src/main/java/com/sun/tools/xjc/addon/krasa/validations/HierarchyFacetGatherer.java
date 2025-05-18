@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 
 /**
- * Starting from a base type it goes up the hierarchy and consolidates all facets.
+ * Starting from a base type it goes up the hierarchy and consolidates all inherited facets.
  *
  * @author Francesco Illuminati <fillumina@gmail.com>
  */

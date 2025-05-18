@@ -109,6 +109,7 @@ public class Processor {
                 ElementDecl element,
                 FieldAnnotator annotator) {
 
+            // used for debugging...
             final String name = property.getName(true);
             final int minOccurs = particle.getMinOccurs().intValue();
             final int maxOccurs = particle.getMaxOccurs().intValue();
@@ -165,13 +166,13 @@ public class Processor {
                     }
                     if (facet.getItemFacet() != null) {
                         facet = facet.getItemFacet();
-                        processType(simpleType, fieldHelper, annotator, facet);
+                        processType(fieldHelper, annotator, facet);
                     }
 
                 } else {
 
-                    processType(simpleType, fieldHelper, annotator, facet);
-                    
+                    processType(fieldHelper, annotator, facet);
+
                 }
 
             }
@@ -231,14 +232,13 @@ public class Processor {
         private void processType(XSSimpleType simpleType, JFieldVar field, FieldAnnotator annotator) {
             AccumulatorFacet facet = HierarchyFacetGatherer.gatherRestrictions(simpleType);
             FieldHelper fieldHelper = new FieldHelper(field);
-            processType(simpleType, fieldHelper, annotator, facet);
+            processType(fieldHelper, annotator, facet);
         }
 
         /**
          * Process types which are not collections
          */
         private void processType(
-                XSSimpleType simpleType,
                 FieldHelper fieldHelper,
                 FieldAnnotator annotator,
                 AccumulatorFacet facet) {
