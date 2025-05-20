@@ -1,11 +1,9 @@
 ProcessContainer
     process
         @NotNull
-        @Pattern(regexp = "(\\QInvoice\\E)|(\\QCredit\\E)|(\\QComplaint\\E)")
-        @Size(max = 9)
     someList
+        @EachPattern(regexp = "[SsOoMmEe_RrGgXxPp]+")
         @NotNull
-        @Pattern(regexp = "[SsOoMmEe_RrGgXxPp]+")
         @Size(max = 5)
         @Valid
     supplierGln

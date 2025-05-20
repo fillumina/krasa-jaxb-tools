@@ -128,8 +128,7 @@ public class Processor {
                 annotator.addNotNullAnnotation(classOutline, field, message);
             }
 
-            boolean multiElementCollection = property.isCollection() && (minOccurs != 1 || maxOccurs != 1);
-            if (multiElementCollection) {
+            if (property.isCollection() && (minOccurs != 1 || maxOccurs != 1)) {
                 annotator.addSizeAnnotation(minOccurs, maxOccurs, null);
             }
 
@@ -151,20 +150,27 @@ public class Processor {
                 // using https://github.com/jirutka/validator-collection to annotate Lists of primitives
                 AccumulatorFacet facet = HierarchyFacetGatherer.gatherRestrictions(simpleType);
                 if (property.isCollection()) {
-                    annotator.addSizeAnnotation(facet.minLength(), facet.maxLength(), facet.length());
 
-                    if (multiElementCollection && options.isValidationCollection()) {
-                        AccumulatorFacet simpleFacet = HierarchyFacetGatherer.gatherRestrictions(simpleType);
-                        annotator.addEachSizeAnnotation(simpleFacet.minLength(), simpleFacet.maxLength());
-                        annotator.addEachDigitsAnnotation(simpleFacet.totalDigits(), simpleFacet.fractionDigits());
-                        annotator.addEachDecimalMinAnnotation(simpleFacet.minInclusive(), simpleFacet.minExclusive());
-                        annotator.addEachDecimalMaxAnnotation(simpleFacet.maxInclusive(), simpleFacet.maxExclusive());
-                        annotator.addEachPatterns(simpleFacet.getMultiPatterns(), options.isMultiPattern());
+                    if (fieldHelper.isList()) {
+                        annotator.addSizeAnnotation(facet.minLength(), facet.maxLength(), facet.length());
                     }
-                    if (facet.getItemFacet() != null) {
-                        facet = facet.getItemFacet();
-                        processType(fieldHelper, annotator, facet);
+
+                    if (options.isValidationCollection()) {
+                        AccumulatorFacet itemFacet = facet.getItemFacet();
+                        if (itemFacet != null) {
+                            setEachAnnotations(annotator, itemFacet);
+                        } else {
+                            /**
+                             * elements that inherit occurrences different from 1 will be
+                             * promoted to list so the facet already refers to the item.
+                             */
+                            if (!fieldHelper.isList()) {
+                                throw new AssertionError("That's unexpected: please report this exception along with the XSD that provoked it.");
+                            }
+                            setEachAnnotations(annotator, facet);
+                        }
                     }
+
 
                 } else {
 
@@ -173,6 +179,14 @@ public class Processor {
                 }
 
             }
+        }
+
+        private void setEachAnnotations(FieldAnnotator annotator, AccumulatorFacet facet) {
+            annotator.addEachSizeAnnotation(facet.minLength(), facet.maxLength());
+            annotator.addEachDigitsAnnotation(facet.totalDigits(), facet.fractionDigits());
+            annotator.addEachDecimalMinAnnotation(facet.minInclusive(), facet.minExclusive());
+            annotator.addEachDecimalMaxAnnotation(facet.maxInclusive(), facet.maxExclusive());
+            annotator.addEachPatterns(facet.getMultiPatterns(), options.isMultiPattern());
         }
 
         /**
@@ -240,7 +254,13 @@ public class Processor {
                 FieldAnnotator annotator,
                 AccumulatorFacet facet) {
 
-            annotator.addSizeAnnotation(facet.minLength(), facet.maxLength(), facet.length());
+            if (fieldHelper.isArray() || fieldHelper.isString() || fieldHelper.isStringList()) {
+                annotator.addSizeAnnotation(facet.minLength(), facet.maxLength(), facet.length());
+            }
+
+            if (fieldHelper.isString()) {
+                annotator.addPatterns(((AccumulatorFacet)facet).getMultiPatterns(), options.isMultiPattern());
+            }
 
             if (fieldHelper.isNumber() || fieldHelper.isString()) {
                 if (options.isAllNumericConstraints()) {
@@ -258,7 +278,6 @@ public class Processor {
                 annotator.addDigitsAnnotation(facet.totalDigits(), facet.fractionDigits());
             }
 
-            annotator.addPatterns(((AccumulatorFacet)facet).getMultiPatterns(), options.isMultiPattern());
         }
     }
 

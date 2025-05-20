@@ -2,7 +2,6 @@ EnumerationType
 OptionsType
     enumeration
         @NotNull
-        @Pattern(regexp = "(\\QAA\\E)|(\\QBB\\E)|(\\QCC\\E)")
     fiftyCharsStringList
         @NotNull
         @Size(min = 1, max = 10)

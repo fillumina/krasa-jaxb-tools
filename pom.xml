@@ -184,9 +184,10 @@
 
   </dependencies>
 
+
   <profiles>
     <profile>
-      <id>ossrh</id>
+      <id>central</id>
       <activation>
         <property>
           <name>performRelease</name>
@@ -246,36 +247,35 @@
               </execution>
             </executions>
           </plugin>
+          <!-- https://central.sonatype.org/publish/publish-portal-maven/#autopublish -->
+          <plugin>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <version>0.7.0</version>
+            <extensions>true</extensions>
+            <configuration>
+               <publishingServerId>central</publishingServerId>
+               <autoPublish>true</autoPublish>
+            </configuration>
+          </plugin>
         </plugins>
       </build>
     </profile>
+
+
   </profiles>
 
   <!--
     INSTRUCTIONS FOR DEPLOYING:
     - remember to set default JDK to version 8
     - deploy with (-X is for verbose error reporting):
-      mvn -Possrh clean deploy -X
+      mvn -Pcentral clean deploy -X
     - check results on:
-      https://oss.sonatype.org/#nexus-search;quick~com.fillumina
+      https://central.sonatype.com/publishing
     - look for the 'Staging repositories' and then 'close' it.
     - wait a little until it says 'repository closed'
     - click on 'release'
   -->
 
-  <distributionManagement>
-    <snapshotRepository>
-      <id>ossrh</id>
-      <!-- I'm on an old legacy repository... -->
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-      <!--<url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>-->
-    </snapshotRepository>
-    <repository>
-      <id>ossrh</id>
-      <!-- I'm on an old legacy repository... -->
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-      <!--<url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
-    </repository>
-  </distributionManagement>
 
 </project>

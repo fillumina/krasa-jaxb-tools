@@ -31,6 +31,10 @@ class FieldHelper {
         return field.type().name().equals("List<String>");
     }
 
+    public boolean isList() {
+        return field.type().name().startsWith("List<");
+    }
+
     public boolean isArray() {
         return field.type().isArray();
     }
