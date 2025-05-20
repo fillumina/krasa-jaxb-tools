@@ -26,7 +26,7 @@ The project is bounded to support **Java 8** (**JDK 1.8**) because of some old p
 Versions
 ----------------
 
-- `2.5.1` that's a **bugfix** to version `2.4.0` fixing issue #31, it was just wrongly named 2.5.1 instead of 2.4.1. Sorry for that.
+- `2.5.1` that's a **bugfix** to version `2.4.0` fixing [issue #31](https://github.com/fillumina/krasa-jaxb-tools/issues/31), it was just wrongly named 2.5.1 instead of 2.4.1. Sorry for that.
 
 - `2.4.0` the algorithm to search for inherited restrictions has been completely rewritten and it is now much more reliable (especially with @EachXXX item annotations)
 
