@@ -4,7 +4,7 @@
 
   <groupId>com.fillumina</groupId>
   <artifactId>krasa-jaxb-tools</artifactId>
-  <version>2.5-SNAPSHOT</version>
+  <version>2.5.1</version>
   <packaging>jar</packaging>
   <name>krasa-jaxb-tools</name>
 
@@ -270,8 +270,8 @@
     - remember to set default JDK to version 8
     - deploy with (-X is for verbose error reporting):
       mvn -Pcentral clean deploy -X
-    - check results on:
-      https://central.sonatype.com/publishing
+    - complete the procedure:
+      https://central.sonatype.com/publishing/deployments
     - look for the 'Staging repositories' and then 'close' it.
     - wait a little until it says 'repository closed'
     - click on 'release'

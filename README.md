@@ -26,6 +26,8 @@ The project is bounded to support **Java 8** (**JDK 1.8**) because of some old p
 Versions
 ----------------
 
+- `2.5.1` that's a **bugfix** to version `2.4.0` fixing issue #31, it was just wrongly named 2.5.1 instead of 2.4.1. Sorry for that.
+
 - `2.4.0` the algorithm to search for inherited restrictions has been completely rewritten and it is now much more reliable (especially with @EachXXX item annotations)
 
 - `2.3.8` add `multiPattern` option (false by default) to enable writing multiple `@Pattern` annotations instead of using `@Pattern.List` (thanks to [CrEaK (Niklas Neesen)](https://github.com/CrEaK))
@@ -98,7 +100,7 @@ Release
 <dependency>
     <groupId>com.fillumina</groupId>
     <artifactId>krasa-jaxb-tools</artifactId>
-    <version>2.4.0</version>
+    <version>2.5.1</version>
 </dependency>
 ```
 
