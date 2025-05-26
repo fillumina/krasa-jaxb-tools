@@ -151,9 +151,7 @@ public class Processor {
                 AccumulatorFacet facet = HierarchyFacetGatherer.gatherRestrictions(simpleType);
                 if (property.isCollection()) {
 
-                    if (fieldHelper.isList()) {
-                        annotator.addSizeAnnotation(facet.minLength(), facet.maxLength(), facet.length());
-                    }
+                    annotator.addSizeAnnotation(facet.minLength(), facet.maxLength(), facet.length());
 
                     if (options.isValidationCollection()) {
                         AccumulatorFacet itemFacet = facet.getItemFacet();
@@ -254,7 +252,7 @@ public class Processor {
                 FieldAnnotator annotator,
                 AccumulatorFacet facet) {
 
-            if (fieldHelper.isArray() || fieldHelper.isString() || fieldHelper.isStringList()) {
+            if (fieldHelper.isArray() || fieldHelper.isString()) {
                 annotator.addSizeAnnotation(facet.minLength(), facet.maxLength(), facet.length());
             }
 
