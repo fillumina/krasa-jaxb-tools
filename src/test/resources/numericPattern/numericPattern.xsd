@@ -1,0 +1,53 @@
+<xsd:schema
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="a"
+    xmlns:a="a"
+    elementFormDefault="qualified">
+
+    <xsd:element name="numericPattern" type="a:NumericPattern"/>
+
+    <xsd:complexType name="NumericPattern">
+        <xsd:sequence>
+
+            <!-- literal pattern replaces the range of the base type (unsignedByte: 0..255) -->
+            <xsd:element name="aunsignedByte">
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:unsignedByte">
+                        <xsd:pattern value="1" />
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:element>
+
+            <!-- decimal literal with escaped point and sign -->
+            <xsd:element name="adecimal">
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:decimal">
+                        <xsd:pattern value="-1\.5" />
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:element>
+
+            <!-- pattern on a String type must still produce @Pattern -->
+            <xsd:element name="astring">
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                        <xsd:pattern value="1" />
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:element>
+
+            <!-- non literal pattern: ignored, only the explicit range is generated -->
+            <xsd:element name="nonLiteral">
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:int">
+                        <xsd:minInclusive value="0" />
+                        <xsd:maxInclusive value="999" />
+                        <xsd:pattern value="[0-9]{1,3}" />
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:element>
+
+        </xsd:sequence>
+    </xsd:complexType>
+
+</xsd:schema>
