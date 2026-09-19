@@ -167,10 +167,10 @@ The plugin generates sources annotated with the following Java Bean Validation 2
 - `@Size` if there is a maxLength or minLength or length restriction
 - `@DecimalMax` for maxInclusive restriction
 - `@DecimalMin` for minInclusive restriction
-- `@DecimalMax` for maxExclusive restriction, enable new parameter (inclusive=false) with: -XJsr303Annotations:JSR_349=true
-- `@DecimalMin` for minExclusive restriction, enable new parameter (inclusive=false) with: -XJsr303Annotations:JSR_349=true
+- `@DecimalMax` for maxExclusive restriction, with `inclusive = false`
+- `@DecimalMin` for minExclusive restriction, with `inclusive = false`
 - `@Digits` if there is a totalDigits or fractionDigits restriction.
-- `@Pattern` and `@PatternList` if there is a Pattern restriction (see `singlePattern` option); strings only — numeric patterns are not supported, see [Numeric patterns are not supported](#numeric-patterns-are-not-supported)
+- `@Pattern` and `@PatternList` if there is a Pattern restriction; strings only — numeric patterns are not supported, see [Numeric patterns are not supported](#numeric-patterns-are-not-supported)
 
 ## Numeric patterns are not supported
 
@@ -234,4 +234,7 @@ Any issue or bug fix reported is *extremely* welcome but to help me understand t
 
 ## TODO
 
-- change the plugin name to `Jsr380Annotations` because it's now about the Java Specification Request 380. Being a breaking change it should cause the version to jump to 2.4.
+- change the plugin name to `Jsr380Annotations`, because the plugin implements the Java Specification
+  Request 380. The rename is a breaking change for existing builds' configuration, so the current name
+  is kept as long as Java 8 is supported: it comes with the next major version, together with lifting
+  the Java 8 bound.
