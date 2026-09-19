@@ -156,7 +156,7 @@ public class Processor {
                     if (options.isValidationCollection()) {
                         AccumulatorFacet itemFacet = facet.getItemFacet();
                         if (itemFacet != null) {
-                            setEachAnnotations(annotator, itemFacet);
+                            setEachAnnotations(fieldHelper, annotator, itemFacet);
                         } else {
                             /**
                              * elements that inherit occurrences different from 1 will be
@@ -165,7 +165,7 @@ public class Processor {
                             if (!fieldHelper.isList()) {
                                 throw new AssertionError("That's unexpected: please report this exception along with the XSD that provoked it.");
                             }
-                            setEachAnnotations(annotator, facet);
+                            setEachAnnotations(fieldHelper, annotator, facet);
                         }
                     }
 
@@ -179,12 +179,16 @@ public class Processor {
             }
         }
 
-        private void setEachAnnotations(FieldAnnotator annotator, AccumulatorFacet facet) {
+        private void setEachAnnotations(FieldHelper fieldHelper, FieldAnnotator annotator, AccumulatorFacet facet) {
             annotator.addEachSizeAnnotation(facet.minLength(), facet.maxLength());
             annotator.addEachDigitsAnnotation(facet.totalDigits(), facet.fractionDigits());
             annotator.addEachDecimalMinAnnotation(facet.minInclusive(), facet.minExclusive());
             annotator.addEachDecimalMaxAnnotation(facet.maxInclusive(), facet.maxExclusive());
-            annotator.addEachPatterns(facet.getMultiPatterns(), options.isMultiPattern());
+            // @EachPattern resolves to the Pattern validator, which accepts CharSequence only:
+            // on a collection of numbers it would check nothing and fail at validation time.
+            if (fieldHelper.isStringList()) {
+                annotator.addEachPatterns(facet.getMultiPatterns(), options.isMultiPattern());
+            }
         }
 
         /**
