@@ -82,9 +82,20 @@ public class Processor {
         private void processElement(CElementPropertyInfo property) {
             String propertyName = property.getName(false);
 
-            XSParticle particle = (XSParticle) property.getSchemaComponent();
+            // Not an error: XJC leaves the component null when the model is built from something
+            // other than XML Schema (a DTD, say) and passes the element declaration for the element
+            // class of a simple content. Nothing can be annotated then, so the element is ignored, as
+            // the attribute path does for a property without a field.
+            XSComponent definition = property.getSchemaComponent();
+            if (!(definition instanceof XSParticle)) {
+                return;
+            }
+            XSParticle particle = (XSParticle) definition;
             XSTerm term = particle.getTerm();
             final JFieldVar field = classOutline.implClass.fields().get(propertyName);
+            if (field == null) {
+                return;
+            }
             FieldAnnotator annotator =
                     new FieldAnnotator(field, options.getAnnotationFactory(), logger);
 
