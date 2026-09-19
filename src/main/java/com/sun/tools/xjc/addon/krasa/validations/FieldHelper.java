@@ -6,6 +6,7 @@ import com.sun.codemodel.JType;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,36 +33,49 @@ class FieldHelper {
      */
     public BigDecimal validItemValue(BigDecimal value) {
         if (value != null) {
-            return NumericRange.valid(itemTypeName(), value);
+            String itemType = itemTypeName();
+            String typeName = itemType != null ? itemType : field.type().boxify().fullName();
+            return NumericRange.valid(typeName, value);
         }
         return null;
     }
 
-    /** The type the field holds: its type argument when it is a collection, its type otherwise. */
+    /**
+     * @return true when the field is exactly of the given type, primitives boxed. The erasure is
+     * compared with the canonical name of the class: codemodel defines no equality for its types,
+     * and the full name of a generic type carries its arguments.
+     */
+    private boolean isType(Class<?> expected) {
+        return field.type().boxify().erasure().fullName().equals(expected.getCanonicalName());
+    }
+
+    /** @return the canonical name of the type argument of the field, null when it has none. */
     private String itemTypeName() {
+        List<JClass> typeArguments = typeArguments();
+        // the type argument of a List is a reference type, so boxify() is not needed
+        // (and is deprecated on JClass)
+        return typeArguments.size() == 1 ? typeArguments.get(0).fullName() : null;
+    }
+
+    /** @return the type arguments of the field: empty unless it is a generic type. */
+    private List<JClass> typeArguments() {
         JType type = field.type();
-        if (type instanceof JClass) {
-            List<JClass> typeArguments = ((JClass) type).getTypeParameters();
-            if (typeArguments.size() == 1) {
-                // the type argument of a List is a reference type, so boxify() is not needed
-                // (and is deprecated on JClass)
-                return typeArguments.get(0).fullName();
-            }
-        }
-        return type.boxify().fullName();
+        return type instanceof JClass
+                ? ((JClass) type).getTypeParameters()
+                : Collections.emptyList();
     }
 
     /** WARNING a string with enumeration restrictions is converted into an enum */
     public boolean isString() {
-        return field.type().name().equals("String");
+        return isType(String.class);
     }
 
     public boolean isStringList() {
-        return field.type().name().equals("List<String>");
+        return isList() && String.class.getCanonicalName().equals(itemTypeName());
     }
 
     public boolean isList() {
-        return field.type().name().startsWith("List<");
+        return isType(List.class) && itemTypeName() != null;
     }
 
     public boolean isArray() {
