@@ -125,7 +125,7 @@ public class Processor {
             // and @NotNull should not be added so only required quilifies to add @NotNull
             if (options.isNotNullAnnotations() && !nillable && required) {
                 String message = notNullMessage(classOutline, field);
-                annotator.addNotNullAnnotation(classOutline, field, message);
+                annotator.addNotNullAnnotation(message);
             }
 
             if (property.isCollection() && (minOccurs != 1 || maxOccurs != 1)) {
@@ -214,7 +214,7 @@ public class Processor {
 
                     if (particle.isRequired()) {
                         String message = notNullMessage(classOutline, field);
-                        annotator.addNotNullAnnotation(classOutline, field, message);
+                        annotator.addNotNullAnnotation(message);
                     }
 
                     processType(type, field, annotator);

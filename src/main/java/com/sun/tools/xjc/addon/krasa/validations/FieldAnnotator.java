@@ -1,7 +1,6 @@
 package com.sun.tools.xjc.addon.krasa.validations;
 
 import com.sun.codemodel.JFieldVar;
-import com.sun.tools.xjc.outline.ClassOutline;
 import cz.jirutka.validator.collection.constraints.*;
 import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
@@ -72,7 +71,7 @@ class FieldAnnotator {
         }
     }
 
-    void addNotNullAnnotation(ClassOutline classOutline, JFieldVar field, String message) {
+    void addNotNullAnnotation(String message) {
         xjcAnnotator.annotate(annotationFactory.getNotNullClass())
                 .param(MESSAGE, message)
                 .log();
