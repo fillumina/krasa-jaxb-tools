@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import junit.framework.AssertionFailedError;
 import junit.framework.TestResult;
 import org.apache.maven.project.MavenProject;
 import org.jvnet.jaxb2.maven2.AbstractXJC2Mojo;
@@ -76,11 +77,19 @@ public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
         this.separateAnnotation = separateAnnotation;
     }
 
-    /** Override to test JAVAX annotated code generation */
-    public void checkJavax() throws Exception {}
+    /**
+     * Override to test JAVAX annotated code generation.
+     *
+     * @param result the result of the running pass, see {@link #recordFailure(TestResult, Throwable)}
+     */
+    public void checkJavax(TestResult result) throws Exception {}
 
-    /** Override to test JAKARTA annotated code generation */
-    public void checkJakarta() throws Exception {}
+    /**
+     * Override to test JAKARTA annotated code generation.
+     *
+     * @param result the result of the running pass, see {@link #recordFailure(TestResult, Throwable)}
+     */
+    public void checkJakarta(TestResult result) throws Exception {}
 
     /** Override to provide bindings */
     public File getBindingDirectory() {
@@ -129,14 +138,63 @@ public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
         if (!"testExecute".equals(name) &&
                 !("testZDefault".equals(name) &&
                 executions.contains(simpleName))) {
-            generateAndCheckJakarta();
-            super.run(result);
-
-            generateAndCheckJavax();
-            super.run(result);
+            runValidationPass(result, ValidationsAnnotation.JAKARTA);
+            runValidationPass(result, ValidationsAnnotation.JAVAX);
 
             executions.add(simpleName);
             executedTests.add(simpleName + "." + name);
+        }
+    }
+
+    /**
+     * Generates the classes with one annotation library, checks the produced annotations against
+     * the expected file and runs the test methods on what has been generated.
+     *
+     * Failures are recorded on the TestResult instead of being thrown: a mismatch must not abort
+     * the class, or the second generation and the test methods would silently never run and
+     * surefire would see a single, class-level error. Each check is attempted and recorded on its
+     * own, so one broken check cannot hide the ones that follow it.
+     */
+    private void runValidationPass(TestResult result, ValidationsAnnotation annotation) {
+        validationAnnotation = annotation;
+        try {
+            generateClasses();
+        } catch (Throwable throwable) {
+            // nothing has been generated, so the remaining checks have nothing to inspect
+            recordFailure(result, throwable);
+            return;
+        }
+        try {
+            checkAnnotationsInResourceFile(result);
+        } catch (Throwable throwable) {
+            recordFailure(result, throwable);
+        }
+        try {
+            checkGeneratedAnnotations(annotation, result);
+        } catch (Throwable throwable) {
+            recordFailure(result, throwable);
+        }
+        super.run(result);
+    }
+
+    private void checkGeneratedAnnotations(ValidationsAnnotation annotation, TestResult result)
+            throws Exception {
+        if (annotation == ValidationsAnnotation.JAKARTA) {
+            checkJakarta(result);
+        } else {
+            checkJavax(result);
+        }
+    }
+
+    /**
+     * Records a failure where it is found, so a check that makes more than one finding reports
+     * all of them instead of aborting on the first one.
+     */
+    protected void recordFailure(TestResult result, Throwable throwable) {
+        if (throwable instanceof AssertionFailedError) {
+            result.addFailure(this, (AssertionFailedError) throwable);
+        } else {
+            result.addError(this, throwable);
         }
     }
 
@@ -179,42 +237,24 @@ public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
         // override RunXJC2Mojo own method to allow tests to be executed after mojo creation
     }
 
-    private void generateAndCheckJakarta() {
-        validationAnnotation = ValidationsAnnotation.JAKARTA;
-        try {
-            generateClasses();
-            checkAnnotationsInResourceFile();
-            checkJakarta();
-        } catch (Exception ex) {
-            throw new AssertionError(ex);
-        }
-    }
-
-    private void generateAndCheckJavax() {
-        validationAnnotation = ValidationsAnnotation.JAVAX;
-        try {
-            generateClasses();
-            checkAnnotationsInResourceFile();
-            checkJavax();
-        } catch (Exception ex) {
-            throw new AssertionError(ex);
-        }
-    }
-
     private void generateClasses() throws Exception {
         super.testExecute();
     }
 
-    private void checkAnnotationsInResourceFile() {
+    private void checkAnnotationsInResourceFile(TestResult result) {
         String[] nsArray = getNamespace().split(",");
         for (String ns : nsArray) {
-            String annotatonFilename = getAnnotationFileName(ns);
-            Path filename = Paths.get(getGeneratedDirectory().getAbsolutePath() +
-                    File.separator + annotatonFilename);
+            try {
+                String annotatonFilename = getAnnotationFileName(ns);
+                Path filename = Paths.get(getGeneratedDirectory().getAbsolutePath() +
+                        File.separator + annotatonFilename);
 
-            writeAllElementsTo(ns, filename);
+                writeAllElementsTo(ns, filename);
 
-            checkAllAnnotations(filename, annotatonFilename);
+                checkAllAnnotations(filename, annotatonFilename);
+            } catch (Throwable throwable) {
+                recordFailure(result, throwable);
+            }
         }
     }
 

@@ -2,6 +2,7 @@ package com.sun.tools.xjc.addon.krasa.validations.jaxb;
 
 import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerTestHelper;
 import com.sun.tools.xjc.addon.krasa.validations.ValidationsAnnotation;
+import junit.framework.TestResult;
 
 /**
  *
@@ -14,13 +15,13 @@ public class ValidTest extends AnnotationCheckerTestHelper {
     }
 
     @Override
-    public void checkJakarta() throws Exception {
+    public void checkJakarta(TestResult result) throws Exception {
         withElement("ContentListType")
                 .assertAnnotationNotPresent(ValidationsAnnotation.JAVAX);
     }
 
     @Override
-    public void checkJavax() throws Exception {
+    public void checkJavax(TestResult result) throws Exception {
         withElement("ContentListType")
                 .assertAnnotationNotPresent(ValidationsAnnotation.JAKARTA);
     }
