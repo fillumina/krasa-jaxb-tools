@@ -18,6 +18,7 @@ package com.sun.tools.xjc.addon.krasa.validations;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -50,9 +51,8 @@ import org.jvnet.jaxb2.maven2.test.RunXJC2Mojo;
  */
 public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
 
-    /** Contains ths the executed test names. */
-    protected static final Set<String> executions = new HashSet<>();
-    protected static final Set<String> executedTests = new HashSet<>();
+    /** The tests this instance has run, see {@link #getExecutedTests()}. */
+    private final Set<String> executedTests = new HashSet<>();
 
     private final String folderName;
     private final String namespace;
@@ -136,14 +136,34 @@ public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
         String name = getName();
         final String simpleName = getClass().getSimpleName();
         if (!"testExecute".equals(name) &&
-                !("testZDefault".equals(name) &&
-                executions.contains(simpleName))) {
+                !("testZDefault".equals(name) && hasOwnTests())) {
             runValidationPass(result, ValidationsAnnotation.JAKARTA);
             runValidationPass(result, ValidationsAnnotation.JAVAX);
 
-            executions.add(simpleName);
             executedTests.add(simpleName + "." + name);
         }
+    }
+
+    /**
+     * Whether the class declares test methods of its own, other than the two inherited
+     * ones: testExecute, which is neutralised, and testZDefault, the default test meant
+     * for classes that have none. Asking the class itself keeps the decision independent
+     * of the order in which surefire runs the classes.
+     */
+    private boolean hasOwnTests() {
+        for (Method method : getClass().getMethods()) {
+            String name = method.getName();
+            if (name.startsWith("test")
+                    && !"testZDefault".equals(name) && !"testExecute".equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** @return the tests this instance has executed, as {@code Class.method} names. */
+    Set<String> getExecutedTests() {
+        return executedTests;
     }
 
     /**

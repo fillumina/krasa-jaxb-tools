@@ -30,33 +30,23 @@ import static junit.framework.TestCase.assertTrue;
  * {@code testExecute} is neutralised and skipped by {@code run()}.
  * {@code testZDefault} is the default test that makes such a class run the
  * passes anyway - {@link RunXJC2MojoTestHelperDefaultTest} is exactly that
- * case. The name is not cosmetic: the harness assumes that the methods of a
- * class are executed in alphabetical order, and it skips
- * {@code testZDefault} in a class that already ran, to avoid a third,
- * redundant generation.
+ * case. In a class that declares tests of its own the passes are performed by
+ * them and {@code testZDefault} is skipped, so that no class generates twice.
  *
  * <p>
  * <b>What is verified here.</b> That the machinery above ran, instead of
  * generating nothing and leaving every fixture green.
- * {@link RunXJC2MojoTestHelper#executedTests} is written by {@code run()}
+ * {@link RunXJC2MojoTestHelper#getExecutedTests()} is written by {@code run()}
  * only after both passes have completed, so an entry in it is the evidence
  * that both libraries were processed; a regression that silently stopped the
  * passes would otherwise be invisible, because the annotations that the
  * fixture tests compare would simply not be produced.
  *
  * <p>
- * <b>How it is verified.</b> The harness class is executed by this test
- * rather than assumed to have been executed by another class before:
- * surefire does not control the order of the classes, so reading state
- * written by {@link RunXJC2MojoTestHelperDefaultTest} made the outcome depend
- * on that order - it passed in the default and in the reverse alphabetical
- * order, and failed under {@code -Dsurefire.runOrder=alphabetical}, where
- * this class runs first and finds the state empty.
- *
- * <p>
- * Note that the two static sets are what P3.2 is about: if they are ever
- * replaced by instance state, this check has to assert on the instance it ran
- * instead.
+ * <b>How it is verified.</b> The harness is executed by this test instead of
+ * being assumed to have been executed by another class: surefire does not
+ * control the order of the classes, so a check reading state written by
+ * {@link RunXJC2MojoTestHelperDefaultTest} would depend on that order.
  *
  * @author Francesco Illuminati
  */
@@ -67,13 +57,6 @@ public class RunXJC2MojoTestHelperDefaultCheckTest extends TestCase {
     private static final String DEFAULT_TEST = HARNESS_CLASS + ".testZDefault";
 
     public void testRunXJC2MojoTestHelperDefaulTestExecuted() {
-        // run() skips testZDefault of a class that is already in
-        // executions, so the record of a previous run must go first:
-        // otherwise the assertions below would be satisfied by a
-        // record written elsewhere, and would prove something only
-        // when this check happened to run first.
-        forgetHarnessRun();
-
         RunXJC2MojoTestHelperDefaultTest harness =
                 new RunXJC2MojoTestHelperDefaultTest();
         // as TestSuite would name it: run() dispatches on this name,
@@ -94,18 +77,8 @@ public class RunXJC2MojoTestHelperDefaultCheckTest extends TestCase {
         // JAKARTA pass and the JAVAX one: an entry here is the proof
         // that the two of them were performed
         assertTrue("testZDefault has not been executed by the harness",
-                RunXJC2MojoTestHelper.executedTests.contains(DEFAULT_TEST));
+                harness.getExecutedTests().contains(DEFAULT_TEST));
 
-        // leave the bookkeeping as it was found: the entry added above
-        // would make the harness skip testZDefault when surefire runs
-        // the class for real, which changes the number of executed
-        // tests depending on the order (159, or 157 when this runs first)
-        forgetHarnessRun();
-    }
-
-    private void forgetHarnessRun() {
-        RunXJC2MojoTestHelper.executions.remove(HARNESS_CLASS);
-        RunXJC2MojoTestHelper.executedTests.remove(DEFAULT_TEST);
     }
 
     private String firstRecorded(TestResult result) {
