@@ -135,7 +135,7 @@ public class Processor {
             final FieldHelper fieldHelper = new FieldHelper(field);
 
             // minOccurs > 0 and required == false means the attribute is part of a <xsd:choice>
-            // and @NotNull should not be added so only required quilifies to add @NotNull
+            // and @NotNull should not be added so only required qualifies to add @NotNull
             if (options.isNotNullAnnotations() && !nillable && required) {
                 String message = notNullMessage(classOutline, field);
                 annotator.addNotNullAnnotation(message);
@@ -159,7 +159,7 @@ public class Processor {
 
             if (simpleType != null) {
 
-                // if it's a complexyType it might add a facet referring to only one of the possibilities
+                // if it's a complexType it might add a facet referring to only one of the possibilities
                 // using https://github.com/jirutka/validator-collection to annotate Lists of primitives
                 AccumulatorFacet facet = HierarchyFacetGatherer.gatherRestrictions(simpleType);
                 if (property.isCollection()) {

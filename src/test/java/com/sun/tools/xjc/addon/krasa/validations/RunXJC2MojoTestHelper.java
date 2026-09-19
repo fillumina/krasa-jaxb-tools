@@ -41,7 +41,7 @@ import org.jvnet.jaxb2.maven2.test.RunXJC2Mojo;
  * Testing helper for generated classes. It uses XJC to compile the given XSD into java classes
  * (but doesn't compile them) that can be tested.
  *
- * Each test will be executed twice: once witht the JAVAX validation and the other time
+ * Each test will be executed twice: once with the JAVAX validation and the other time
  * with the JAKARTA one.
  *
  * NOTE: We cannot use reflection here because RunXJC2Mojo acts on the generation phase and the
@@ -130,7 +130,7 @@ public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
                 .getOptionList();
     }
 
-    /** Execute the current test twice: once for each beckend (Javax and Jackarta). */
+    /** Execute the current test twice: once for each backend (Javax and Jakarta). */
     @Override
     public void run(TestResult result) {
         String name = getName();
