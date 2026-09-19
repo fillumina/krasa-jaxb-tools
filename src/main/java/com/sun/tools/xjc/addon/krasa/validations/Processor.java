@@ -12,8 +12,10 @@ import com.sun.xml.xsom.XSParticle;
 import com.sun.xml.xsom.XSSimpleType;
 import com.sun.xml.xsom.XSTerm;
 import com.sun.xml.xsom.XSType;
+import com.sun.xml.xsom.XmlString;
 import com.sun.xml.xsom.impl.*;
 import java.lang.annotation.Annotation;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -183,6 +185,10 @@ public class Processor {
 
                 } else {
 
+                    BigDecimal fixedBound = fixedBoundOf(fieldHelper, element.getFixedValue());
+                    if (fixedBound != null) {
+                        facet.setFixedValue(fixedBound);
+                    }
                     processType(fieldHelper, annotator, facet);
 
                 }
@@ -228,9 +234,27 @@ public class Processor {
                         annotator.addNotNullAnnotation(message);
                     }
 
-                    processType(type, field, annotator);
+                    FieldHelper fieldHelper = new FieldHelper(field);
+                    AccumulatorFacet facet = HierarchyFacetGatherer.gatherRestrictions(type);
+                    BigDecimal fixedBound =
+                            fixedBoundOf(fieldHelper, particle.getDecl().getFixedValue());
+                    if (fixedBound != null) {
+                        facet.setFixedValue(fixedBound);
+                    }
+                    processType(fieldHelper, annotator, facet);
                 }
             }
+        }
+
+        /**
+         * The value pinned by {@code fixed}, as a bound, or null when there is none or the field
+         * cannot carry a numeric bound: a decimal bound on a string field would mean nothing.
+         */
+        private BigDecimal fixedBoundOf(FieldHelper fieldHelper, XmlString fixedValue) {
+            if (fixedValue == null || !fieldHelper.isNumber()) {
+                return null;
+            }
+            return new BigDecimal(fixedValue.value);
         }
 
         /**
