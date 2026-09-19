@@ -28,7 +28,7 @@ public class JaxbValidationsPlugin extends Plugin {
 
     public static final String PLUGIN_NAME = "XJsr303Annotations";
     public static final String PLUGIN_OPTION_NAME = "-" + PLUGIN_NAME;
-    public static final int PLUGIN_OPTION_NAME_LENGHT = PLUGIN_OPTION_NAME.length() + 1;
+    public static final int PLUGIN_OPTION_NAME_LENGTH = PLUGIN_OPTION_NAME.length() + 1;
 
     ValidationsOptions.Builder optionsBuilder = ValidationsOptions.builder();
 
