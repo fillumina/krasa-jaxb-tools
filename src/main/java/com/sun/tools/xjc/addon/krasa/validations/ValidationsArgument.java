@@ -38,12 +38,12 @@ public enum ValidationsArgument {
             p -> p.isMultiPattern()),
     generateAllNumericConstraints(
             Boolean.class,
-            "adds @DecinalMin and @DecimalMax annotations even if within the range of the java type",
+            "adds @DecimalMin and @DecimalMax annotations even if within the range of the java type",
             (p,v) -> setBoolean(v, r -> p.allNumericConstraints(r)),
             (p) -> p.isAllNumericConstraints()),
     generateNotNullAnnotations(
             Boolean.class,
-            "adds a @NotNull when an element has minOccours not 0, is required or is not nillable",
+            "adds a @NotNull when an element has minOccurs not 0, is required or is not nillable",
             (p,v) -> setBoolean(v, r -> p.notNullAnnotations(r)),
             (p) -> p.isNotNullAnnotations()),
     notNullAnnotationsCustomMessages(
