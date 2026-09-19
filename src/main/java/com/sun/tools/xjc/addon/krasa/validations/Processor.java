@@ -182,8 +182,12 @@ public class Processor {
         private void setEachAnnotations(FieldHelper fieldHelper, FieldAnnotator annotator, AccumulatorFacet facet) {
             annotator.addEachSizeAnnotation(facet.minLength(), facet.maxLength());
             annotator.addEachDigitsAnnotation(facet.totalDigits(), facet.fractionDigits());
-            annotator.addEachDecimalMinAnnotation(facet.minInclusive(), facet.minExclusive());
-            annotator.addEachDecimalMaxAnnotation(facet.maxInclusive(), facet.maxExclusive());
+            annotator.addEachDecimalMinAnnotation(
+                    fieldHelper.validItemValue(facet.minInclusive()),
+                    fieldHelper.validItemValue(facet.minExclusive()));
+            annotator.addEachDecimalMaxAnnotation(
+                    fieldHelper.validItemValue(facet.maxInclusive()),
+                    fieldHelper.validItemValue(facet.maxExclusive()));
             // @EachPattern resolves to the Pattern validator, which accepts CharSequence only:
             // on a collection of numbers it would check nothing and fail at validation time.
             if (fieldHelper.isStringList()) {

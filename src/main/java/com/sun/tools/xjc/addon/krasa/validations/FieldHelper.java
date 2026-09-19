@@ -1,9 +1,12 @@
 package com.sun.tools.xjc.addon.krasa.validations;
 
+import com.sun.codemodel.JClass;
 import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JType;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -20,6 +23,32 @@ class FieldHelper {
             return NumericRange.valid(typeName, value);
         }
         return null;
+    }
+
+    /**
+     * The same as {@link #validValue(BigDecimal)}, for the elements of a collection: a bound of a
+     * {@code List<Integer>} has to be compared with {@code Integer}, while the field itself is a
+     * {@code List}, which {@code NumericRange} does not know.
+     */
+    public BigDecimal validItemValue(BigDecimal value) {
+        if (value != null) {
+            return NumericRange.valid(itemTypeName(), value);
+        }
+        return null;
+    }
+
+    /** The type the field holds: its type argument when it is a collection, its type otherwise. */
+    private String itemTypeName() {
+        JType type = field.type();
+        if (type instanceof JClass) {
+            List<JClass> typeArguments = ((JClass) type).getTypeParameters();
+            if (typeArguments.size() == 1) {
+                // the type argument of a List is a reference type, so boxify() is not needed
+                // (and is deprecated on JClass)
+                return typeArguments.get(0).fullName();
+            }
+        }
+        return type.boxify().fullName();
     }
 
     /** WARNING a string with enumeration restrictions is converted into an enum */
