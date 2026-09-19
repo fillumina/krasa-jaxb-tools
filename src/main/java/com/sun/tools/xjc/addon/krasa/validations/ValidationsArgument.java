@@ -202,13 +202,13 @@ public enum ValidationsArgument {
     }
 
     static ValidationsArgument parse(final String name) throws BadCommandLineException {
-        ValidationsArgument argument = ValidationsArgument.valueOf(name);
-        if (argument == null) {
+        try {
+            return ValidationsArgument.valueOf(name);
+        } catch (IllegalArgumentException ex) {
             throw new BadCommandLineException(JaxbValidationsPlugin.PLUGIN_NAME +
                     " unrecognized option " + name + ", usage:\n" +
                     ValidationsArgument.helpMessageWithPrefix(""));
         }
-        return argument;
     }
 
     /**
