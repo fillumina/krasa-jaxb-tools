@@ -1,0 +1,14 @@
+NumericValue
+    fixedAtTheTypeLimit
+        @NotNull
+    fixedAttribute
+        @DecimalMax(value = "1", inclusive = true)
+        @DecimalMin(value = "1", inclusive = true)
+    fixedValue
+        @DecimalMax(value = "1", inclusive = true)
+        @DecimalMin(value = "1", inclusive = true)
+        @NotNull
+    multiEnumerated
+        @NotNull
+    singleEnumerated
+        @NotNull
