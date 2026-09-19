@@ -157,6 +157,10 @@ the proof of both its halves — in [doc/numeric-patterns-prepass.md](doc/numeri
 Whatever it produces is for **code generation only**: it drops the pattern, so it is *not*
 equivalent as a validation contract — keep validating against the original schema.
 
+Numeric `xsd:enumeration` restrictions are not validated: no annotation is generated for them. A
+value pinned by `fixed` is translated, as a fixed range (`minInclusive` + `maxInclusive` with the same
+value).
+
 ## Note on submitting issues and bugfixes
 
 Any issue or bug fix reported is *extremely* welcome but to help me understand the problem and reduce the time to publish the fix I kindly ask to comply to these roles:
