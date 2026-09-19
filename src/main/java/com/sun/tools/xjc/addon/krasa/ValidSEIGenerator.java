@@ -99,8 +99,6 @@ public class ValidSEIGenerator extends SEIGenerator {
 
         String[] xjcArgs = (String[]) ctx.get(ToolConstants.CFG_XJC_ARGS);
 		if (xjcArgs != null) {
-			System.err.println("xjcArgs: \n" + Arrays.deepToString(xjcArgs));
-
 			Arrays.stream(xjcArgs).forEachOrdered(xjcArg -> {
                 try {
                     optionsBuilder.parseArgument(xjcArg);

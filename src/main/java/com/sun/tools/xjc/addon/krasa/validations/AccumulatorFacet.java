@@ -35,6 +35,16 @@ public class AccumulatorFacet extends AbstractFacet {
     private final LinkedHashSet<LinkedHashSet<String>> multiPatterns = new LinkedHashSet<>();
     private final LinkedHashSet<String> multiEnumerations = new LinkedHashSet<>();
 
+    /**
+     * Pins the value of the element to one: {@code fixed} means it can only have that value, so it
+     * is both the minimum and the maximum, and whatever bounds the type declares is beside the
+     * point.
+     */
+    void setFixedValue(BigDecimal value) {
+        this.minInclusive = value;
+        this.maxInclusive = value;
+    }
+
     public void apply(AbstractFacet facet) {
         final Integer minLength = facet.minLength();
         if (minLength != null) {

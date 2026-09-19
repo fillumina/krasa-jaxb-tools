@@ -1,0 +1,44 @@
+<xsd:schema
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="a"
+    xmlns:a="a"
+    elementFormDefault="qualified">
+
+    <xsd:element name="numericPattern" type="a:NumericPattern"/>
+
+    <xsd:complexType name="NumericPattern">
+        <xsd:sequence>
+            <!--
+              A numeric type must not carry a pattern: no Bean Validation constraint can honor it.
+
+              Two reasons, and this fixture is written so that both stay visible:
+               - @Pattern resolves to the Pattern validator, which accepts CharSequence only, so
+                 it cannot validate a number at all - it fails at validation time instead of
+                 checking anything;
+               - a pattern is not a numeric range: "[0-9]3[0-9]*" pins the digit 3 in second
+                 position, which no minInclusive/maxInclusive pair can express.
+
+              The pattern below is deliberately of the second kind. A literal value would hide
+              the limit, because it happens to be expressible as a range; this one shows why
+              "just translate the pattern into numeric facets" is not a general answer.
+
+              So no pattern validation may be imported for these fields - scalar or collection.
+              To constrain a numeric value, use numeric facets (minInclusive + maxInclusive).
+
+              The same simpleType is used twice, once scalar and once as a collection, so this
+              fixture is the verification gate for anyone adding pattern support to numbers.
+            -->
+            <xsd:element name="patternedInteger" type="a:PatternedInteger"
+                         minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="patternedIntegerList" type="a:PatternedInteger"
+                         minOccurs="2" maxOccurs="4"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:simpleType name="PatternedInteger">
+        <xsd:restriction base="xsd:integer">
+            <xsd:pattern value="[0-9]3[0-9]*"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+</xsd:schema>

@@ -1,0 +1,50 @@
+<xsd:schema
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="a"
+    xmlns:a="a"
+    elementFormDefault="qualified">
+
+    <xsd:element name="numericBounds" type="a:NumericBounds"/>
+
+    <xsd:complexType name="NumericBounds">
+        <xsd:sequence>
+            <!--
+              xsd:int declares minInclusive -2147483648 and maxInclusive 2147483647.
+              Every int satisfies them, so as annotations they say nothing and, worse,
+              they misrepresent a restriction: the scalar path drops them through
+              NumericRange.valid, and this fixture is the gate that the collection path
+              does the same, for the *element* type of the collection.
+
+              One field per case:
+               - plainInt: a plain scalar, whose own bounds are already dropped;
+               - plainIntList: a plain int collection, which must lose them as well;
+               - boundedIntList: element type Integer (known to NumericRange), whose
+                 declared bounds are not the type limits and must survive;
+               - decimalList: element type BigDecimal (unknown to NumericRange), whose
+                 declared bounds must survive too - the filter drops a bound only when
+                 the Java type already implies it.
+            -->
+            <xsd:element name="plainInt" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="plainIntList" type="xsd:int" minOccurs="0" maxOccurs="5"/>
+            <xsd:element name="boundedIntList" type="a:BoundedInt"
+                         minOccurs="2" maxOccurs="4"/>
+            <xsd:element name="decimalList" type="a:Percentage"
+                         minOccurs="0" maxOccurs="3"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:simpleType name="BoundedInt">
+        <xsd:restriction base="xsd:int">
+            <xsd:minInclusive value="0"/>
+            <xsd:maxInclusive value="9999"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="Percentage">
+        <xsd:restriction base="xsd:decimal">
+            <xsd:minInclusive value="0"/>
+            <xsd:maxInclusive value="100"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+</xsd:schema>

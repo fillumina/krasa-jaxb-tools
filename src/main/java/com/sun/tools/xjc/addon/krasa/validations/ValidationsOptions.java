@@ -130,13 +130,13 @@ public class ValidationsOptions {
                 int idx = option.indexOf("=");
                 if (idx != -1) {
                     final String name = option.substring(
-                            JaxbValidationsPlugin.PLUGIN_OPTION_NAME_LENGHT, idx);
+                            JaxbValidationsPlugin.PLUGIN_OPTION_NAME_LENGTH, idx);
                     final String value = option.substring(idx + 1);
                     ValidationsArgument argument = ValidationsArgument.parse(name);
                     setValue(argument, value);
-                } else if (option.length() > JaxbValidationsPlugin.PLUGIN_OPTION_NAME_LENGHT) {
+                } else if (option.length() > JaxbValidationsPlugin.PLUGIN_OPTION_NAME_LENGTH) {
                     final String name = option.substring(
-                            JaxbValidationsPlugin.PLUGIN_OPTION_NAME_LENGHT);
+                            JaxbValidationsPlugin.PLUGIN_OPTION_NAME_LENGTH);
                     ValidationsArgument argument = ValidationsArgument.parse(name);
                     setValue(argument, "true");
                 }

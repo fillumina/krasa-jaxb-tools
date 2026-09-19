@@ -1,0 +1,47 @@
+<xsd:schema
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="a"
+    xmlns:a="a"
+    elementFormDefault="qualified">
+
+    <xsd:element name="numericValue" type="a:NumericValue"/>
+
+    <xsd:complexType name="NumericValue">
+        <xsd:sequence>
+            <!--
+              Three ways of pinning one value, only one of which can be honored:
+               - fixed is one value and nothing else, so a fixed range says exactly the same
+                 thing, and every fixed value is expressible;
+               - an enumeration is a value set: one value or many, and Bean Validation has no
+                 "one of these values" constraint, so only the single-valued case could be
+                 expressed while the rest stayed silently ignored. That partial promise is
+                 what the pattern refusal was about, so enumeration is not translated either,
+                 whatever its cardinality. Both enumeration fields are here to keep that true.
+
+              An element and an attribute carry fixed the same way, so both are here; and a
+              fixed value equal to the limit of the Java type is as vacuous as any other
+              natural bound, so it must be dropped like the others.
+            -->
+            <xsd:element name="fixedValue" type="xsd:int" minOccurs="1" maxOccurs="1" fixed="1"/>
+            <xsd:element name="fixedAtTheTypeLimit" type="xsd:int" minOccurs="1" maxOccurs="1"
+                         fixed="-2147483648"/>
+            <xsd:element name="singleEnumerated" type="a:One" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="multiEnumerated" type="a:OneOrTwo" minOccurs="1" maxOccurs="1"/>
+        </xsd:sequence>
+        <xsd:attribute name="fixedAttribute" type="xsd:int" fixed="1"/>
+    </xsd:complexType>
+
+    <xsd:simpleType name="One">
+        <xsd:restriction base="xsd:int">
+            <xsd:enumeration value="1"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="OneOrTwo">
+        <xsd:restriction base="xsd:int">
+            <xsd:enumeration value="1"/>
+            <xsd:enumeration value="2"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+</xsd:schema>

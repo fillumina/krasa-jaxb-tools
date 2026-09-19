@@ -12,8 +12,10 @@ import com.sun.xml.xsom.XSParticle;
 import com.sun.xml.xsom.XSSimpleType;
 import com.sun.xml.xsom.XSTerm;
 import com.sun.xml.xsom.XSType;
+import com.sun.xml.xsom.XmlString;
 import com.sun.xml.xsom.impl.*;
 import java.lang.annotation.Annotation;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -82,9 +84,20 @@ public class Processor {
         private void processElement(CElementPropertyInfo property) {
             String propertyName = property.getName(false);
 
-            XSParticle particle = (XSParticle) property.getSchemaComponent();
+            // Not an error: XJC leaves the component null when the model is built from something
+            // other than XML Schema (a DTD, say) and passes the element declaration for the element
+            // class of a simple content. Nothing can be annotated then, so the element is ignored, as
+            // the attribute path does for a property without a field.
+            XSComponent definition = property.getSchemaComponent();
+            if (!(definition instanceof XSParticle)) {
+                return;
+            }
+            XSParticle particle = (XSParticle) definition;
             XSTerm term = particle.getTerm();
             final JFieldVar field = classOutline.implClass.fields().get(propertyName);
+            if (field == null) {
+                return;
+            }
             FieldAnnotator annotator =
                     new FieldAnnotator(field, options.getAnnotationFactory(), logger);
 
@@ -125,7 +138,7 @@ public class Processor {
             // and @NotNull should not be added so only required quilifies to add @NotNull
             if (options.isNotNullAnnotations() && !nillable && required) {
                 String message = notNullMessage(classOutline, field);
-                annotator.addNotNullAnnotation(classOutline, field, message);
+                annotator.addNotNullAnnotation(message);
             }
 
             if (property.isCollection() && (minOccurs != 1 || maxOccurs != 1)) {
@@ -156,7 +169,7 @@ public class Processor {
                     if (options.isValidationCollection()) {
                         AccumulatorFacet itemFacet = facet.getItemFacet();
                         if (itemFacet != null) {
-                            setEachAnnotations(annotator, itemFacet);
+                            setEachAnnotations(fieldHelper, annotator, itemFacet);
                         } else {
                             /**
                              * elements that inherit occurrences different from 1 will be
@@ -165,13 +178,17 @@ public class Processor {
                             if (!fieldHelper.isList()) {
                                 throw new AssertionError("That's unexpected: please report this exception along with the XSD that provoked it.");
                             }
-                            setEachAnnotations(annotator, facet);
+                            setEachAnnotations(fieldHelper, annotator, facet);
                         }
                     }
 
 
                 } else {
 
+                    BigDecimal fixedBound = fixedBoundOf(fieldHelper, element.getFixedValue());
+                    if (fixedBound != null) {
+                        facet.setFixedValue(fixedBound);
+                    }
                     processType(fieldHelper, annotator, facet);
 
                 }
@@ -179,12 +196,20 @@ public class Processor {
             }
         }
 
-        private void setEachAnnotations(FieldAnnotator annotator, AccumulatorFacet facet) {
+        private void setEachAnnotations(FieldHelper fieldHelper, FieldAnnotator annotator, AccumulatorFacet facet) {
             annotator.addEachSizeAnnotation(facet.minLength(), facet.maxLength());
             annotator.addEachDigitsAnnotation(facet.totalDigits(), facet.fractionDigits());
-            annotator.addEachDecimalMinAnnotation(facet.minInclusive(), facet.minExclusive());
-            annotator.addEachDecimalMaxAnnotation(facet.maxInclusive(), facet.maxExclusive());
-            annotator.addEachPatterns(facet.getMultiPatterns(), options.isMultiPattern());
+            annotator.addEachDecimalMinAnnotation(
+                    fieldHelper.validItemValue(facet.minInclusive()),
+                    fieldHelper.validItemValue(facet.minExclusive()));
+            annotator.addEachDecimalMaxAnnotation(
+                    fieldHelper.validItemValue(facet.maxInclusive()),
+                    fieldHelper.validItemValue(facet.maxExclusive()));
+            // @EachPattern resolves to the Pattern validator, which accepts CharSequence only:
+            // on a collection of numbers it would check nothing and fail at validation time.
+            if (fieldHelper.isStringList()) {
+                annotator.addEachPatterns(facet.getMultiPatterns(), options.isMultiPattern());
+            }
         }
 
         /**
@@ -206,12 +231,30 @@ public class Processor {
 
                     if (particle.isRequired()) {
                         String message = notNullMessage(classOutline, field);
-                        annotator.addNotNullAnnotation(classOutline, field, message);
+                        annotator.addNotNullAnnotation(message);
                     }
 
-                    processType(type, field, annotator);
+                    FieldHelper fieldHelper = new FieldHelper(field);
+                    AccumulatorFacet facet = HierarchyFacetGatherer.gatherRestrictions(type);
+                    BigDecimal fixedBound =
+                            fixedBoundOf(fieldHelper, particle.getDecl().getFixedValue());
+                    if (fixedBound != null) {
+                        facet.setFixedValue(fixedBound);
+                    }
+                    processType(fieldHelper, annotator, facet);
                 }
             }
+        }
+
+        /**
+         * The value pinned by {@code fixed}, as a bound, or null when there is none or the field
+         * cannot carry a numeric bound: a decimal bound on a string field would mean nothing.
+         */
+        private BigDecimal fixedBoundOf(FieldHelper fieldHelper, XmlString fixedValue) {
+            if (fixedValue == null || !fieldHelper.isNumber()) {
+                return null;
+            }
+            return new BigDecimal(fixedValue.value);
         }
 
         /**

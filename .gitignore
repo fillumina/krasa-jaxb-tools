@@ -6,4 +6,7 @@
 target
 /nb-configuration.xml
 /nbproject/
+.vscode/
+.run/
+.pi/
 !/src/test/resources/target/

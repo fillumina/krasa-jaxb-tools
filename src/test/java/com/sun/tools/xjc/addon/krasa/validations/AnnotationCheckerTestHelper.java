@@ -1,6 +1,7 @@
 package com.sun.tools.xjc.addon.krasa.validations;
 
 import java.util.stream.Stream;
+import junit.framework.TestResult;
 
 /**
  * Helper to test if there are JAVAX annotated classes in a JAKARTA production and vice versa.
@@ -23,17 +24,27 @@ public class AnnotationCheckerTestHelper extends RunXJC2MojoTestHelper {
     }
 
     @Override
-    public void checkJakarta() throws Exception {
-        streamOfElementNames().forEach(en ->
+    public void checkJakarta(TestResult result) throws Exception {
+        streamOfElementNames().forEach(en -> {
+            try {
                 withElement(en)
-                        .assertAnnotationNotPresent(ValidationsAnnotation.JAVAX));
+                        .assertAnnotationNotPresent(ValidationsAnnotation.JAVAX);
+            } catch (Throwable throwable) {
+                recordFailure(result, throwable);
+            }
+        });
     }
 
     @Override
-    public void checkJavax() throws Exception {
-        streamOfElementNames().forEach(en ->
+    public void checkJavax(TestResult result) throws Exception {
+        streamOfElementNames().forEach(en -> {
+            try {
                 withElement(en)
-                        .assertAnnotationNotPresent(ValidationsAnnotation.JAKARTA));
+                        .assertAnnotationNotPresent(ValidationsAnnotation.JAKARTA);
+            } catch (Throwable throwable) {
+                recordFailure(result, throwable);
+            }
+        });
     }
 
     Stream<String> streamOfElementNames() {

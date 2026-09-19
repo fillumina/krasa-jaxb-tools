@@ -1,0 +1,27 @@
+# Runs the test suite on every push and pull request, on JDK 8, which is the JDK this project
+# targets (the release/deploy procedure is the note at the end of the pom).
+
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up JDK 8
+      uses: actions/setup-java@v4
+      with:
+        java-version: '8'
+        distribution: 'temurin'
+
+    - name: Run the tests
+      run: mvn -B test --file pom.xml

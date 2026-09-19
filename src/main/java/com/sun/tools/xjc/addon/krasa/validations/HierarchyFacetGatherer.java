@@ -19,12 +19,12 @@ public class HierarchyFacetGatherer {
             return AccumulatorFacet.EMPTY;
         }
         AccumulatorFacet facet = new AccumulatorFacet();
-        navigateUpTheHierarcy(facet, type);
-        consolildatePatterns(facet);
+        navigateUpTheHierarchy(facet, type);
+        consolidatePatterns(facet);
         return facet;
     }
 
-    private static void consolildatePatterns(AccumulatorFacet facet) {
+    private static void consolidatePatterns(AccumulatorFacet facet) {
         final LinkedHashSet<LinkedHashSet<String>> multiPatterns = facet.getMultiPatterns();
         final LinkedHashSet<String> multiEnumerations = facet.getMultiEnumerations();
 
@@ -41,7 +41,7 @@ public class HierarchyFacetGatherer {
 
     }
 
-    private static void navigateUpTheHierarcy(AccumulatorFacet facet, XSSimpleType type) {
+    private static void navigateUpTheHierarchy(AccumulatorFacet facet, XSSimpleType type) {
         XSSimpleType baseType = null;
         if (type instanceof XSListSimpleType) {
             baseType = type.getBaseListType();
@@ -54,7 +54,7 @@ public class HierarchyFacetGatherer {
             facet = facet.createItemFacet();
         }
         if (baseType != null && baseType != type) {
-            navigateUpTheHierarcy(facet, baseType);
+            navigateUpTheHierarchy(facet, baseType);
         }
 
         final XSSimpleTypeFacet typeFacet = new XSSimpleTypeFacet(type);

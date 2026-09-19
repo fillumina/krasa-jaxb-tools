@@ -1,6 +1,7 @@
 package com.sun.tools.xjc.addon.krasa.validations;
 
 import java.util.List;
+import junit.framework.TestResult;
 
 public class ClassNameTest extends AnnotationCheckerTestHelper {
 
@@ -9,7 +10,7 @@ public class ClassNameTest extends AnnotationCheckerTestHelper {
     }
 
     @Override
-    public void checkJavax() {
+    public void checkJavax(TestResult result) {
         withElement("NotNullType")
                 .withField("notNullString")
                 .withAnnotation("NotNull")
@@ -18,7 +19,7 @@ public class ClassNameTest extends AnnotationCheckerTestHelper {
     }
 
     @Override
-    public void checkJakarta() {
+    public void checkJakarta(TestResult result) {
         withElement("NotNullType")
                 .withField("notNullString")
                 .withAnnotation("NotNull")

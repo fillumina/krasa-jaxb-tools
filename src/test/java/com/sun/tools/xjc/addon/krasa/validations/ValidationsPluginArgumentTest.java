@@ -21,6 +21,7 @@ import com.sun.tools.xjc.addon.krasa.JaxbValidationsPlugin;
 import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import org.junit.Test;
 
 /**
@@ -53,6 +54,23 @@ public class ValidationsPluginArgumentTest {
     @Test(expected = BadCommandLineException.class)
     public void shouldNotSetErroneousVerbose() throws BadCommandLineException, IOException {
         setArguments(ValidationsArgument.verbose.withValue("ERROR"));
+    }
+
+    /**
+     * An unknown option <i>name</i> must be reported like a wrong value is, with the usage, and not
+     * as the IllegalArgumentException thrown by the enum lookup. A bad name is what a user typing
+     * the option by hand gets; a raw java exception is not an answer.
+     */
+    @Test
+    public void shouldNotAcceptAnUnknownOptionName() throws BadCommandLineException, IOException {
+        try {
+            setArguments(JaxbValidationsPlugin.PLUGIN_OPTION_NAME + ":bogusOption=1");
+            fail("an unknown option name must be rejected");
+        } catch (BadCommandLineException ex) {
+            String message = ex.getMessage();
+            assertTrue(message, message.contains("bogusOption"));
+            assertTrue(message, message.contains(ValidationsArgument.helpMessageWithPrefix("")));
+        }
     }
 
     @Test
