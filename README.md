@@ -170,7 +170,57 @@ The plugin generates sources annotated with the following Java Bean Validation 2
 - `@DecimalMax` for maxExclusive restriction, enable new parameter (inclusive=false) with: -XJsr303Annotations:JSR_349=true
 - `@DecimalMin` for minExclusive restriction, enable new parameter (inclusive=false) with: -XJsr303Annotations:JSR_349=true
 - `@Digits` if there is a totalDigits or fractionDigits restriction.
-- `@Pattern` and `@PatternList` if there is a Pattern restriction (see `singlePattern` option)
+- `@Pattern` and `@PatternList` if there is a Pattern restriction (see `singlePattern` option); strings only — numeric patterns are not supported, see [Numeric patterns are not supported](#numeric-patterns-are-not-supported)
+
+## Numeric patterns are not supported
+
+A `xsd:pattern` on a numeric type is **not supported**: the plugin derives no annotation from it,
+neither `@Pattern` (nor `@EachPattern` on collections) nor a translated range. This is a deliberate
+refusal, not a missing feature.
+
+Two reasons, and the second is why no translation can be complete:
+
+1. `@Pattern` resolves to the Bean Validation `Pattern` validator, which accepts `CharSequence`
+   only: on a `Short`, an `Integer` or a `BigDecimal` it does not check anything, it fails at
+   validation time.
+2. A regexp is not a range. It can constrain the *shape* of a number (`[0-9]3[0-9]*` requires the
+   second digit to be a `3`), which no interval can express, so a pattern-to-range translation
+   would be right for a few shapes and wrong for the rest.
+
+### What to write instead
+
+Use the numeric facets, which the plugin does understand:
+
+```xml
+<!-- not supported: a pattern on a numeric type -->
+<xsd:restriction base="xsd:decimal">
+  <xsd:pattern value="-1\.5" />
+</xsd:restriction>
+
+<!-- supported: the same constraint, expressed as facets -->
+<xsd:restriction base="xsd:decimal">
+  <xsd:minInclusive value="-1.5" />
+  <xsd:maxInclusive value="-1.5" />
+</xsd:restriction>
+```
+
+Mind the escaping: a pattern is a regexp, so its point is escaped (`-1\.5`), a facet is a number,
+so it is not (`-1.5`). The second form generates exactly the intended constraint:
+
+```java
+@DecimalMin(value = "-1.5", inclusive = true)
+@DecimalMax(value = "-1.5", inclusive = true)
+```
+
+### If the schema cannot be changed
+
+There is a pre-pass: rewrite the patterns into facets before the generator runs, leaving the
+original schema in place. It is a workaround for schemas that are not yours to change, **not** a
+feature of the plugin, and it is documented on its own — stylesheet, the verified Maven wiring and
+the proof of both its halves — in [doc/numeric-patterns-prepass.md](doc/numeric-patterns-prepass.md).
+
+Whatever it produces is for **code generation only**: it drops the pattern, so it is *not*
+equivalent as a validation contract — keep validating against the original schema.
 
 ## Note on submitting issues and bugfixes
 
