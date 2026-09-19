@@ -1,0 +1,7 @@
+NumericPattern
+    patternedInteger
+        @NotNull
+    patternedIntegerList
+        @NotNull
+        @Size(min = 2, max = 4)
+        @Valid
