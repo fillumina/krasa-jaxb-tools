@@ -62,7 +62,7 @@ public class ValidationsPluginArgumentTest {
      * the option by hand gets; a raw java exception is not an answer.
      */
     @Test
-    public void shouldNotAcceptAnUnknownOptionName() throws BadCommandLineException, IOException {
+    public void shouldNotAcceptAnUnknownOptionName() throws IOException {
         try {
             setArguments(JaxbValidationsPlugin.PLUGIN_OPTION_NAME + ":bogusOption=1");
             fail("an unknown option name must be rejected");

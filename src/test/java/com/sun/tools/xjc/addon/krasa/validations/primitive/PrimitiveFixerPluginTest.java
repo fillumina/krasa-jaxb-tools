@@ -18,7 +18,7 @@ public class PrimitiveFixerPluginTest extends AnnotationCheckerTestHelper {
         super("primitive", "a", "Primitive");
     }
 
-    public void testPrimitiveSubstitution() throws NoSuchFieldException {
+    public void testPrimitiveSubstitution() {
         withElement("Primitive")
                 .withField("abyte").assertClass(Byte.class).end()
                 .withField("adecimal").assertClass(BigDecimal.class).end()

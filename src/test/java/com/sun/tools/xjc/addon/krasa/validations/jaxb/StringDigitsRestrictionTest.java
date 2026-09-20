@@ -14,7 +14,7 @@ public class StringDigitsRestrictionTest extends RunXJC2MojoTestHelper {
         super("stringDigitsRestriction", "a");
     }
 
-    public void test() throws ClassNotFoundException {
+    public void test() {
         withElement("StringClassContainer")
                 .withField("stringField")
                         .assertType("String")
