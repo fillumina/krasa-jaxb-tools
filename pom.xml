@@ -222,11 +222,6 @@
                 </goals>
               </execution>
             </executions>
-            <configuration>
-              <javadocExecutable>
-                ${java.home}/bin/javadoc
-              </javadocExecutable>
-            </configuration>
           </plugin>
           <plugin>
             <!-- https://central.sonatype.org/publish/publish-maven/#gpg-signed-components -->
