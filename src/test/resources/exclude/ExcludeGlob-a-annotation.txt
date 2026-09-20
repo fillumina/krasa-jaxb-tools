@@ -1,0 +1,9 @@
+ChildType
+    name
+        @NotNull
+RootType
+    amount
+    child
+    children
+    code
+    label

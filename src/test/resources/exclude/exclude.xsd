@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="a"
+    xmlns:a="a">
+
+    <xsd:element name="root" type="a:rootType"/>
+
+    <xsd:complexType name="rootType">
+        <xsd:sequence>
+            <xsd:element name="code" type="a:codeType"/>
+            <xsd:element name="label" type="a:labelType"/>
+            <xsd:element name="amount" type="a:amountType"/>
+            <xsd:element name="child" type="a:childType"/>
+            <xsd:element name="children" type="a:childType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:simpleType name="codeType">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[A-Z]{2}[0-9]{3}"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="labelType">
+        <xsd:restriction base="xsd:string">
+            <xsd:minLength value="2"/>
+            <xsd:maxLength value="20"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="amountType">
+        <xsd:restriction base="xsd:decimal">
+            <xsd:minInclusive value="1.5"/>
+            <xsd:maxInclusive value="99.5"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="childType">
+        <xsd:sequence>
+            <xsd:element name="name" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+</xsd:schema>
