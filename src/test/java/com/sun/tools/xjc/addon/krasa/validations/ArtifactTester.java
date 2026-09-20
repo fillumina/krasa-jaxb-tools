@@ -55,7 +55,8 @@ public class ArtifactTester<P> {
     /**
      * Check if the given canonical name for the annotation is present in the import statement.
      *
-     * @param canonicalName the canonical name of the class to check (i.e. 'javax.validation.constraints.DecimalMin')
+     * @param canonicalName the canonical name of the class to check
+     *                      (i.e. 'javax.validation.constraints.DecimalMin')
      * @return a tester
      */
     public ArtifactTester<P> assertImportCanonicalName(String canonicalName) {
