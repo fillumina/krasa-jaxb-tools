@@ -115,6 +115,14 @@ public enum ValidationsArgument {
             "generates github.com/jirutka/validator-collection annotations",
             (p,v) -> setBoolean(v, r -> p.validationCollection(r)),
             (p) -> p.isValidationCollection()),
+    generateValidOnCollections(
+            Boolean.class,
+            "adds a @Valid annotation to collections; turning it off drops it from a container, "
+                    + "which Bean Validation deprecated (HV000271): the annotation belongs on the "
+                    + "type argument, which this generator cannot write. Off means the elements of "
+                    + "a collection are no longer validated through it",
+            (p, v) -> setBoolean(v, r -> p.generateValidOnCollections(r)),
+            (p) -> p.isGenerateValidOnCollections()),
     // used by ValidSEIGenerator
     generateServiceValidationAnnotations(
             String.class,

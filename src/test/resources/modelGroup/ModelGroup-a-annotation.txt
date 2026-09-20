@@ -1,0 +1,6 @@
+Grouped
+    itemAndNote
+        @Valid
+ItemType
+    code
+        @NotNull

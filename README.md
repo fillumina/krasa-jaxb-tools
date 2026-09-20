@@ -86,6 +86,8 @@ Options
   example: `-XJsr303Annotations:notNullAnnotationsCustomMessages=ClassName`
 - `generateListAnnotations` (boolean, optional, default `false`) generates [validator-collection annotations](https://github.com/jirutka/validator-collection) annotations
   example: `-XJsr303Annotations:generateListAnnotations=true`
+- `generateValidOnCollections` (boolean, default=`true`): adds a `@Valid` annotation to a collection. Bean Validation deprecated `@Valid` on a container ([HV000271](https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/)) and asks for it on the type argument - `List<@Valid Foo>` - which this generator cannot write, so turning the option off drops it from the container instead. **It is a workaround, not a fix**: with it off, the elements of a collection are no longer validated through the parent object.
+  example: `-XJsr303Annotations:generateValidOnCollections=false`
 - `generateServiceValidationAnnotations` (string, accepts: `in`, `out`, `inout`, works with  `apache-cxf` only) adds `@Valid` annotations to respective message direction (in, out or both).
   example: `-XJsr303Annotations:generateServiceValidationAnnotations=inout`
 - `generateAllNumericConstraints` (boolean, defaults to `false`) generates all `@DecimalMin` and `@DecimalMax` even those regarding the natural boundaries of the referred java type.

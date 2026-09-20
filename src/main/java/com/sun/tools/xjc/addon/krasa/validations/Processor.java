@@ -105,14 +105,21 @@ public class Processor {
                     new FieldAnnotator(field, options.getAnnotationFactory(), logger);
 
             if (term instanceof ModelGroupImpl) {
-                processModelGroupIml(annotator);
+                processModelGroupIml(property, annotator);
             } else if (term instanceof ElementDecl) {
                 processElementDecl(property, field, particle, (ElementDecl) term, annotator);
             }
         }
 
-        private void processModelGroupIml(FieldAnnotator annotator) {
-            annotator.addValidAnnotation();
+        /**
+         * A model group becomes a field of {@code List<Object>} - another container, and the same
+         * deprecated form of {@code @Valid} - so it follows the option the element collections
+         * follow.
+         */
+        private void processModelGroupIml(CElementPropertyInfo property, FieldAnnotator annotator) {
+            if (options.isGenerateValidOnCollections()) {
+                annotator.addValidAnnotation();
+            }
         }
 
         /**
@@ -146,8 +153,13 @@ public class Processor {
                 annotator.addSizeAnnotation(minOccurs, maxOccurs, null);
             }
 
-            if ((property.isCollection() || isComplexType) &&
-                    Utils.isEqualsOrNull(options.getTargetNamespace(), targetNamespace))  {
+            final boolean inTargetNamespace =
+                    Utils.isEqualsOrNull(options.getTargetNamespace(), targetNamespace);
+            // a container follows the option, any other complex type is not deprecated and keeps
+            // its @Valid whatever the option says
+            if (inTargetNamespace && (property.isCollection()
+                    ? options.isGenerateValidOnCollections()
+                    : isComplexType)) {
                 annotator.addValidAnnotation();
             }
 

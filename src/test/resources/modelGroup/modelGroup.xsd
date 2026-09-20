@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<xsd:schema
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="a"
+    xmlns:a="a"
+    elementFormDefault="qualified">
+
+  <xsd:element name="Grouped">
+    <xsd:complexType>
+      <xsd:sequence maxOccurs="unbounded">
+        <xsd:element name="Item" type="a:ItemType"/>
+        <xsd:element name="Note" type="xsd:string"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:complexType name="ItemType">
+    <xsd:sequence>
+      <xsd:element name="Code" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+</xsd:schema>
