@@ -43,13 +43,42 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
+  <dependencyManagement>
+    <dependencies>
+      <!-- The JAXB 2.3 line is the newest that still runs on JDK 8. It arrives through CXF at
+           2.3.5, so the versions are pinned here instead of being declared as dependencies:
+           dependencyManagement governs this build's own resolution and is not inherited by
+           consumers, who keep using the XJC of their own build -->
+      <dependency>
+        <groupId>org.glassfish.jaxb</groupId>
+        <artifactId>jaxb-xjc</artifactId>
+        <version>2.3.9</version>
+      </dependency>
+      <dependency>
+        <groupId>org.glassfish.jaxb</groupId>
+        <artifactId>jaxb-runtime</artifactId>
+        <version>2.3.9</version>
+      </dependency>
+      <dependency>
+        <groupId>org.glassfish.jaxb</groupId>
+        <artifactId>xsom</artifactId>
+        <version>2.3.9</version>
+      </dependency>
+      <dependency>
+        <groupId>org.glassfish.jaxb</groupId>
+        <artifactId>codemodel</artifactId>
+        <version>2.3.9</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <build>
     <pluginManagement>
       <plugins>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.2.5</version>
+          <version>3.6.0</version>
           <configuration>
             <trimStackTrace>false</trimStackTrace>
           </configuration>
@@ -61,7 +90,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>1.4.1</version>
+        <version>3.6.3</version>
         <executions>
           <execution>
             <id>enforce-versions</id>
@@ -82,7 +111,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.10.1</version>
+        <version>3.16.0</version>
         <configuration>
           <!-- must keep JDK 8 compatibility because of some old projects depending on it -->
           <source>1.8</source>
@@ -124,7 +153,7 @@
     <dependency>
       <groupId>jakarta.validation</groupId>
       <artifactId>jakarta.validation-api</artifactId>
-      <version>3.0.2</version>
+      <version>3.1.1</version>
     </dependency>
 
     <dependency>
@@ -143,7 +172,7 @@
     <dependency>
       <groupId>org.apache.cxf</groupId>
       <artifactId>cxf-tools-wsdlto-frontend-jaxws</artifactId>
-      <version>3.5.10</version>
+      <version>3.5.11</version>
       <exclusions>
         <exclusion>
           <!--
@@ -199,7 +228,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-source-plugin</artifactId>
-            <version>3.3.1</version>
+            <version>3.4.0</version>
             <executions>
               <execution>
                 <phase>verify</phase>
@@ -213,7 +242,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>3.6.3</version>
+            <version>3.12.0</version>
             <executions>
               <execution>
                 <id>attach-javadocs</id>
@@ -227,7 +256,7 @@
             <!-- https://central.sonatype.org/publish/publish-maven/#gpg-signed-components -->
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>3.2.4</version>
+            <version>3.2.8</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>
@@ -246,7 +275,7 @@
           <plugin>
             <groupId>org.sonatype.central</groupId>
             <artifactId>central-publishing-maven-plugin</artifactId>
-            <version>0.7.0</version>
+            <version>0.9.0</version>
             <extensions>true</extensions>
             <configuration>
                <publishingServerId>central</publishingServerId>
