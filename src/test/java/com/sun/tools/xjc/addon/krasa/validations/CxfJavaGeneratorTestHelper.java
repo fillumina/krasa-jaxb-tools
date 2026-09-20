@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import org.junit.Assert;
 
 /**
  * Use the Cxf to generate java classes and expose some test helper methods
@@ -27,11 +28,30 @@ public class CxfJavaGeneratorTestHelper extends CxfJavaGenerator {
     }
 
     private List<String> readLines(String filename) {
-        String absoluteName = PathUtil.getAbsolutePathOfGeneratedTestSourcesDirectory() +
-                getOutputDir() + "/" + filename;
-        Path path = Paths.get(absoluteName);
-        List<String> lines = readFile(path);
-        return lines;
+        return readFile(generatedFile(filename));
+    }
+
+    /**
+     * Asserts that the given file, relative to the output directory, has been generated.
+     */
+    public CxfJavaGeneratorTestHelper assertGeneratedFileExists(String filename) {
+        Path path = generatedFile(filename);
+        Assert.assertTrue("expected the file to be generated: " + path, Files.exists(path));
+        return this;
+    }
+
+    /**
+     * Asserts that the given file, relative to the output directory, has not been generated.
+     */
+    public CxfJavaGeneratorTestHelper assertGeneratedFileAbsent(String filename) {
+        Path path = generatedFile(filename);
+        Assert.assertFalse("expected the file not to be generated: " + path, Files.exists(path));
+        return this;
+    }
+
+    private Path generatedFile(String filename) {
+        return Paths.get(PathUtil.getAbsolutePathOfGeneratedTestSourcesDirectory() +
+                getOutputDir() + "/" + filename);
     }
 
     private List<String> readFile(Path path) {
