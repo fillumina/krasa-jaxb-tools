@@ -301,7 +301,7 @@ public class Processor {
             }
 
             if (fieldHelper.isString()) {
-                annotator.addPatterns(((AccumulatorFacet)facet).getMultiPatterns(), options.isMultiPattern());
+                annotator.addPatterns(facet.getMultiPatterns(), options.isMultiPattern());
             }
 
             if (fieldHelper.isNumber() || fieldHelper.isString()) {

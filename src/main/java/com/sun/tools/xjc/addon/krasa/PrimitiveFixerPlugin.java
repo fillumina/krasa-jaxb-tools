@@ -29,7 +29,7 @@ public class PrimitiveFixerPlugin extends Plugin {
 
     public static final String PLUGIN_NAME = "XReplacePrimitives";
 
-    private static final HashMap<String, Class> NUMERIC_TYPE_MAP = new HashMap<String, Class>();
+    private static final HashMap<String, Class<?>> NUMERIC_TYPE_MAP = new HashMap<String, Class<?>>();
     static {
         NUMERIC_TYPE_MAP.put("int", Integer.class);
         NUMERIC_TYPE_MAP.put("long", Long.class);
@@ -71,7 +71,7 @@ public class PrimitiveFixerPlugin extends Plugin {
                 }
 
                 if (type.isPrimitive()) {
-                    Class o = NUMERIC_TYPE_MAP.get(type.name());
+                    Class<?> o = NUMERIC_TYPE_MAP.get(type.name());
                     if (o != null) {
                         JCodeModel jCodeModel = new JCodeModel();
                         JClass newType = jCodeModel.ref(o);

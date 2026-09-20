@@ -104,7 +104,12 @@ public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
         return new File(getBaseDir(), "src/test/resources/" + folderName);
     }
 
+    /**
+     * The parameter is raw because the inherited method declares it raw: a wildcard
+     * parameter has the same erasure without overriding it.
+     */
     @Override
+    @SuppressWarnings("rawtypes")
     protected void configureMojo(AbstractXJC2Mojo mojo) {
         super.configureMojo(mojo);
         mojo.setProject(new MavenProject());
@@ -303,7 +308,6 @@ public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
         try (BufferedWriter writer = Files.newBufferedWriter(filename, Charset.defaultCharset(),
                 StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {
             gatAllElementsAsString(ns, writer);
-            writer.close();
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
@@ -402,7 +406,7 @@ public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
     public ArtifactTester<RunXJC2MojoTestHelper> withElement(String namespace, String elementName) {
         final String filename = elementName + ".java";
         List<String> lines = readFile(namespace, filename);
-        return new ArtifactTester(filename, lines, getAnnotation(), this);
+        return new ArtifactTester<>(filename, lines, getAnnotation(), this);
     }
 
     private List<String> readFile(String ns, String filename) {
