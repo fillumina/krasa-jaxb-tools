@@ -5,6 +5,40 @@ plugin; this file records what changed in each release.
 
 ## Versions
 
+- `2.6.0` bug fix release, with one small enhancement and a few corrections of what a schema means:
+
+  - a `fixed` value on an element or an attribute was lost: the field kept a primitive type with
+    `@NotNull` only, so the value the schema pins was never checked. It is now translated into a
+    fixed range (`minInclusive` + `maxInclusive`), on numeric fields only
+
+  - a numeric `xsd:pattern` is **not supported**: `@Pattern` accepts `CharSequence` only, and a
+    pattern is not a range (it can pin a digit at a position). Support was added during this line
+    and withdrawn before the release (see [issue #38](https://github.com/fillumina/krasa-jaxb-tools/issues/38)
+    and the [pull request #39](https://github.com/fillumina/krasa-jaxb-tools/pull/39) reverted by
+    [#40](https://github.com/fillumina/krasa-jaxb-tools/pull/40)). For a schema that cannot be
+    changed there is a pre-pass, see `doc/numeric-patterns-prepass.md`
+
+  - a numeric `enumeration` is not validated either: no annotation is generated for it
+
+  - `@EachPattern` is no longer generated on a collection of numbers, where it could not validate
+    anything
+
+  - numeric bounds are no longer copied onto a collection field: they are filtered by the element
+    type of the list
+
+  - an unknown option name is reported as a command line error with the usage, instead of as an
+    `IllegalArgumentException` from the enum lookup
+
+  - the `xjcArgs:` line is no longer printed to stderr on every CXF build, and an element property
+    without a particle is skipped instead of failing the build
+
+  - documentation: the version history moved here from the README, the references to options that
+    no longer exist were dropped, and the README gained the section *Numeric patterns are not
+    supported*
+
+  - `mvn test` now runs on JDK 8 in CI, on push and pull request
+
+
 - `2.5.1` that's a **bugfix** to version `2.4.0` fixing [issue #31](https://github.com/fillumina/krasa-jaxb-tools/issues/31), it was just wrongly named 2.5.1 instead of 2.4.1. Sorry for that.
 
 - `2.4.0` the algorithm to search for inherited restrictions has been completely rewritten and it is now much more reliable (especially with @EachXXX item annotations)

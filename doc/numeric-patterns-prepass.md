@@ -86,7 +86,7 @@ executions of the same phase run in declaration order:
       <plugin>
         <groupId>com.fillumina</groupId>
         <artifactId>krasa-jaxb-tools</artifactId>
-        <version>2.6.0-SNAPSHOT</version>
+        <version>2.6.0</version>
       </plugin>
     </plugins>
   </configuration>
@@ -100,7 +100,7 @@ produced no annotations at all and no error: the option was silently ignored.
 ## Proof
 
 Both halves were run on 2026-09-19, offline, with JDK `1.8.0_504`, `xml-maven-plugin` 1.2.2,
-`maven-jaxb2-plugin` 0.15.3 and `krasa-jaxb-tools` 2.6.0-SNAPSHOT.
+`maven-jaxb2-plugin` 0.15.3 and `krasa-jaxb-tools` 2.6.0.
 
 A schema with `<xsd:pattern value="-1\.5"/>` on `xsd:decimal` and `<xsd:pattern value="[A-Z]{3}"/>`
 on `xsd:string` produced:
