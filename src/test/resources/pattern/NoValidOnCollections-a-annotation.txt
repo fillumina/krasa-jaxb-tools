@@ -1,0 +1,11 @@
+ProcessContainer
+    process
+        @NotNull
+    someList
+        @EachPattern(regexp = "[SsOoMmEe_RrGgXxPp]+")
+        @NotNull
+        @Size(max = 5)
+    supplierGln
+        @NotNull
+        @Size(max = 14)
+ProcessType
