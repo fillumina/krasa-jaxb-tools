@@ -153,12 +153,70 @@ The plugin goes among the XJC run's `plugins`, and its options are passed as `-X
   example: `-XBeanValidationAnnotations:generateAllNumericConstraints=true`
 - `multiPattern` (boolean, default: `false`) uses a multiple javax validation `@Pattern` instead of `@Pattern.List` (see [3.2. Applying multiple constraints of the same type](https://beanvalidation.org/2.0-jsr380/spec/#constraintsdefinitionimplementation-multipleconstraints))
 
-- `exclude` (string, repeatable, optional): leaves classes or properties out of the generated annotations, or writes another one in their place. The value is a glob over the qualified name of the generated class (`*` and `?`, everything else literal), optionally `#` and a glob over the property name, optionally `=` and the annotation to write instead:
-  - `-XBeanValidationAnnotations:exclude=com.example.RootType#code` — every annotation of that property is left out
-  - `-XBeanValidationAnnotations:exclude=*RootType#*` — the same for the whole class, `*RootType` being a glob over `com.example.RootType`
-  - `-XBeanValidationAnnotations:exclude=*#label=@Size(max = {max})` — that annotation is written instead, and `{…}` is a placeholder
+- `exclude` (string, repeatable, optional): leaves chosen classes, properties or annotations out of the
+  generated code, sets a parameter of one of them, or writes another annotation in its place. Its shape is
+  `Class[#property][@Annotation][:parameter = value][=@Annotation(...)]`, it is described in the section
+  below, and it is the only option which changes the annotations the schema produced.
 
-  A replacement may name any annotation this plugin manages, and its parameters are plain text in which `{className}`, `{fieldName}`, any parameter the plugin was about to write (`{max}`, `{regexp}`, `{value}`, `{inclusive}`, …) and the annotation's own default (`{message}`) can be used; nothing else is substituted, and an unknown name is an error at generation time. The replacement itself is not validated — your compiler does that. A statement that matches no class and no property is reported as a warning, because a typo would otherwise leave the annotations in place, silently.
+### `exclude`: leaving annotations out, or setting their parameters
+
+The annotations are derived from the schema, and sometimes that is not what the generated code needs:
+one constraint has to go, or its message has to say something else. `exclude` changes what is written for
+a chosen class, property or annotation, without touching the schema and without touching the rest of the
+generated code.
+
+A statement has these parts, and every name in it is a glob (`*`, `?`; every other character literal):
+
+| part | what it means |
+|---|---|
+| `Class` | the **qualified** name of the generated class |
+| `#property` | the property name; without it, every property of the class is covered |
+| `@Annotation` | the simple name of an annotation the plugin computed for it — `NotNull`, `Size`, `Pattern`, `Valid`, `EachSize`, …; without it, all of them are covered |
+| `:parameter = value` | sets that parameter and keeps the rest of the annotation as it was |
+| `= @Annotation(...)` | writes this annotation instead of the covered ones |
+
+The option can be repeated, several statements may cover one property, and they apply in the order given:
+
+```
+-XBeanValidationAnnotations:exclude=com.example.RootType#code
+    every annotation of that property is left out
+-XBeanValidationAnnotations:exclude=*RootType#*
+    the same for the whole class, '*RootType' matching com.example.RootType
+-XBeanValidationAnnotations:exclude=*#label@NotNull
+    only @NotNull is left out, so @Size and the rest of that property stay
+-XBeanValidationAnnotations:exclude=*#amount@Decimal*
+    both decimal constraints go, @NotNull stays
+-XBeanValidationAnnotations:exclude=*#label@Size:message = at most {max} characters
+    @Size keeps the min and max the plugin computed and takes that message
+-XBeanValidationAnnotations:exclude=*#label=@Size(max = {max})
+    only a @Size of yours is written, out of the values the plugin had computed
+-XBeanValidationAnnotations:exclude=*#label@NotNull=@NotNull(message = "required")
+    the computed @NotNull becomes that one, and @Size stays
+```
+
+**Placeholders.** In a replacement and in a parameter value, `{…}` is substituted once, so a value that
+came from a placeholder is not scanned again — a regexp containing `{2}` is safe:
+
+- `{className}` and `{fieldName}` — the generated class, qualified, and the property;
+- any parameter of the annotation being written, with the value the plugin computed for it: `{max}`,
+  `{min}`, `{regexp}`, `{value}`, `{inclusive}`, `{fraction}`, `{integer}`, …;
+- the annotation's own default for a parameter the plugin does not write: `{message}` is
+  `{javax.validation.constraints.NotNull.message}` in a `javax` build, the `jakarta` one in a `jakarta`
+  build.
+
+An unknown name stops the generation with the list of the names that exist, rather than writing braces
+into your code.
+
+**What it will not do.** A replacement may name only the annotations this plugin manages: the bean
+validation constraints, `@Valid` and the `@Each*` annotations of validator-collection. Nothing else about
+it is checked — if it does not compile, the compiler of the generated code is what says so. And a
+statement that matched no class, no property, or none of the annotations it names is reported as a
+warning, because a typo would otherwise leave the annotations in place, silently.
+
+**When not to reach for it.** The annotations come from the schema, and a statement that changes them
+makes the generated code diverge from it, with nothing keeping the two in step afterwards. It is meant
+for a message, for a pattern the XSD dialect and Java do not agree on, and for the one constraint a field
+must not carry — not for maintaining constraints by hand.
 
 ### Notes
 

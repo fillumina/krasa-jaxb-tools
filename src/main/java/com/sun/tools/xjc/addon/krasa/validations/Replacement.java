@@ -137,15 +137,32 @@ class Replacement {
         XjcAnnotator.Annotate annotation = new XjcAnnotator(field, logger).annotate(annotationClass);
         for (Map.Entry<String, String> parameter : parameters.entrySet()) {
             String name = parameter.getKey();
-            String value = resolve(parameter.getValue(), className, propertyName, computed);
-            write(annotation, name, value, computed, className, propertyName);
+            String value = resolveValue(parameter.getValue(), annotationClass, className, propertyName,
+                    computed);
+            writeParameter(annotation, annotationClass, name, value);
         }
         annotation.log();
     }
 
-    private void write(XjcAnnotator.Annotate annotation, String name, String value,
-            List<XjcAnnotator.Annotate> computed, String className, String propertyName) {
-        Class<?> type = parameterType(name);
+    /**
+     * Writes the annotation the plugin computed, with the parameters a statement set on top of them.
+     */
+    static void writeComputed(JFieldVar field, XjcAnnotator.Annotate computed,
+            Map<String, String> overrides, ValidationsLogger logger) {
+        Class<? extends Annotation> type = computed.getAnnotationClass();
+        XjcAnnotator.Annotate annotation = new XjcAnnotator(field, logger).annotate(type);
+        Map<String, String> parameters = new LinkedHashMap<>(computed.getParameters());
+        parameters.putAll(overrides);
+        for (Map.Entry<String, String> parameter : parameters.entrySet()) {
+            writeParameter(annotation, type, parameter.getKey(), parameter.getValue());
+        }
+        annotation.log();
+    }
+
+    /** Writes one parameter as the annotation declares it, so numbers stay numbers. */
+    static void writeParameter(XjcAnnotator.Annotate annotation,
+            Class<? extends Annotation> annotationType, String name, String value) {
+        Class<?> type = parameterType(annotationType, name);
         if (type == String.class) {
             annotation.param(name, unquote(value));
         } else if (type == Integer.class || type == int.class) {
@@ -155,36 +172,36 @@ class Replacement {
         } else if (type == BigDecimal.class || type == Long.class || type == long.class) {
             annotation.param(name, new BigDecimal(value).toString());
         } else {
-            throw new IllegalArgumentException("@" + annotationClass.getSimpleName() + "." + name
-                    + " is of a type a replacement cannot write: " + type.getSimpleName());
+            throw new IllegalArgumentException("@" + annotationType.getSimpleName() + "." + name
+                    + " is of a type this plugin cannot write: " + type.getSimpleName());
         }
     }
 
-    private Class<?> parameterType(String name) {
+    static Class<?> parameterType(Class<? extends Annotation> annotationType, String name) {
         try {
-            return annotationClass.getMethod(name).getReturnType();
+            return annotationType.getMethod(name).getReturnType();
         } catch (NoSuchMethodException ex) {
-            throw new IllegalArgumentException("@" + annotationClass.getSimpleName()
-                    + " has no parameter " + name + ", it has " + parameterNames());
+            throw new IllegalArgumentException("@" + annotationType.getSimpleName()
+                    + " has no parameter " + name + ", it has " + parameterNames(annotationType));
         }
     }
 
     /** @return the value with every placeholder replaced, in one pass. */
-    private String resolve(String value, String className, String propertyName,
-            List<XjcAnnotator.Annotate> computed) {
+    static String resolveValue(String value, Class<? extends Annotation> annotationClass,
+            String className, String propertyName, List<XjcAnnotator.Annotate> computed) {
         Matcher matcher = PLACEHOLDER.matcher(value);
         StringBuilder resolved = new StringBuilder();
         int end = 0;
         while (matcher.find()) {
             resolved.append(value, end, matcher.start());
-            resolved.append(valueOf(matcher.group(1), className, propertyName, computed));
+            resolved.append(valueOf(matcher.group(1), annotationClass, className, propertyName, computed));
             end = matcher.end();
         }
         return resolved.append(value.substring(end)).toString();
     }
 
-    private String valueOf(String name, String className, String propertyName,
-            List<XjcAnnotator.Annotate> computed) {
+    private static String valueOf(String name, Class<? extends Annotation> annotationClass,
+            String className, String propertyName, List<XjcAnnotator.Annotate> computed) {
         if ("className".equals(name)) {
             return className;
         }
@@ -210,16 +227,16 @@ class Replacement {
         if (found != null) {
             return found;
         }
-        Object defaultValue = defaultValue(name);
+        Object defaultValue = defaultValue(annotationClass, name);
         if (defaultValue != null) {
             return String.valueOf(defaultValue);
         }
         throw new IllegalArgumentException("{" + name + "} is neither a parameter of "
                 + computedNames(computed) + " nor a parameter of @" + annotationClass.getSimpleName()
-                + " (" + parameterNames() + "), and it is not className or fieldName");
+                + " (" + parameterNames(annotationClass) + "), and it is not className or fieldName");
     }
 
-    private Object defaultValue(String name) {
+    private static Object defaultValue(Class<? extends Annotation> annotationClass, String name) {
         try {
             return annotationClass.getMethod(name).getDefaultValue();
         } catch (NoSuchMethodException ex) {
@@ -227,9 +244,9 @@ class Replacement {
         }
     }
 
-    private List<String> parameterNames() {
+    private static List<String> parameterNames(Class<? extends Annotation> annotationType) {
         List<String> names = new ArrayList<>();
-        for (Method method : annotationClass.getDeclaredMethods()) {
+        for (Method method : annotationType.getDeclaredMethods()) {
             names.add(method.getName());
         }
         return names;

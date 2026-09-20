@@ -109,4 +109,69 @@ public class ExclusionsTest {
         assertNotNull(Exclusions.validate("="));
     }
 
+    @Test
+    public void aStatementCanNameTheAnnotation() {
+        Exclusions exclusions = Exclusions.of(Collections.singletonList("a.RootType#label@NotNull"));
+
+        Exclusions.Statement statement = exclusions.statementFor("a.RootType", "label");
+        assertNotNull(statement);
+        assertTrue(statement.coversAnnotation("NotNull"));
+        assertFalse(statement.coversAnnotation("Size"));
+        assertTrue(exclusions.unmatched().isEmpty());
+    }
+
+    @Test
+    public void theAnnotationNameIsAGlobToo() {
+        Exclusions exclusions = Exclusions.of(Collections.singletonList("a.RootType#amount@Decimal*"));
+
+        Exclusions.Statement statement = exclusions.statementFor("a.RootType", "amount");
+        assertTrue(statement.coversAnnotation("DecimalMin"));
+        assertTrue(statement.coversAnnotation("DecimalMax"));
+        assertFalse(statement.coversAnnotation("NotNull"));
+    }
+
+    @Test
+    public void withoutAnAnnotationTheStatementCoversThemAll() {
+        Exclusions exclusions = Exclusions.of(Collections.singletonList("a.RootType#label"));
+
+        Exclusions.Statement statement = exclusions.statementFor("a.RootType", "label");
+        assertTrue(statement.coversAnnotation("NotNull"));
+        assertTrue(statement.coversAnnotation("Anything"));
+    }
+
+    @Test
+    public void aStatementWhoseAnnotationWasNeverThereIsReported() {
+        Exclusions exclusions = Exclusions.of(Collections.singletonList("a.RootType#label@Size"));
+
+        Exclusions.Statement statement = exclusions.statementFor("a.RootType", "label");
+        assertFalse(statement.coversAnnotation("NotNull"));
+        assertEquals(1, exclusions.unmatched().size());
+    }
+
+    @Test
+    public void aParameterNamesItsAnnotationAndItsValue() {
+        Exclusions exclusions = Exclusions.of(Collections.singletonList("a.RootType#label@Size:max = 5"));
+
+        Exclusions.Statement statement = exclusions.statementFor("a.RootType", "label");
+        assertTrue(statement.hasParameter());
+        assertEquals("max", statement.getParameter());
+        assertEquals("5", statement.getParameterValue());
+        assertFalse(statement.hasReplacement());
+    }
+
+    @Test
+    public void aParameterWithoutItsAnnotationIsRefused() {
+        assertNotNull(Exclusions.validate("a.RootType#label:max = 5"));
+    }
+
+    @Test
+    public void aParameterWithoutAValueIsRefused() {
+        assertNotNull(Exclusions.validate("a.RootType#label@Size:max"));
+    }
+
+    @Test
+    public void anEmptyAnnotationNameIsRefused() {
+        assertNotNull(Exclusions.validate("a.RootType#label@"));
+    }
+
 }
