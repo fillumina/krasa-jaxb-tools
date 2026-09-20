@@ -8,7 +8,6 @@ import java.util.LinkedHashSet;
  *
  * @author Francesco Illuminati
  */
-@SuppressWarnings("LocalVariableHidesMemberVariable")
 public class AccumulatorFacet extends AbstractFacet {
 
     public final static AccumulatorFacet EMPTY = new AccumulatorFacet() {

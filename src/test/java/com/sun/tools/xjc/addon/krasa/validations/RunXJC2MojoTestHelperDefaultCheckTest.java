@@ -4,7 +4,6 @@ import java.util.Enumeration;
 import junit.framework.TestCase;
 import junit.framework.TestFailure;
 import junit.framework.TestResult;
-import static junit.framework.TestCase.assertTrue;
 
 /**
  * Verifies that the harness really runs, by checking its default test

@@ -11,14 +11,12 @@ import java.util.Objects;
 public class AnnotationTester<P> {
 
     private final DeclarationTester<P> parent;
-    private final String line;
     private final String annotation;
     private final Map<String, String> parameterMap = new HashMap<>();
 
     public AnnotationTester(DeclarationTester<P> parent, String line,
             String annotationName) {
         this.parent = parent;
-        this.line = line;
         this.annotation = annotationName;
         parseAnnotationValues(line);
     }

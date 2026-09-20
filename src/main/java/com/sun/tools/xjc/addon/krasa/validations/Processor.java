@@ -125,8 +125,6 @@ public class Processor {
                 ElementDecl element,
                 FieldAnnotator annotator) {
 
-            // used for debugging...
-            final String name = property.getName(true);
             final int minOccurs = particle.getMinOccurs().intValue();
             final int maxOccurs = particle.getMaxOccurs().intValue();
             final boolean required = property.isRequired() || property.isCollectionRequired();
