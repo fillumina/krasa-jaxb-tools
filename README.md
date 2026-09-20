@@ -2,6 +2,34 @@
 
 # XJC and CXF plugins that generate Bean Validation 2.0 annotations
 
+## Content of the project
+
+Three independent tools ship in this one artifact, and a build can use any combination of them:
+
+- **[`Jsr303Annotations`](#the-xjc-plugin-jsr303annotations)** — a XJC plugin that adds Bean Validation 2.0 or [JSR 380](https://jcp.org/en/jsr/detail?id=380) annotations to the generated JAXB types, supporting both `javax` and `jakarta` packages, configured with the `-XJsr303Annotations` options.
+
+- **[`ReplacePrimitives`](#the-xjc-plugin-replaceprimitives)** — a XJC plugin that replaces the generated primitives with the corresponding boxed types (i.e. `int` -> `Integer`), enabled with `-XReplacePrimitives`.
+
+- **[The CXF frontends](#the-cxf-frontends-krasa-and-krasa-jaxws)** — an [Apache Cxf plugin](https://cxf.apache.org/docs/tools.html) that adds the `javax` or `jakarta` `@Valid` annotation to the SOAP methods and their parameters (both optionally) of the generated Port Type interface. It ships two frontends, `krasa` and `krasa-jaxws`, selected with `-frontend`.
+
+The two XJC plugins work on the schema and the frontends on the WSDL handed to CXF: nothing else is shared between them, and none of them needs the others to be configured.
+
+Release
+----------------
+
+```xml
+<dependency>
+    <groupId>com.fillumina</groupId>
+    <artifactId>krasa-jaxb-tools</artifactId>
+    <version>2.6.0</version>
+</dependency>
+```
+
+Versions
+----------------
+
+See [CHANGELOG.md](CHANGELOG.md) for the version history.
+
 ## This project is in maintenance — new projects will follow
 
 **This project** (`com.fillumina:krasa-jaxb-tools`)
@@ -27,22 +55,21 @@
   only what it uses.
 - **New features land here**: these projects are where further development happens.
 
-**If this plan is a problem for you, say so now** by opening an
-[issue](https://github.com/fillumina/krasa-jaxb-tools/issues) — most of all if you are midway
-through a `javax` → `jakarta` migration and would need a bridge release that does both. Better to
-hear it before the split than after.
+**Both populations are covered:**
 
-## What this project defines
+- A project that moves to JDK 21, XJC 4.x and `jakarta.validation` finds the same features in the new
+  projects, in a modern package.
+- A project that has to stay on a JDK 8 toolchain stays here, and this project stays maintained for
+  it — fixes and new options, with every default left exactly as it is.
 
-This project defines 2 XJC and 1 CXF plugins:
+The one difficult case is staying on JDK 8 *and* needing the new standards — `jakarta.validation`,
+or the annotations the specification moved from containers to type arguments. That combination is
+the only unstable ground in this arrangement, and it gets a **best-effort, optional-only** answer:
+a new option where one can be written, never a change to what the current defaults generate. If it
+is your case, an [issue](https://github.com/fillumina/krasa-jaxb-tools/issues) describing it is what
+tells us how far that effort should go.
 
-- `Jsr308Annotations` a XJC plugin that adds Bean Validation 2.0 or [JSR 380](https://jcp.org/en/jsr/detail?id=380) validations suporting both `javax` or `jakarta` packages
-
-- `ReplacePrimitives`  a XJC plugin that replaces the generated primitives with the corresponding boxed types (i.e. `int` -> `Integer`)
-
-- an [Apache Cxf plugin](https://cxf.apache.org/docs/tools.html) that adds the `javax` or `jakarta` `@Valid` annotation to the SOAP methods and their parameters (both optionally) of the generated Port Type interface. This plugin is configured using the same `JSR308Annotations` name.
-
-## Example of usage
+## Example projects
 
 There are 2 example projects containing many different plugins and configurations available for reference (each new version of this plugin is tested against these two projects):
 
@@ -50,29 +77,43 @@ There are 2 example projects containing many different plugins and configuration
 
 - [GitHub - fillumina/krasa-jaxb-tools-example: Sample project for https://github.com/fillumina/krasa-jaxb-tools](https://github.com/fillumina/krasa-jaxb-tools-example) uses **JDK 8** and provides examples using the latest versions of plugins and dependencies available for that java version.
 
-JDK 1.8 Support
-----------------
+## The XJC plugin `Jsr303Annotations`
 
-The project is bounded to support **Java 8** (**JDK 1.8**) because of some old projects still requiring it. All dependencies are selected from the latest available versions still supporting that.
+A **XJC plugin** that writes Bean Validation 2.0 or [JSR 380](https://jcp.org/en/jsr/detail?id=380) (not fully supported) annotations into the classes XJC generates, in the `javax` or the `jakarta` package. It is enabled with `-XJsr303Annotations` — the option name says JSR 303, which is where the generator started, while the annotations it writes are those of Bean Validation 2.0. It is configured with the options below; it writes annotations only and never changes the generated types.
 
-Versions
-----------------
-
-See [CHANGELOG.md](CHANGELOG.md) for the version history.
-
-Release
-----------------
+Example with the [maven-jaxb2-plugin](https://github.com/highsource/maven-jaxb2-plugin), the wiring of [krasa-maven-jaxb2-plugin-example](https://github.com/fillumina/krasa-jaxb-tools-example/tree/master/krasa-maven-jaxb2-plugin-example):
 
 ```xml
-<dependency>
-    <groupId>com.fillumina</groupId>
-    <artifactId>krasa-jaxb-tools</artifactId>
-    <version>2.6.0</version>
-</dependency>
+<plugin>
+  <groupId>org.jvnet.jaxb2.maven2</groupId>
+  <artifactId>maven-jaxb2-plugin</artifactId>
+  <executions>
+    <execution>
+      <goals>
+        <goal>generate</goal>
+      </goals>
+      <configuration>
+        <extension>true</extension>
+        <args>
+          <arg>-XJsr303Annotations</arg>
+          <arg>-XJsr303Annotations:targetNamespace=a</arg>
+        </args>
+        <plugins>
+          <plugin>
+            <groupId>com.fillumina</groupId>
+            <artifactId>krasa-jaxb-tools</artifactId>
+            <version>${krasa-jaxb-tools.version}</version>
+          </plugin>
+        </plugins>
+      </configuration>
+    </execution>
+  </executions>
+</plugin>
 ```
 
-Options
-----------------
+The plugin goes among the XJC run's `plugins`, and its options are passed as `-XJsr303Annotations:…` arguments. With the `cxf-codegen-plugin` the same arguments are prefixed with `-xjc-`, see [The CXF frontends](#the-cxf-frontends-krasa-and-krasa-jaxws).
+
+### Options
 
 - `verbose` (boolean, default=`false`) print verbose messages to output
   example: `-XJsr303Annotations:verbose=true`
@@ -118,15 +159,9 @@ Bean validation policy can be customized with `-XJsr303Annotations:generateServi
 - `In` (validate only requests)
 - `Out` (validate only responses)
 
-Using this option requires to specify `krasa` as front end generator in the CXF plugin with the option `-frontend krasa` (See example in [krasa-jaxb-tools-example/krasa-cxf-codegen-plugin-example/pom.xml at master · fillumina/krasa-jaxb-tools-example · GitHub](https://github.com/fillumina/krasa-jaxb-tools-example/blob/master/krasa-cxf-codegen-plugin-example/pom.xml) )
+Using this option requires one of the frontends of this project as the CXF plugin's front end — `-frontend krasa` or `-frontend krasa-jaxws` — see [The CXF frontends](#the-cxf-frontends-krasa-and-krasa-jaxws).
 
-#### About `ReplacePrimitives`
-
-That is a different plugin within this same package that can be enabled with the option `-XReplacePrimitives`.  It replaces primitive types with boxed ones (`int` -> `Integer`). It's enabled in the [krasa-cxf-codegen-plugin-example](https://github.com/fillumina/krasa-jaxb-tools-example/blob/master/krasa-cxf-codegen-plugin-example/pom.xml) project as an example.
-**WARNING:** must be defined before XhashCode or Xequals.
-
-Supported Annotations
-----------------
+### Supported annotations
 
 The plugin generates sources annotated with the following Java Bean Validation 2.0 (JSR 380) annotations (with either `javax` or `jakarta` packages depending on the configuration, see `-XJsr303Annotations:validationAnnotations=javax`):
 
@@ -141,7 +176,21 @@ The plugin generates sources annotated with the following Java Bean Validation 2
 - `@Digits` if there is a totalDigits or fractionDigits restriction.
 - `@Pattern` and `@PatternList` if there is a Pattern restriction; strings only — numeric patterns are not supported, see [Numeric patterns are not supported](#numeric-patterns-are-not-supported)
 
-## Numeric patterns are not supported
+**That is only part of JSR 380.** The generator writes the constraints a schema can express, where a
+JAXB field or parameter allows them — the annotations above, on a field, a getter or a parameter —
+and not:
+
+- the constraints that belong to a **type argument** — `List<@Pattern(regexp = "…") String>`, and
+  `@Valid` on the type argument rather than on the container. A collection carries either `@Valid` on
+  the container (deprecated, see `generateValidOnCollections`) or the `@Each*` annotations of
+  [validator-collection](https://github.com/jirutka/validator-collection), a third-party stand-in for
+  the same constraints; the form the specification asks for is what the new projects announced above
+  are for.
+- the JSR 380 constraints a schema has no source for — `@Email`, `@NotEmpty`, `@NotBlank`, the sign
+  constraints (`@Positive`, `@Negative`, …) and the date constraints (`@PastOrPresent`,
+  `@FutureOrPresent`) — which are not derived from anything.
+
+### Numeric patterns are not supported
 
 A `xsd:pattern` on a numeric type is **not supported**: the plugin derives no annotation from it,
 neither `@Pattern` (nor `@EachPattern` on collections) nor a translated range. This is a deliberate
@@ -156,7 +205,7 @@ Two reasons, and the second is why no translation can be complete:
    second digit to be a `3`), which no interval can express, so a pattern-to-range translation
    would be right for a few shapes and wrong for the rest.
 
-### What to write instead
+#### What to write instead
 
 Use the numeric facets, which the plugin does understand:
 
@@ -181,7 +230,7 @@ so it is not (`-1.5`). The second form generates exactly the intended constraint
 @DecimalMax(value = "-1.5", inclusive = true)
 ```
 
-### If the schema cannot be changed
+#### If the schema cannot be changed
 
 There is a pre-pass: rewrite the patterns into facets before the generator runs, leaving the
 original schema in place. It is a workaround for schemas that are not yours to change, **not** a
@@ -194,6 +243,84 @@ equivalent as a validation contract — keep validating against the original sch
 Numeric `xsd:enumeration` restrictions are not validated: no annotation is generated for them. A
 value pinned by `fixed` is translated, as a fixed range (`minInclusive` + `maxInclusive` with the same
 value).
+
+## The XJC plugin `ReplacePrimitives`
+
+A **XJC plugin**, in the same artifact but independent of `Jsr303Annotations`, that replaces the primitive types of the generated classes with the corresponding boxed ones (`int` -> `Integer`). It is enabled with `-XReplacePrimitives` and takes no option; it is used in the [krasa-cxf-codegen-plugin-example](https://github.com/fillumina/krasa-jaxb-tools-example/tree/master/krasa-cxf-codegen-plugin-example) project as an example.
+
+In a `maven-jaxb2-plugin` run it is one more XJC argument:
+
+```xml
+<args>
+  <arg>-XReplacePrimitives</arg>
+  <arg>-XhashCode</arg>
+  <arg>-Xequals</arg>
+</args>
+```
+
+**WARNING:** must be defined before `XhashCode` or `Xequals`.
+
+## The CXF frontends `krasa` and `krasa-jaxws`
+
+An [Apache Cxf plugin](https://cxf.apache.org/docs/tools.html) that runs as a CXF *frontend*, selected with `-frontend`. It adds the `javax` or `jakarta` `@Valid` annotation to the SOAP methods and their parameters of the generated Port Type interface (`generateServiceValidationAnnotations`), and it ships two frontends, which differ only in the generators they run:
+
+- **`krasa`** — the frontend this project has always shipped. It declares the `ValidSEIGenerator` only, so next to the JAXB types it writes the port type interface with the `@Valid` annotations and nothing else. No CXF generator is registered under this name, so **CXF's own switches have no effect**: with `-all`, `-client`, `-server` or `-impl` you still get that one interface.
+- **`krasa-jaxws`** — new in 2.7.0. The same `ValidSEIGenerator` plus the seven generators CXF's own `jaxws` frontend declares — `AntGenerator`, `ClientGenerator`, `FaultGenerator`, `ImplGenerator`, `SEIGenerator`, `ServerGenerator`, `ServiceGenerator` — so a single invocation writes the validated interface **and** the classes those generators produce.
+
+`krasa` was deliberately left alone: adding those generators to it would change what every current user generates, with extra `Client`, `Server`, `Fault` and `Impl` classes appearing in their builds. The new name is additive, and `krasa` keeps generating exactly what it generated before.
+
+Example with the `cxf-codegen-plugin` — the wiring of [krasa-cxf-codegen-plugin-example](https://github.com/fillumina/krasa-jaxb-tools-example/tree/master/krasa-cxf-codegen-plugin-example), with the frontend and the XJC options this project adds:
+
+```xml
+<plugin>
+  <groupId>org.apache.cxf</groupId>
+  <artifactId>cxf-codegen-plugin</artifactId>
+  <executions>
+    <execution>
+      <phase>generate-sources</phase>
+      <goals>
+        <goal>wsdl2java</goal>
+      </goals>
+      <configuration>
+        <wsdlOptions>
+          <wsdlOption>
+            <wsdl>${project.basedir}/wsdl/Hello.wsdl</wsdl>
+            <extraargs>
+              <!-- the frontend -->
+              <extraarg>-frontend</extraarg>
+              <extraarg>krasa-jaxws</extraarg>
+              <!-- XJC options, prefixed with -xjc- -->
+              <extraarg>-xjc-XJsr303Annotations</extraarg>
+              <extraarg>-xjc-XJsr303Annotations:generateServiceValidationAnnotations=InOut</extraarg>
+              <extraarg>-xjc-XReplacePrimitives</extraarg>
+            </extraargs>
+          </wsdlOption>
+        </wsdlOptions>
+      </configuration>
+    </execution>
+  </executions>
+  <dependencies>
+    <dependency>
+      <groupId>com.fillumina</groupId>
+      <artifactId>krasa-jaxb-tools</artifactId>
+      <version>${krasa-jaxb-tools.version}</version>
+    </dependency>
+  </dependencies>
+</plugin>
+```
+
+On the command line the frontend is the same argument: `wsdl2java -frontend krasa-jaxws wsdl/service.wsdl`.
+
+With the default switches `krasa-jaxws` writes the JAXB types, the interface with its `@Valid` annotations, the service class and the fault exception classes; `-all` (or `-client`, `-server`, `-impl`, `-ant`) adds the corresponding client, server, implementation and Ant artifacts — the switches that do nothing under `krasa`.
+
+If the annotated interface is all you want, keep `krasa` — `krasa-jaxws` adds nothing to it.
+
+Both names are guarded by tests: one asserts that `krasa-jaxws` writes the CXF classes next to the validated interface while `krasa` writes the interface alone, another reads CXF's own `META-INF/tools-plugin.xml`, so that a CXF upgrade cannot silently change what the new frontend generates.
+
+JDK 1.8 Support
+----------------
+
+The project is bounded to support **Java 8** (**JDK 1.8**) because of some old projects still requiring it. All dependencies are selected from the latest available versions still supporting that.
 
 ## Note on submitting issues and bugfixes
 
