@@ -30,6 +30,11 @@ class SystemOutValidationsLogger implements ValidationsLogger {
         log("adding @" + annotationName + params + " to " + className + "." + propertyName);
     }
 
+    @Override
+    public void warning(String message) {
+        log("warning: " + message);
+    }
+
     private static void log(String message) {
         System.out.println(PREFIX + message);
     }

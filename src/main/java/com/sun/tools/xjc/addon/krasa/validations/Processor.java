@@ -19,6 +19,7 @@ import com.sun.xml.xsom.impl.ModelGroupImpl;
 import com.sun.xml.xsom.impl.SimpleTypeImpl;
 import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,9 +30,11 @@ import java.util.List;
 public class Processor {
 
     private final ValidationsOptions options;
+    private final Exclusions exclusions;
 
     public Processor(ValidationsOptions options) {
         this.options = options;
+        this.exclusions = Exclusions.of(options.getExclusions());
     }
 
     /**
@@ -41,7 +44,8 @@ public class Processor {
      */
     public void process(Outline model) {
         for (ClassOutline classOutline : model.getClasses()) {
-            String className = classOutline.implClass.name();
+            // the statements match the qualified name: a glob can then cover a package
+            String className = classOutline.implClass.fullName();
 
             // the properties for each class
             List<CPropertyInfo> properties = classOutline.target.getProperties();
@@ -54,8 +58,34 @@ public class Processor {
                         ? new SystemOutValidationsLogger(className, propertyName)
                         : SilentValidationLogger.INSTANCE;
 
-                new TypeProcessor(classOutline, logger).processProperty(property);
+                // an excluded property is processed as usual, but its annotations are collected
+                // instead of written, so that a replacement can use the values they would have had
+                Exclusions.Statement exclusion = exclusions.statementFor(className, propertyName);
+                List<XjcAnnotator.Annotate> collected =
+                        exclusion == null ? null : new ArrayList<XjcAnnotator.Annotate>();
+
+                new TypeProcessor(classOutline, logger, collected).processProperty(property);
+
+                if (exclusion != null && exclusion.hasReplacement()) {
+                    JFieldVar field = classOutline.implClass.fields().get(propertyName);
+                    if (field != null) {
+                        Replacement.parse(exclusion.getReplacement(), options.getAnnotationFactory())
+                                .writeInto(field, className, propertyName, collected, logger);
+                    }
+                }
             }
+        }
+
+        reportUnmatchedExclusions();
+    }
+
+    /** A statement that matched nothing is a typo, and it silently leaves the annotations in place. */
+    private void reportUnmatchedExclusions() {
+        ValidationsLogger logger = options.isVerbose()
+                ? new SystemOutValidationsLogger("", "")
+                : SilentValidationLogger.INSTANCE;
+        for (Exclusions.Statement statement : exclusions.unmatched()) {
+            logger.warning("exclude=" + statement + " matched no class and no property");
         }
     }
 
@@ -63,10 +93,13 @@ public class Processor {
 
         private final ValidationsLogger logger;
         private final ClassOutline classOutline;
+        private final List<XjcAnnotator.Annotate> collector;
 
-        public TypeProcessor(ClassOutline classOutline, ValidationsLogger logger) {
+        public TypeProcessor(ClassOutline classOutline, ValidationsLogger logger,
+                List<XjcAnnotator.Annotate> collector) {
             this.logger = logger;
             this.classOutline = classOutline;
+            this.collector = collector;
         }
 
         public void processProperty(CPropertyInfo property) {
@@ -102,7 +135,7 @@ public class Processor {
                 return;
             }
             FieldAnnotator annotator =
-                    new FieldAnnotator(field, options.getAnnotationFactory(), logger);
+                    new FieldAnnotator(field, options.getAnnotationFactory(), logger, collector);
 
             if (term instanceof ModelGroupImpl) {
                 processModelGroupIml(property, annotator);
@@ -240,7 +273,7 @@ public class Processor {
 
                 if (field != null) {
                     FieldAnnotator annotator =
-                            new FieldAnnotator(field, options.getAnnotationFactory(), logger);
+                            new FieldAnnotator(field, options.getAnnotationFactory(), logger, collector);
 
                     if (particle.isRequired()) {
                         String message = notNullMessage(classOutline, field);
@@ -287,7 +320,7 @@ public class Processor {
 
                 if (field != null) {
                     FieldAnnotator annotator =
-                            new FieldAnnotator(field, options.getAnnotationFactory(), logger);
+                            new FieldAnnotator(field, options.getAnnotationFactory(), logger, collector);
 
                     processType(simpleType, field, annotator);
                 }

@@ -2,6 +2,8 @@ package com.sun.tools.xjc.addon.krasa.validations;
 
 import com.sun.tools.xjc.BadCommandLineException;
 import com.sun.tools.xjc.addon.krasa.JaxbValidationsPlugin;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -26,6 +28,7 @@ public class ValidationsOptions {
     private final ValidationsAnnotation annotationFactory;
     private final boolean validIn;
     private final boolean validOut;
+    private final List<String> exclusions;
 
     public void logActualOptions() {
         if (verbose) {
@@ -111,6 +114,11 @@ public class ValidationsOptions {
         return validOut;
     }
 
+    /** @return the statements of the {@code exclude} option, in the order they were given. */
+    public List<String> getExclusions() {
+        return exclusions;
+    }
+
     public static class Builder {
         private String targetNamespace = null;
         private boolean multiPattern = false;
@@ -126,6 +134,7 @@ public class ValidationsOptions {
         private ValidationsAnnotation annotationFactory = ValidationsAnnotation.JAVAX;
         private boolean validIn = true;
         private boolean validOut = true;
+        private final List<String> exclusions = new ArrayList<>();
 
         private Builder() {
         }
@@ -236,11 +245,18 @@ public class ValidationsOptions {
             return this;
         }
 
+        /** Adds one statement of the {@code exclude} option, which can be repeated. */
+        public Builder exclusion(final String value) {
+            this.exclusions.add(value);
+            return this;
+        }
+
         public ValidationsOptions build() {
             return new com.sun.tools.xjc.addon.krasa.validations.ValidationsOptions(targetNamespace, multiPattern,
                     verbose, allNumericConstraints, notNullAnnotations, notNullCustomMessage,
                     notNullPrefixFieldName, notNullPrefixClassName, notNullCustomMessageText,
-                    validationCollection, generateValidOnCollections, annotationFactory, validIn, validOut);
+                    validationCollection, generateValidOnCollections, annotationFactory, validIn, validOut,
+                    exclusions);
         }
     }
 
@@ -256,7 +272,8 @@ public class ValidationsOptions {
             final boolean generateValidOnCollections,
             final ValidationsAnnotation annotationFactory,
             final boolean validIn,
-            final boolean validOut) {
+            final boolean validOut,
+            final List<String> exclusions) {
         this.targetNamespace = targetNamespace;
         this.multiPattern = multiPattern;
         this.verbose = verbose;
@@ -271,6 +288,7 @@ public class ValidationsOptions {
         this.annotationFactory = annotationFactory;
         this.validIn = validIn;
         this.validOut = validOut;
+        this.exclusions = exclusions;
     }
 
 }

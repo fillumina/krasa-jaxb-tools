@@ -153,6 +153,13 @@ The plugin goes among the XJC run's `plugins`, and its options are passed as `-X
   example: `-XBeanValidationAnnotations:generateAllNumericConstraints=true`
 - `multiPattern` (boolean, default: `false`) uses a multiple javax validation `@Pattern` instead of `@Pattern.List` (see [3.2. Applying multiple constraints of the same type](https://beanvalidation.org/2.0-jsr380/spec/#constraintsdefinitionimplementation-multipleconstraints))
 
+- `exclude` (string, repeatable, optional): leaves classes or properties out of the generated annotations, or writes another one in their place. The value is a glob over the qualified name of the generated class (`*` and `?`, everything else literal), optionally `#` and a glob over the property name, optionally `=` and the annotation to write instead:
+  - `-XBeanValidationAnnotations:exclude=com.example.RootType#code` — every annotation of that property is left out
+  - `-XBeanValidationAnnotations:exclude=*RootType#*` — the same for the whole class, `*RootType` being a glob over `com.example.RootType`
+  - `-XBeanValidationAnnotations:exclude=*#label=@Size(max = {max})` — that annotation is written instead, and `{…}` is a placeholder
+
+  A replacement may name any annotation this plugin manages, and its parameters are plain text in which `{className}`, `{fieldName}`, any parameter the plugin was about to write (`{max}`, `{regexp}`, `{value}`, `{inclusive}`, …) and the annotation's own default (`{message}`) can be used; nothing else is substituted, and an unknown name is an error at generation time. The replacement itself is not validated — your compiler does that. A statement that matches no class and no property is reported as a warning, because a typo would otherwise leave the annotations in place, silently.
+
 ### Notes
 
 - Arguments accepting booleans can either be given the value `true` as with `verbose=true` or simply be left without a value at all and that will be interpreted as being `true`  (you can omit the `=` too).
