@@ -2,6 +2,7 @@ package com.sun.tools.xjc.addon.krasa.validations;
 
 import com.sun.tools.xjc.BadCommandLineException;
 import com.sun.tools.xjc.addon.krasa.JaxbValidationsPlugin;
+import static com.sun.tools.xjc.addon.krasa.JaxbValidationsPlugin.PLUGIN_ALIAS_OPTION_NAME;
 import static com.sun.tools.xjc.addon.krasa.JaxbValidationsPlugin.PLUGIN_OPTION_NAME;
 import java.util.Objects;
 import java.util.function.BiFunction;
@@ -202,6 +203,11 @@ public enum ValidationsArgument {
                 .append(PLUGIN_OPTION_NAME)
                 .append("      :  ")
                 .append("inject Bean validation annotations (JSR 303)")
+                .append(System.lineSeparator())
+                .append("  -")
+                .append(PLUGIN_ALIAS_OPTION_NAME)
+                .append("      :  ")
+                .append("the same plugin, under the name of the specification")
                 .append(System.lineSeparator())
                 .append("   Options:")
                 .append(helpMessageWithPrefix("     "))

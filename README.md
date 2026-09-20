@@ -1,12 +1,12 @@
 ![Maven Central](https://img.shields.io/maven-central/v/com.fillumina/krasa-jaxb-tools.svg)
 
-# XJC and CXF plugins that generate Bean Validation 2.0 annotations
+# XJC and CXF plugins that generate Bean Validation annotations
 
 ## Content of the project
 
 Three independent tools ship in this one artifact, and a build can use any combination of them:
 
-- **[`Jsr303Annotations`](#the-xjc-plugin-jsr303annotations)** — a XJC plugin that adds Bean Validation 2.0 or [JSR 380](https://jcp.org/en/jsr/detail?id=380) annotations to the generated JAXB types, supporting both `javax` and `jakarta` packages, configured with the `-XJsr303Annotations` options.
+- **[`BeanValidationAnnotations`](#the-xjc-plugin-beanvalidationannotations)** — a XJC plugin that adds Bean Validation 2.0 or [JSR 380](https://jcp.org/en/jsr/detail?id=380) annotations to the generated JAXB types, supporting both `javax` and `jakarta` packages, configured with the `-XBeanValidationAnnotations` options — the same ones under the older `-XJsr303Annotations` name, which keeps working.
 
 - **[`ReplacePrimitives`](#the-xjc-plugin-replaceprimitives)** — a XJC plugin that replaces the generated primitives with the corresponding boxed types (i.e. `int` -> `Integer`), enabled with `-XReplacePrimitives`.
 
@@ -50,7 +50,7 @@ See [CHANGELOG.md](CHANGELOG.md) for the version history.
   standard **container element constraints** — `List<@Pattern(regexp = "…") String>` — with
   `@Valid` moved to the type argument
   ([#33](https://github.com/fillumina/krasa-jaxb-tools/issues/33)).
-- The three tools conflated here — the `-XJsr303Annotations` generator, the `-XReplacePrimitives`
+- The three tools conflated here — the `-XBeanValidationAnnotations` generator, the `-XReplacePrimitives`
   replacer and the CXF `krasa` frontend — separated, each into its own project, so a build takes
   only what it uses.
 - **New features land here**: these projects are where further development happens.
@@ -77,9 +77,27 @@ There are 2 example projects containing many different plugins and configuration
 
 - [GitHub - fillumina/krasa-jaxb-tools-example: Sample project for https://github.com/fillumina/krasa-jaxb-tools](https://github.com/fillumina/krasa-jaxb-tools-example) uses **JDK 8** and provides examples using the latest versions of plugins and dependencies available for that java version.
 
-## The XJC plugin `Jsr303Annotations`
+## The XJC plugin `BeanValidationAnnotations`
 
-A **XJC plugin** that writes Bean Validation 2.0 or [JSR 380](https://jcp.org/en/jsr/detail?id=380) (not fully supported) annotations into the classes XJC generates, in the `javax` or the `jakarta` package. It is enabled with `-XJsr303Annotations` — the option name says JSR 303, which is where the generator started, while the annotations it writes are those of Bean Validation 2.0. It is configured with the options below; it writes annotations only and never changes the generated types.
+A **XJC plugin** that writes Bean Validation 2.0 or [JSR 380](https://jcp.org/en/jsr/detail?id=380)
+(not fully supported) annotations into the classes XJC generates, in the `javax` or the `jakarta`
+package. It writes annotations only and never changes the generated types; it is configured with the
+options below.
+
+It answers to two names: **`-XBeanValidationAnnotations`**, the one to use in a new build, and
+`-XJsr303Annotations`, which is where this plugin started — its option name says JSR 303, while the
+annotations it writes are those of Bean Validation 2.0. **The old name is not retired**: it keeps
+working exactly as it does today, so no existing build has to be re-pointed, and either name takes the
+same options.
+
+```
+-XBeanValidationAnnotations
+-XBeanValidationAnnotations:validationAnnotations=jakarta
+-XJsr303Annotations:targetNamespace=http://www.foo.com/bar
+```
+
+Both are accepted everywhere the plugin is: with the `cxf-codegen-plugin` that means either
+`-xjc-XBeanValidationAnnotations` or `-xjc-XJsr303Annotations`.
 
 Example with the [maven-jaxb2-plugin](https://github.com/highsource/maven-jaxb2-plugin), the wiring of [krasa-maven-jaxb2-plugin-example](https://github.com/fillumina/krasa-jaxb-tools-example/tree/master/krasa-maven-jaxb2-plugin-example):
 
@@ -95,8 +113,8 @@ Example with the [maven-jaxb2-plugin](https://github.com/highsource/maven-jaxb2-
       <configuration>
         <extension>true</extension>
         <args>
-          <arg>-XJsr303Annotations</arg>
-          <arg>-XJsr303Annotations:targetNamespace=a</arg>
+          <arg>-XBeanValidationAnnotations</arg>
+          <arg>-XBeanValidationAnnotations:targetNamespace=a</arg>
         </args>
         <plugins>
           <plugin>
@@ -111,28 +129,28 @@ Example with the [maven-jaxb2-plugin](https://github.com/highsource/maven-jaxb2-
 </plugin>
 ```
 
-The plugin goes among the XJC run's `plugins`, and its options are passed as `-XJsr303Annotations:…` arguments. With the `cxf-codegen-plugin` the same arguments are prefixed with `-xjc-`, see [The CXF frontends](#the-cxf-frontends-krasa-and-krasa-jaxws).
+The plugin goes among the XJC run's `plugins`, and its options are passed as `-XBeanValidationAnnotations:…` arguments. With the `cxf-codegen-plugin` the same arguments are prefixed with `-xjc-`, see [The CXF frontends](#the-cxf-frontends-krasa-and-krasa-jaxws).
 
 ### Options
 
 - `verbose` (boolean, default=`false`) print verbose messages to output
-  example: `-XJsr303Annotations:verbose=true`
+  example: `-XBeanValidationAnnotations:verbose=true`
 - `validationAnnotations` (`javax` | `jakarta`, default=`javax`): selects the library to use for validation annotations
-  example: `-XJsr303Annotations:validationAnnotations=javax`
+  example: `-XBeanValidationAnnotations:validationAnnotations=javax`
 - `targetNamespace` (string): adds @Valid annotation only if the element has the given namespace
-  example: `-XJsr303Annotations:targetNamespace=a`
+  example: `-XBeanValidationAnnotations:targetNamespace=a`
 - `generateNotNullAnnotations` (boolean, default=`true`): adds a `@NotNull` annotation if an element has `minOccurs` not 0, is `required` or is not `nillable`.
-  examples: `-XJsr303Annotations:generateNotNullAnnotations=true`
+  examples: `-XBeanValidationAnnotations:generateNotNullAnnotations=true`
 - `notNullAnnotationsCustomMessages` (boolean or string, default=`false`): values are `true`, `FieldName`, `ClassName`, or an *actual message* (see further explanation in a note down below)
-  example: `-XJsr303Annotations:notNullAnnotationsCustomMessages=ClassName`
+  example: `-XBeanValidationAnnotations:notNullAnnotationsCustomMessages=ClassName`
 - `generateListAnnotations` (boolean, optional, default `false`) generates [validator-collection annotations](https://github.com/jirutka/validator-collection) annotations
-  example: `-XJsr303Annotations:generateListAnnotations=true`
+  example: `-XBeanValidationAnnotations:generateListAnnotations=true`
 - `generateValidOnCollections` (boolean, default=`true`): adds a `@Valid` annotation to a collection. Bean Validation deprecated `@Valid` on a container ([HV000271](https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/)) and asks for it on the type argument - `List<@Valid Foo>` - which this generator cannot write, so turning the option off drops it from the container instead. **It is a workaround, not a fix**: with it off, the elements of a collection are no longer validated through the parent object. It is meant for the day a provider stops honouring the old form, when the annotation would be dead weight; the form the specification asks for is generated by the new projects announced above.
-  example: `-XJsr303Annotations:generateValidOnCollections=false`
+  example: `-XBeanValidationAnnotations:generateValidOnCollections=false`
 - `generateServiceValidationAnnotations` (string, accepts: `in`, `out`, `inout`, works with  `apache-cxf` only) adds `@Valid` annotations to respective message direction (in, out or both).
-  example: `-XJsr303Annotations:generateServiceValidationAnnotations=inout`
+  example: `-XBeanValidationAnnotations:generateServiceValidationAnnotations=inout`
 - `generateAllNumericConstraints` (boolean, defaults to `false`) generates all `@DecimalMin` and `@DecimalMax` even those regarding the natural boundaries of the referred java type.
-  example: `-XJsr303Annotations:generateAllNumericConstraints=true`
+  example: `-XBeanValidationAnnotations:generateAllNumericConstraints=true`
 - `multiPattern` (boolean, default: `false`) uses a multiple javax validation `@Pattern` instead of `@Pattern.List` (see [3.2. Applying multiple constraints of the same type](https://beanvalidation.org/2.0-jsr380/spec/#constraintsdefinitionimplementation-multipleconstraints))
 
 ### Notes
@@ -143,7 +161,7 @@ The plugin goes among the XJC run's `plugins`, and its options are passed as `-X
 
 #### About `notNullAnnotationsCustomMessages`
 
-**`@NotNull`** default validation message is not always helpful, so it can be customized with **-XJsr303Annotations:notNullAnnotationsCustomMessages=OPTION** where **OPTION** is one of the following:
+**`@NotNull`** default validation message is not always helpful, so it can be customized with **-XBeanValidationAnnotations:notNullAnnotationsCustomMessages=OPTION** where **OPTION** is one of the following:
 
 - `false` default: no custom message
 - `true` message is present but equivalent to the default: **"{javax.validation.constraints.NotNull.message}"**
@@ -153,7 +171,7 @@ The plugin goes among the XJC run's `plugins`, and its options are passed as `-X
 
 #### About `generateServiceValidationAnnotations`
 
-Bean validation policy can be customized with `-XJsr303Annotations:generateServiceValidationAnnotations=OPTION` where OPTION is one of the following (the option is case insensitive):
+Bean validation policy can be customized with `-XBeanValidationAnnotations:generateServiceValidationAnnotations=OPTION` where OPTION is one of the following (the option is case insensitive):
 
 - `InOut` (default: validate requests and responses)
 - `In` (validate only requests)
@@ -163,9 +181,9 @@ Using this option requires one of the frontends of this project as the CXF plugi
 
 ### Supported annotations
 
-The plugin generates sources annotated with the following Java Bean Validation 2.0 (JSR 380) annotations (with either `javax` or `jakarta` packages depending on the configuration, see `-XJsr303Annotations:validationAnnotations=javax`):
+The plugin generates sources annotated with the following Java Bean Validation 2.0 (JSR 380) annotations (with either `javax` or `jakarta` packages depending on the configuration, see `-XBeanValidationAnnotations:validationAnnotations=javax`):
 
-- `@Valid` annotation for all complex types, can be further restricted to generate only for types from defined schema: `-XJsr303Annotations:targetNamespace=http://www.foo.com/bar`
+- `@Valid` annotation for all complex types, can be further restricted to generate only for types from defined schema: `-XBeanValidationAnnotations:targetNamespace=http://www.foo.com/bar`
 - `@NotNull` annotation for objects that has a MinOccur value >= 1 or for required attributes
 - `@Size` for lists that have minOccurs > 1
 - `@Size` if there is a maxLength or minLength or length restriction
@@ -246,7 +264,7 @@ value).
 
 ## The XJC plugin `ReplacePrimitives`
 
-A **XJC plugin**, in the same artifact but independent of `Jsr303Annotations`, that replaces the primitive types of the generated classes with the corresponding boxed ones (`int` -> `Integer`). It is enabled with `-XReplacePrimitives` and takes no option; it is used in the [krasa-cxf-codegen-plugin-example](https://github.com/fillumina/krasa-jaxb-tools-example/tree/master/krasa-cxf-codegen-plugin-example) project as an example.
+A **XJC plugin**, in the same artifact but independent of `BeanValidationAnnotations`, that replaces the primitive types of the generated classes with the corresponding boxed ones (`int` -> `Integer`). It is enabled with `-XReplacePrimitives` and takes no option; it is used in the [krasa-cxf-codegen-plugin-example](https://github.com/fillumina/krasa-jaxb-tools-example/tree/master/krasa-cxf-codegen-plugin-example) project as an example.
 
 In a `maven-jaxb2-plugin` run it is one more XJC argument:
 
@@ -290,8 +308,8 @@ Example with the `cxf-codegen-plugin` — the wiring of [krasa-cxf-codegen-plugi
               <extraarg>-frontend</extraarg>
               <extraarg>krasa-jaxws</extraarg>
               <!-- XJC options, prefixed with -xjc- -->
-              <extraarg>-xjc-XJsr303Annotations</extraarg>
-              <extraarg>-xjc-XJsr303Annotations:generateServiceValidationAnnotations=InOut</extraarg>
+              <extraarg>-xjc-XBeanValidationAnnotations</extraarg>
+              <extraarg>-xjc-XBeanValidationAnnotations:generateServiceValidationAnnotations=InOut</extraarg>
               <extraarg>-xjc-XReplacePrimitives</extraarg>
             </extraargs>
           </wsdlOption>
@@ -332,9 +350,3 @@ Any issue or bug fix reported is *extremely* welcome but to help me understand t
 
 - **Case insensitive filesystem** users (wich is the default on Windows and MacOS) should be careful about file naming especially considering that _signatures_ files (the ones containing the expected annotations) usually are named after the class they refer to so their first letter is often a capital one (ie: `multiplePatternsWithBase-a-annotation.txt` should probably be `MultiplePatternsWithBase-a-annotation.txt`)
 
-## TODO
-
-- change the plugin name to `Jsr380Annotations`, because the plugin implements the Java Specification
-  Request 380. The rename is a breaking change for existing builds' configuration, so the current name
-  is kept as long as Java 8 is supported: it comes with the next major version, together with lifting
-  the Java 8 bound.
