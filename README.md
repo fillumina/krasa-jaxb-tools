@@ -1,6 +1,38 @@
 ![Maven Central](https://img.shields.io/maven-central/v/com.fillumina/krasa-jaxb-tools.svg)
 
-# XJC Plugin to generate Bean Validation Annotations 2.0 ([JSR-380](https://jcp.org/en/jsr/detail?id=380))
+# XJC and CXF plugins that generate Bean Validation 2.0 annotations
+
+## This project is in maintenance — new projects will follow
+
+**This project** (`com.fillumina:krasa-jaxb-tools`)
+
+- **JDK 8** toolchain, **XJC 2.3.x** and **CXF 3.5.x** — the newest line of each that still
+  supports JDK 8 — with the `javax` validation API. Usable from newer JDKs (see the examples
+  below), but it will not move to XJC 4.x or to `jakarta`.
+- It takes **only changes that cannot break a build that already depends on it**: fixes and new
+  options from the issues, with every default left exactly as it is.
+- Its name, URL and Maven coordinates stay where they are, so nothing has to be re-pointed.
+
+**New projects, one per tool** (their own names and coordinates, announced later)
+
+- Built from a copy of these sources, and breaking compatibility from the first commit: the two
+  worlds cannot be carried in one codebase.
+- JDK 21, XJC 4.x, CXF 4.1, `jakarta.validation` 3.x.
+- The collection annotations (`@EachPattern`, `@EachSize`, `@EachDecimalMin`, …) replaced by the
+  standard **container element constraints** — `List<@Pattern(regexp = "…") String>` — with
+  `@Valid` moved to the type argument
+  ([#33](https://github.com/fillumina/krasa-jaxb-tools/issues/33)).
+- The three tools conflated here — the `-XJsr303Annotations` generator, the `-XReplacePrimitives`
+  replacer and the CXF `krasa` frontend — separated, each into its own project, so a build takes
+  only what it uses.
+- **New features land here**: these projects are where further development happens.
+
+**If this plan is a problem for you, say so now** by opening an
+[issue](https://github.com/fillumina/krasa-jaxb-tools/issues) — most of all if you are midway
+through a `javax` → `jakarta` migration and would need a bridge release that does both. Better to
+hear it before the split than after.
+
+## What this project defines
 
 This project defines 2 XJC and 1 CXF plugins:
 
@@ -9,37 +41,6 @@ This project defines 2 XJC and 1 CXF plugins:
 - `ReplacePrimitives`  a XJC plugin that replaces the generated primitives with the corresponding boxed types (i.e. `int` -> `Integer`)
 
 - an [Apache Cxf plugin](https://cxf.apache.org/docs/tools.html) that adds the `javax` or `jakarta` `@Valid` annotation to the SOAP methods and their parameters (both optionally) of the generated Port Type interface. This plugin is configured using the same `JSR308Annotations` name.
-
-The plan for this project, and the one after it
----------------------------------------------------
-
-This repository is the **legacy line**: JDK 8 toolchain, XJC 2.3.x, CXF 3.5 and the `javax`
-validation API. It can still be used from newer JDKs (see the examples below), but it will not
-move to XJC 4.x or to `jakarta`, and **from now on it receives fixes only** — no new features, no
-behaviour changes. Its name, URL and Maven coordinates stay exactly where they are, so nothing has
-to be re-published or re-pointed by the projects that depend on it.
-
-The modern line will be a **separate project**, started from a copy of these sources and breaking
-compatibility from its first commit, because the two worlds cannot be carried in one codebase:
-
-- **JDK 21**, XJC 4.x, CXF 4.1 and `jakarta.validation` 3.x;
-- the collection annotations (`@EachPattern`, `@EachSize`, `@EachDecimalMin`, …) replaced by the
-  **standard container element constraints** — `List<@Pattern(regexp = "…") String>` — which Bean
-  Validation has supported since 2.0, with `@Valid` moved to the type argument
-  ([#33](https://github.com/fillumina/krasa-jaxb-tools/issues/33));
-- the three plugins that are conflated here — the `-XJsr303Annotations` generator, the
-  `-XReplacePrimitives` replacer and the CXF `krasa` frontend — published separately, so a build
-  takes only what it uses;
-- a new name and new coordinates. The contract that ports is the fixtures — the schemas with their
-  expected annotations — not the code.
-
-**If this plan is a problem for you, say so now** by opening an
-[issue](https://github.com/fillumina/krasa-jaxb-tools/issues): in particular if you are in the
-middle of a `javax` → `jakarta` migration and would need a bridge release that does both. It is
-better to hear it before the split than after.
-
-Nothing above changes what you already depend on: **2.6.0** is the current release of this line,
-and fixes keep coming to it.
 
 ## Example of usage
 
