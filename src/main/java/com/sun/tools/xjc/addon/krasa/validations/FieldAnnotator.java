@@ -1,7 +1,11 @@
 package com.sun.tools.xjc.addon.krasa.validations;
 
 import com.sun.codemodel.JFieldVar;
-import cz.jirutka.validator.collection.constraints.*;
+import cz.jirutka.validator.collection.constraints.EachDecimalMax;
+import cz.jirutka.validator.collection.constraints.EachDecimalMin;
+import cz.jirutka.validator.collection.constraints.EachDigits;
+import cz.jirutka.validator.collection.constraints.EachPattern;
+import cz.jirutka.validator.collection.constraints.EachSize;
 import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
 import java.util.Collection;

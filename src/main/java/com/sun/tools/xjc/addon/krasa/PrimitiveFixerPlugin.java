@@ -1,6 +1,13 @@
 package com.sun.tools.xjc.addon.krasa;
 
-import com.sun.codemodel.*;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JFormatter;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JStatement;
+import com.sun.codemodel.JType;
+import com.sun.codemodel.JVar;
 import com.sun.tools.xjc.Options;
 import com.sun.tools.xjc.Plugin;
 import com.sun.tools.xjc.outline.ClassOutline;
