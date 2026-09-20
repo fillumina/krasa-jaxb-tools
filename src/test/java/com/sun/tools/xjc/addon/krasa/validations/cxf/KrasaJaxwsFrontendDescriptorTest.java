@@ -89,22 +89,34 @@ public class KrasaJaxwsFrontendDescriptorTest {
                 continue;
             }
             NodeList blocks = element.getElementsByTagName("generators");
+            assertEquals("CXF reads a single generators element per frontend, in " + frontend,
+                    1, blocks.getLength());
             for (int j = 0; j < blocks.getLength(); j++) {
-                Element block = (Element) blocks.item(j);
-                generators.put(block.getAttribute("package"), namesOf(block));
+                collect((Element) blocks.item(j), generators);
             }
         }
         return generators;
     }
 
-    private List<String> namesOf(Element block) {
-        List<String> names = new ArrayList<>();
+    /**
+     * Groups the generators by the package they come from: a generator may name its own package,
+     * and then it does not belong to the package of the element that lists it.
+     */
+    private void collect(Element block, Map<String, List<String>> generators) {
+        String blockPackage = block.getAttribute("package");
         NodeList listed = block.getElementsByTagName("generator");
         for (int i = 0; i < listed.getLength(); i++) {
-            names.add(((Element) listed.item(i)).getAttribute("name"));
+            Element generator = (Element) listed.item(i);
+            String packageName = generator.getAttribute("package");
+            if (packageName.isEmpty()) {
+                packageName = blockPackage;
+            }
+            generators.computeIfAbsent(packageName, key -> new ArrayList<>())
+                    .add(generator.getAttribute("name"));
         }
-        Collections.sort(names);
-        return names;
+        for (List<String> names : generators.values()) {
+            Collections.sort(names);
+        }
     }
 
     private Document parse(String descriptor) throws Exception {
