@@ -3,7 +3,6 @@ package com.sun.tools.xjc.addon.krasa.validations.jaxb;
 import com.sun.tools.xjc.addon.krasa.validations.ArgumentBuilder;
 import com.sun.tools.xjc.addon.krasa.validations.RunXJC2MojoTestHelper;
 import java.util.List;
-import org.junit.Test;
 
 /**
  * Test default parameters
@@ -22,8 +21,7 @@ public class OptionDefaultTest extends RunXJC2MojoTestHelper {
         return ArgumentBuilder.builder().getOptionList();
     }
 
-    @Test
-    public void enumerationTypeShouldNotHavePatternAnnotation() {
+    public void testEnumerationTypeShouldNotHavePatternAnnotation() {
         withElement("OptionsType")
                 .withField("enumeration")
                         .assertAnnotationNotPresent("Pattern");

@@ -1,7 +1,6 @@
 package com.sun.tools.xjc.addon.krasa.validations.jaxb;
 
 import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerTestHelper;
-import org.junit.Test;
 
 public class PatternTest extends AnnotationCheckerTestHelper {
 
@@ -9,17 +8,17 @@ public class PatternTest extends AnnotationCheckerTestHelper {
         super("pattern", "a", "ProcessContainer");
     }
 
-    @Test
-    public void enumerationTypeShouldNotHavePatternAnnotation() {
+    public void testEnumerationTypeShouldNotHavePatternAnnotation() {
         withElement("ProcessContainer")
-                .withField("processs")
+                .withField("process")
                         .assertAnnotationNotPresent("Pattern")
                         .end()
                 .withField("someList")
                         .withAnnotation("NotNull").assertNoParameters()
                         .withAnnotation("Valid").assertNoParameters()
-                        .withAnnotation("EachPattern").assertParam("regexp", "[SsOoMmEe_RrGgXxPp]").end()
-                        .withAnnotation("Size").assertValue("5");
+                        .withAnnotation("EachPattern")
+                                .assertParam("regexp", "[SsOoMmEe_RrGgXxPp]+").end()
+                        .withAnnotation("Size").assertParam("max", 5);
 
     }
 
