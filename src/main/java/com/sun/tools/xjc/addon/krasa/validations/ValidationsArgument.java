@@ -113,7 +113,11 @@ public enum ValidationsArgument {
             (p) -> p.getAnnotationFactory()),
     generateListAnnotations(
             Boolean.class,
-            "generates github.com/jirutka/validator-collection annotations",
+            "generates github.com/jirutka/validator-collection annotations. Warning: that library "
+                    + "is javax-only and unmaintained, so it works with an old javax provider only: with "
+                    + "a recent one (Hibernate Validator 6 and later) validation fails with a "
+                    + "ConstraintDefinitionException, and under validationAnnotations=jakarta the @Each* "
+                    + "constraints are silently not enforced by any provider. See the README",
             (p,v) -> setBoolean(v, r -> p.validationCollection(r)),
             (p) -> p.isValidationCollection()),
     generateValidOnCollections(
