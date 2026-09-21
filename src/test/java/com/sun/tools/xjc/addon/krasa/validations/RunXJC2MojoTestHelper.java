@@ -32,8 +32,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import junit.framework.AssertionFailedError;
 import junit.framework.TestResult;
-import org.apache.maven.project.MavenProject;
-import org.jvnet.jaxb2.maven2.AbstractXJC2Mojo;
 import org.jvnet.jaxb2.maven2.test.RunXJC2Mojo;
 
 /**
@@ -103,24 +101,6 @@ public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
     public File getSchemaDirectory() {
         return new File(getBaseDir(), "src/test/resources/" + folderName);
     }
-
-    /**
-     * The parameter is raw because the inherited method declares it raw: a wildcard
-     * parameter has the same erasure without overriding it.
-     */
-    @Override
-    @SuppressWarnings("rawtypes")
-    protected void configureMojo(AbstractXJC2Mojo mojo) {
-        super.configureMojo(mojo);
-        mojo.setProject(new MavenProject());
-        mojo.setForceRegenerate(true);
-        mojo.setExtension(true);
-
-        File bindingDirectory = getBindingDirectory();
-        if (bindingDirectory != null) {
-            mojo.setBindingDirectory(bindingDirectory);
-        }
-	}
 
     // test with all options enabled.
     @Override
@@ -261,7 +241,8 @@ public abstract class RunXJC2MojoTestHelper extends RunXJC2Mojo {
     }
 
     private void generateClasses() throws Exception {
-        super.testExecute();
+        new XjcRunner(getSchemaDirectory(), getGeneratedDirectory(), getArgs(), getBindingDirectory())
+                .run();
     }
 
     private void checkAnnotationsInResourceFile(TestResult result) {
