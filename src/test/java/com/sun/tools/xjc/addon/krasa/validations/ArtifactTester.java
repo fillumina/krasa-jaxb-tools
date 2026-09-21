@@ -70,17 +70,6 @@ public class ArtifactTester<P> {
         return this;
     }
 
-    /**
-     * Check annotations relative to the class.
-     */
-    public DeclarationTester<P> classAnnotations() {
-        final String clazzName = filename.replace(".java", "");
-        int line = getLineForClass(clazzName, "public class ");
-        List<String> annotationList = getFieldAnnotations(clazzName, line);
-        String definition = lines.get(line);
-        return new DeclarationTester<>(this, filename, clazzName, definition, annotationList);
-    }
-
     public DeclarationTester<P> withField(String fieldName) {
         int line = getLineForField(fieldName);
         List<String> annotationList = getFieldAnnotations(fieldName, line);
@@ -133,16 +122,6 @@ public class ArtifactTester<P> {
     /** Allows for fluid interface: go back to test helper. */
     public P end() {
         return parent;
-    }
-
-    private int getLineForClass(String className, String startingWith) {
-        for (int i = 0, l = lines.size(); i < l; i++) {
-            String line = lines.get(i).trim();
-            if (line.startsWith(startingWith + className)) {
-                return i;
-            }
-        }
-        throw new AssertionError("attribute " + className + " not found in file " + filename);
     }
 
     private int getLineForMethod(String methodName) {

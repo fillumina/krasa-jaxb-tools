@@ -223,10 +223,6 @@ class Exclusions {
             return !matched || (annotationPattern != null && !annotationMatched);
         }
 
-        boolean hasAnnotation() {
-            return annotationPattern != null;
-        }
-
         boolean hasParameter() {
             return parameter != null;
         }
