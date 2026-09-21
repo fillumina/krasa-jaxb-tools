@@ -235,7 +235,7 @@ class XjcFixture {
      * }
      * </pre>
      */
-    private List<String> compactArrayAnnotations(List<String> annotationList) {
+    static List<String> compactArrayAnnotations(List<String> annotationList) {
         List<String> reversedList = new ArrayList<>();
         for (int i=annotationList.size()-1; i>=0; i--) {
             String line = annotationList.get(i);
