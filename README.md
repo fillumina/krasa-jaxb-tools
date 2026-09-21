@@ -21,15 +21,17 @@ Release
 <dependency>
     <groupId>com.fillumina</groupId>
     <artifactId>krasa-jaxb-tools</artifactId>
-    <version>2.7.0</version>
+    <version>2.8.0</version>
 </dependency>
 ```
 
 Versions
 ----------------
 
-The latest release is **2.7.0**: two new options, a new frontend, an option alias, and the
-dependencies moved forward.
+The latest release is **2.8.0**, a maintenance release: nothing the plugin does changes — no generated
+annotation, no option and no default differs from 2.7.0.
+
+**2.7.0** added two options, a new frontend and an option alias, and moved the dependencies forward:
 
 - `exclude` leaves chosen classes, properties or annotations out of the generated annotations, or
   changes one parameter of one of them — a different message, for example — without touching the
