@@ -102,7 +102,18 @@ public class PrimitiveFixerPluginTest extends AnnotationCheckerFixtureTest {
                         .assertParam("value", "255")
                         .assertParam("inclusive", true)
                     .end()
-                .end();
+                .end()
+                .withField("aboolean").assertClass(Boolean.class).end()
+                .withField("adouble").assertClass(Double.class).end()
+                .withField("afloat").assertClass(Float.class).end()
+                // a boxed field with a primitive accessor would not compile, so the substitution has
+                // to reach the getter and the setter as well
+                .withMethod("isAboolean").assertType("Boolean").end()
+                .withMethod("setAboolean").assertType("Boolean").end()
+                .withMethod("getAfloat").assertType("Float").end()
+                .withMethod("setAfloat").assertType("Float").end()
+                .withMethod("getAdouble").assertType("Double").end()
+                .withMethod("setAdouble").assertType("Double").end();
     }
 
     @Override

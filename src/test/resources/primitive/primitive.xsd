@@ -8,8 +8,11 @@
 
     <xsd:complexType name="Primitive">
         <xsd:sequence>
+            <xsd:element name="aboolean" type="xsd:boolean"/>
             <xsd:element name="abyte" type="xsd:byte"/>
             <xsd:element name="adecimal" type="xsd:decimal"/>
+            <xsd:element name="adouble" type="xsd:double"/>
+            <xsd:element name="afloat" type="xsd:float"/>
             <xsd:element name="aint" type="xsd:int"/>
             <xsd:element name="ainteger" type="xsd:integer"/>
             <xsd:element name="along" type="xsd:long"/>

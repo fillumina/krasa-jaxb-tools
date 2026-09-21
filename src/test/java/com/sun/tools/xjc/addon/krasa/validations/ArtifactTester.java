@@ -124,10 +124,14 @@ public class ArtifactTester<P> {
         return parent;
     }
 
+    /**
+     * A method is either a signature alone on its line, as an interface has it, or a declaration
+     * whose body opens on the same line, as a generated class has it.
+     */
     private int getLineForMethod(String methodName) {
         for (int i = 0, l = lines.size(); i < l; i++) {
             String line = lines.get(i).trim();
-            if (line.endsWith(methodName + "(")) {
+            if (line.endsWith(methodName + "(") || line.contains(" " + methodName + "(")) {
                 return i;
             }
         }

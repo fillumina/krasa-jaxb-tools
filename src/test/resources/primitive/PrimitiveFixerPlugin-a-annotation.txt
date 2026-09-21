@@ -1,7 +1,13 @@
 Primitive
+    aboolean
+        @NotNull
     abyte
         @NotNull
     adecimal
+        @NotNull
+    adouble
+        @NotNull
+    afloat
         @NotNull
     aint
         @NotNull
