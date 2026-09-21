@@ -19,6 +19,9 @@ import org.jvnet.jaxb2.maven2.test.RunXJC2Mojo;
  */
 class XjcRunner {
 
+    /** Set to true to let the fixture runner print what it normally keeps to itself. */
+    static final String VERBOSE = "fixture.verbose";
+
     private final RunXJC2Mojo runner;
 
     /**
@@ -56,6 +59,14 @@ class XjcRunner {
                 mojo.setProject(new MavenProject());
                 mojo.setForceRegenerate(true);
                 mojo.setExtension(true);
+                if (!Boolean.getBoolean(VERBOSE)) {
+                    // the mojo prints its whole configuration and XJC its debug log, once per
+                    // fixture: thousands of lines nobody reads. The mojo also passes its flag to
+                    // XJC, and the plugin reports the options it was given when the run is verbose.
+                    // -Dfixture.verbose=true gives all of it back.
+                    mojo.setLog(new SilentMojoLog());
+                    mojo.setVerbose(false);
+                }
                 if (bindingDirectory != null) {
                     mojo.setBindingDirectory(bindingDirectory);
                 }
