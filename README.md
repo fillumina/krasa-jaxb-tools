@@ -28,7 +28,20 @@ Release
 Versions
 ----------------
 
-See [CHANGELOG.md](CHANGELOG.md) for the version history.
+The latest release is **2.7.0**: two new options, a new frontend, an option alias, and the
+dependencies moved forward.
+
+- `exclude` leaves chosen classes, properties or annotations out of the generated annotations, or
+  changes one parameter of one of them — a different message, for example — without touching the
+  schema.
+- `generateValidOnCollections` can stop the plugin from writing `@Valid` on a collection, which Bean
+  Validation deprecated because the annotation belongs on the type argument.
+- The new `krasa-jaxws` frontend runs CXF's own generators beside the validated interface, so a
+  single invocation can produce both.
+- The plugin also answers to `-XBeanValidationAnnotations`, the name the specification gives it, while
+  `-XJsr303Annotations` keeps working.
+
+See [CHANGELOG.md](CHANGELOG.md) for the full history of every release.
 
 ## This project is in maintenance — new projects will follow
 
