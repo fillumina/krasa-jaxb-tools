@@ -6,7 +6,7 @@ import com.sun.tools.xjc.addon.krasa.validations.ValidationsAnnotation;
 import com.sun.tools.xjc.addon.krasa.validations.ValidationsArgument;
 import java.util.List;
 
-public class NotNullBase extends AnnotationCheckerFixtureTest {
+public abstract class NotNullBase extends AnnotationCheckerFixtureTest {
     private Object notNullAnnotationsCustomMessage = false; // default
 
     public NotNullBase(ValidationsAnnotation library, Object notNullAnnotationsCustomMessage) {

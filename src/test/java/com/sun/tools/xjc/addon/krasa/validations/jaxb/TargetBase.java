@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @author Francesco Illuminati
  */
-public class TargetBase extends FixtureTest {
+public abstract class TargetBase extends FixtureTest {
     private final String targetNamespace;
 
     public TargetBase(ValidationsAnnotation library, String targetNamespace) {
