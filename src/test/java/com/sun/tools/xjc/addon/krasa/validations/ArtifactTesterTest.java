@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
@@ -88,6 +89,15 @@ public class ArtifactTesterTest {
     public void shouldRefuseAParameterWithAnotherValue() {
         assertThrows(AssertionError.class, () -> tester().withField("annotated")
                 .withAnnotation("Size").assertParam("max", 999));
+    }
+
+    @Test
+    public void shouldSayWhichValueItExpectedAndWhichItFound() {
+        AssertionError error = assertThrows(AssertionError.class, () -> tester().withField("annotated")
+                .withAnnotation("Size").assertParam("max", 999));
+
+        assertTrue("the message should name the expected value first: " + error.getMessage(),
+                error.getMessage().contains("expected 999 found 200"));
     }
 
     @Test
