@@ -2,6 +2,8 @@ package com.sun.tools.xjc.addon.krasa.validations;
 
 import com.sun.tools.xjc.BadCommandLineException;
 import com.sun.tools.xjc.addon.krasa.JaxbValidationsPlugin;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -22,9 +24,11 @@ public class ValidationsOptions {
     private final boolean notNullPrefixClassName;
     private final String notNullCustomMessageText;
     private final boolean validationCollection;
+    private final boolean generateValidOnCollections;
     private final ValidationsAnnotation annotationFactory;
     private final boolean validIn;
     private final boolean validOut;
+    private final List<String> exclusions;
 
     public void logActualOptions() {
         if (verbose) {
@@ -94,6 +98,10 @@ public class ValidationsOptions {
         return validationCollection;
     }
 
+    public boolean isGenerateValidOnCollections() {
+        return generateValidOnCollections;
+    }
+
     public ValidationsAnnotation getAnnotationFactory() {
         return annotationFactory;
     }
@@ -104,6 +112,11 @@ public class ValidationsOptions {
 
     public boolean isValidOut() {
         return validOut;
+    }
+
+    /** @return the statements of the {@code exclude} option, in the order they were given. */
+    public List<String> getExclusions() {
+        return exclusions;
     }
 
     public static class Builder {
@@ -117,9 +130,11 @@ public class ValidationsOptions {
         private boolean notNullPrefixClassName = false;
         private String notNullCustomMessageText = null;
         private boolean validationCollection = false;
+        private boolean generateValidOnCollections = true;
         private ValidationsAnnotation annotationFactory = ValidationsAnnotation.JAVAX;
         private boolean validIn = true;
         private boolean validOut = true;
+        private final List<String> exclusions = new ArrayList<>();
 
         private Builder() {
         }
@@ -210,6 +225,11 @@ public class ValidationsOptions {
             return this;
         }
 
+        public Builder generateValidOnCollections(final boolean value) {
+            this.generateValidOnCollections = value;
+            return this;
+        }
+
         public Builder annotationFactory(final ValidationsAnnotation value) {
             this.annotationFactory = value;
             return this;
@@ -225,11 +245,18 @@ public class ValidationsOptions {
             return this;
         }
 
+        /** Adds one statement of the {@code exclude} option, which can be repeated. */
+        public Builder exclusion(final String value) {
+            this.exclusions.add(value);
+            return this;
+        }
+
         public ValidationsOptions build() {
             return new com.sun.tools.xjc.addon.krasa.validations.ValidationsOptions(targetNamespace, multiPattern,
                     verbose, allNumericConstraints, notNullAnnotations, notNullCustomMessage,
                     notNullPrefixFieldName, notNullPrefixClassName, notNullCustomMessageText,
-                    validationCollection, annotationFactory, validIn, validOut);
+                    validationCollection, generateValidOnCollections, annotationFactory, validIn, validOut,
+                    exclusions);
         }
     }
 
@@ -242,9 +269,11 @@ public class ValidationsOptions {
             final boolean notNullCustomMessage, final boolean notNullPrefixFieldName,
             final boolean notNullPrefixClassName, final String notNullCustomMessageText,
             final boolean validationCollection,
+            final boolean generateValidOnCollections,
             final ValidationsAnnotation annotationFactory,
             final boolean validIn,
-            final boolean validOut) {
+            final boolean validOut,
+            final List<String> exclusions) {
         this.targetNamespace = targetNamespace;
         this.multiPattern = multiPattern;
         this.verbose = verbose;
@@ -255,9 +284,11 @@ public class ValidationsOptions {
         this.notNullPrefixClassName = notNullPrefixClassName;
         this.notNullCustomMessageText = notNullCustomMessageText;
         this.validationCollection = validationCollection;
+        this.generateValidOnCollections = generateValidOnCollections;
         this.annotationFactory = annotationFactory;
         this.validIn = validIn;
         this.validOut = validOut;
+        this.exclusions = exclusions;
     }
 
 }

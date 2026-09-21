@@ -17,4 +17,13 @@ public class SilentValidationLogger implements ValidationsLogger {
         // do nothing
     }
 
+    /**
+     * A warning is not the chatter this logger exists to silence: it says that something asked for
+     * had no effect, so it goes to the error stream.
+     */
+    @Override
+    public void warning(String message) {
+        System.err.println(PREFIX + "warning: " + message);
+    }
+
 }

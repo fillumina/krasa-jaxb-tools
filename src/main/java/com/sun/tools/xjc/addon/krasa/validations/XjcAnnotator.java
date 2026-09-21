@@ -9,6 +9,7 @@ import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,11 +22,18 @@ import java.util.Set;
 class XjcAnnotator {
     private final JFieldVar field;
     private final ValidationsLogger logger;
+    /** When not null the annotations are collected here instead of being written to the field. */
+    private final List<Annotate> collector;
     private final Set<Class<? extends Annotation>> annotationSet = new HashSet<>();
 
     public XjcAnnotator(JFieldVar field, ValidationsLogger logger) {
+        this(field, logger, null);
+    }
+
+    public XjcAnnotator(JFieldVar field, ValidationsLogger logger, List<Annotate> collector) {
         this.field = field;
         this.logger = logger;
+        this.collector = collector;
     }
 
     Annotate annotate(Class<? extends Annotation> annotation) {
@@ -33,80 +41,106 @@ class XjcAnnotator {
     }
 
     public class Annotate {
+        private Class<? extends Annotation> annotationClass;
         private final JAnnotationUse annotationUse;
+        /** False when the annotation is a duplicate and is written nowhere. */
+        private final boolean active;
         private final Map<String,String> parameterMap = new LinkedHashMap<>();
 
         public Annotate(JAnnotationUse annotationUse) {
             this.annotationUse = annotationUse;
+            this.active = annotationUse != null;
         }
 
         public Annotate(Class<? extends Annotation> annotation) {
+            this.annotationClass = annotation;
             // @Pattern is allowed multiple times
-            if (annotationSet.add(annotation) || annotation.equals(Pattern.class) || annotation.equals(javax.validation.constraints.Pattern.class)) {
-                annotationUse = field.annotate(annotation);
+            boolean used = annotationSet.add(annotation)
+                    || annotation.equals(Pattern.class)
+                    || annotation.equals(javax.validation.constraints.Pattern.class);
+            this.active = used;
+            if (!used) {
+                this.annotationUse = null;
+            } else if (collector == null) {
+                this.annotationUse = field.annotate(annotation);
             } else {
                 this.annotationUse = null;
+                collector.add(this);
             }
+        }
+
+        /** @return the annotation that would have been written, with the parameters it was given. */
+        Class<? extends Annotation> getAnnotationClass() {
+            return annotationClass;
+        }
+
+        Map<String, String> getParameters() {
+            return parameterMap;
+        }
+
+        /**
+         * Records a parameter: it is always remembered, and written only when there is an
+         * annotation to write it into — a collected annotation has none.
+         *
+         * @return true when the parameter also has to be written
+         */
+        private boolean record(String name, String value) {
+            if (!active || value == null || parameterMap.containsKey(name)) {
+                return false;
+            }
+            parameterMap.put(name, value);
+            return annotationUse != null;
         }
 
         public Annotate paramIf(boolean condition, String name, Integer value) {
-            if (condition && annotationUse != null && value != null && !parameterMap.containsKey(name)) {
-                annotationUse.param(name, value);
-                parameterMap.put(name, value.toString());
-            }
-            return this;
+            return condition ? param(name, value) : this;
         }
 
         public Annotate param(String name, Integer value) {
-            if (annotationUse != null && value != null && !parameterMap.containsKey(name)) {
+            if (value != null && record(name, value.toString())) {
                 annotationUse.param(name, value);
-                parameterMap.put(name, value.toString());
             }
             return this;
         }
 
         public Annotate param(String name, Boolean value) {
-            if (annotationUse != null && value != null && !parameterMap.containsKey(name)) {
+            if (value != null && record(name, value.toString())) {
                 annotationUse.param(name, value);
-                parameterMap.put(name, value.toString());
             }
             return this;
         }
 
         public Annotate param(String name, BigDecimal value) {
-            if (annotationUse != null && value != null && !parameterMap.containsKey(name)) {
+            if (value != null && record(name, value.toString())) {
                 annotationUse.param(name, value.toString());
-                parameterMap.put(name, value.toString());
             }
             return this;
         }
 
         public Annotate param(String name, String value) {
-            if (annotationUse != null && value != null && !parameterMap.containsKey(name)) {
+            if (record(name, value)) {
                 annotationUse.param(name, value);
-                parameterMap.put(name, value);
             }
             return this;
         }
 
         public Annotate param(String name, String value, String defaultValue) {
-            if (annotationUse != null && !parameterMap.containsKey(name)) {
-                String v = value == null ? defaultValue : value;
+            String v = value == null ? defaultValue : value;
+            if (record(name, v)) {
                 annotationUse.param(name, v);
-                parameterMap.put(name, v);
             }
             return this;
         }
 
         public Annotate param(String name, Integer value, Integer defaultValue) {
-            if (annotationUse != null && !parameterMap.containsKey(name)) {
-                Integer v = value == null ? defaultValue : value;
+            Integer v = value == null ? defaultValue : value;
+            if (v != null && record(name, v.toString())) {
                 annotationUse.param(name, v);
-                parameterMap.put(name, v.toString());
             }
             return this;
         }
 
+        /** Only an annotation that was written is logged: a collected one was not. */
         public void log() {
             if (annotationUse != null) {
                 String annotationName = annotationUse.getAnnotationClass().name();

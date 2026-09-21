@@ -11,13 +11,24 @@ public class ValidSEIGeneratorTestHelper extends CxfJavaGeneratorTestHelper {
     private static final String CLASS_FILE = "com/example/weather/WeatherServicePortType.java";
 
     public ValidSEIGeneratorTestHelper(ValidationsAnnotation validationsAnnotation, String inout) {
+        this(validationsAnnotation, inout, INPUT_WSDL, "krasa", "xcf");
+    }
+
+    /**
+     * Generates from another WSDL, with another frontend.
+     *
+     * @param wsdlResource the WSDL to generate from, as a classpath resource
+     * @param frontend the CXF frontend to run, as named in {@code META-INF/tools-plugin.xml}
+     * @param outputDir the directory to write to, under the generated test sources
+     */
+    public ValidSEIGeneratorTestHelper(ValidationsAnnotation validationsAnnotation, String inout,
+            String wsdlResource, String frontend, String outputDir) {
         super(new String[]{
                     "-verbose",
                     "-frontend",
-                    "krasa",
-                    PathUtil.getAbsolutePathOfResource(INPUT_WSDL)
-        }, generateXjcArgs(validationsAnnotation, inout), "xcf");
-
+                    frontend,
+                    PathUtil.getAbsolutePathOfResource(wsdlResource)
+        }, generateXjcArgs(validationsAnnotation, inout), outputDir);
     }
 
     private static String[] generateXjcArgs(ValidationsAnnotation validationsAnnotation, String inout) {

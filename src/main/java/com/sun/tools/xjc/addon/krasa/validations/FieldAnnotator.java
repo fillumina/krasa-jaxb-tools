@@ -10,6 +10,7 @@ import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -31,8 +32,17 @@ class FieldAnnotator {
 
     public FieldAnnotator(
             JFieldVar field, ValidationsAnnotation annotationFactory, ValidationsLogger log) {
+        this(field, annotationFactory, log, null);
+    }
+
+    /**
+     * @param collector when not null the annotations are collected instead of written, see
+     *     {@link Exclusions}
+     */
+    public FieldAnnotator(JFieldVar field, ValidationsAnnotation annotationFactory, ValidationsLogger log,
+            List<XjcAnnotator.Annotate> collector) {
         this.annotationFactory = annotationFactory;
-        this.xjcAnnotator = new XjcAnnotator(field, log);
+        this.xjcAnnotator = new XjcAnnotator(field, log, collector);
     }
 
     void addEachSizeAnnotation(Integer minLength, Integer maxLength) {

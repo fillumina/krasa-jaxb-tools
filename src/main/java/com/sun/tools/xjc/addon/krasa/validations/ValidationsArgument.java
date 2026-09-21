@@ -2,6 +2,7 @@ package com.sun.tools.xjc.addon.krasa.validations;
 
 import com.sun.tools.xjc.BadCommandLineException;
 import com.sun.tools.xjc.addon.krasa.JaxbValidationsPlugin;
+import static com.sun.tools.xjc.addon.krasa.JaxbValidationsPlugin.PLUGIN_ALIAS_OPTION_NAME;
 import static com.sun.tools.xjc.addon.krasa.JaxbValidationsPlugin.PLUGIN_OPTION_NAME;
 import java.util.Objects;
 import java.util.function.BiFunction;
@@ -112,9 +113,21 @@ public enum ValidationsArgument {
             (p) -> p.getAnnotationFactory()),
     generateListAnnotations(
             Boolean.class,
-            "generates github.com/jirutka/validator-collection annotations",
+            "generates github.com/jirutka/validator-collection annotations. Warning: that library "
+                    + "is javax-only and unmaintained, so it works with an old javax provider only: with "
+                    + "a recent one (Hibernate Validator 6 and later) validation fails with a "
+                    + "ConstraintDefinitionException, and under validationAnnotations=jakarta the @Each* "
+                    + "constraints are silently not enforced by any provider. See the README",
             (p,v) -> setBoolean(v, r -> p.validationCollection(r)),
             (p) -> p.isValidationCollection()),
+    generateValidOnCollections(
+            Boolean.class,
+            "adds a @Valid annotation to collections; turning it off drops it from a container, "
+                    + "which Bean Validation deprecated (HV000271): the annotation belongs on the "
+                    + "type argument, which this generator cannot write. Off means the elements of "
+                    + "a collection are no longer validated through it",
+            (p, v) -> setBoolean(v, r -> p.generateValidOnCollections(r)),
+            (p) -> p.isGenerateValidOnCollections()),
     // used by ValidSEIGenerator
     generateServiceValidationAnnotations(
             String.class,
@@ -139,7 +152,21 @@ public enum ValidationsArgument {
                 if (p.isValidIn()) return "in";
                 if (p.isValidOut()) return "out";
                 return "none";
-            });
+            }),
+    exclude(
+            String.class,
+            "leaves the given class or property out of the generated annotations: a glob for the class, "
+                    + "optionally # and a glob for the property, optionally = and the annotation to write "
+                    + "instead of the computed one",
+            (p, v) -> {
+                String error = Exclusions.validate(v);
+                if (error != null) {
+                    return error;
+                }
+                p.exclusion(v);
+                return null;
+            },
+            p -> p.getExclusions());
 
     // parameter type
     private final Class<?> type;
@@ -194,6 +221,11 @@ public enum ValidationsArgument {
                 .append(PLUGIN_OPTION_NAME)
                 .append("      :  ")
                 .append("inject Bean validation annotations (JSR 303)")
+                .append(System.lineSeparator())
+                .append("  -")
+                .append(PLUGIN_ALIAS_OPTION_NAME)
+                .append("      :  ")
+                .append("the same plugin, under the name of the specification")
                 .append(System.lineSeparator())
                 .append("   Options:")
                 .append(helpMessageWithPrefix("     "))

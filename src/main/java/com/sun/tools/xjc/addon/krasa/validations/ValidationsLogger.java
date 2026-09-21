@@ -12,4 +12,7 @@ interface ValidationsLogger {
 
     void addAnnotation(String annotationName, Map<String, String> parameterMap);
 
+    /** Reports something the caller should know about, whether or not the run is verbose. */
+    void warning(String message);
+
 }

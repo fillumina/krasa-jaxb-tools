@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+                  xmlns:tns="http://ws.example.com/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+                  xmlns:ns1="http://schemas.xmlsoap.org/soap/http" 
+                  name="ExampleWSService" targetNamespace="http://ws.example.com/">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ws.example.com/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://ws.example.com/">
+
+  <xs:element name="userRequest" type="tns:userRequest"/>
+  <xs:element name="userRequestResponse" type="tns:userRequestResponse"/>
+
+  <xs:complexType name="errorCode">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="internalErrorCode" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="userRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="tns:customObject"/>
+      <xs:element minOccurs="0" name="arg1" type="xs:string"/>
+      <xs:element name="arg2" type="xs:int"/>
+      <xs:element minOccurs="0" name="arg3" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg4" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="customObject">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="normalString" type="xs:string"/>
+      
+      <xs:element name="customRegexString">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="16"/>
+            <xsd:minLength value="1"/>
+            <xsd:pattern value="[0-9a-zA-Z]*"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xs:element>
+      
+      <xs:element name="integerField" type="xs:integer"/>
+      <xs:element name="booleanField" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="userRequestResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:requestResponse"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="requestResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="data" type="xs:base64Binary"/>
+      <xs:element minOccurs="0" name="responseType" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="ExampleException" type="tns:ExampleException"/>
+  <xs:complexType name="ExampleException">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="errorCode" type="tns:errorCode"/>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="CustomException" type="tns:CustomException"/>
+  <xs:complexType name="CustomException">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="approvalId" type="xs:int"/>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DummyException" type="tns:DummyException"/>
+  <xs:complexType name="DummyException">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="errorCode" type="tns:errorCode"/>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SuperException" type="tns:SuperException"/>
+  <xs:complexType name="SuperException">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="NotFoundException" type="tns:NotFoundException"/>
+  <xs:complexType name="NotFoundException">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="errorCode" type="tns:errorCode"/>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="CustomException">
+    <wsdl:part element="tns:CustomException" name="CustomException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="DummyException">
+    <wsdl:part element="tns:DummyException" name="DummyException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="userRequestResponse">
+    <wsdl:part element="tns:userRequestResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+
+  <wsdl:message name="userRequest">
+    <wsdl:part element="tns:userRequest" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+
+  <wsdl:message name="SuperException">
+    <wsdl:part element="tns:SuperException" name="SuperException">
+    </wsdl:part>
+  </wsdl:message>
+
+  <wsdl:message name="NotFoundException">
+    <wsdl:part element="tns:NotFoundException" name="NotFoundException">
+    </wsdl:part>
+  </wsdl:message>
+
+  <wsdl:message name="ExampleException">
+    <wsdl:part element="tns:ExampleException" name="ExampleException">
+    </wsdl:part>
+  </wsdl:message>
+
+
+  <wsdl:portType name="ExampleWS">
+    <wsdl:operation name="userRequest">
+      <wsdl:input message="tns:userRequest" name="userRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:userRequestResponse" name="userRequestResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:DummyException" name="DummyException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:SuperException" name="SuperException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:ExampleException" name="ExampleException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:CustomException" name="CustomException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:NotFoundException" name="NotFoundException">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+
+  <wsdl:binding name="ExampleWSServiceSoapBinding" type="tns:ExampleWS">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="userRequest">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="userRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="userRequestResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="DummyException">
+        <soap:fault name="DummyException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SuperException">
+        <soap:fault name="SuperException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ExampleException">
+        <soap:fault name="ExampleException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="CustomException">
+        <soap:fault name="CustomException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="NotFoundException">
+        <soap:fault name="NotFoundException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+
+  <wsdl:service name="ExampleWSService">
+    <wsdl:port binding="tns:ExampleWSServiceSoapBinding" name="ExampleWSPort">
+      <soap:address location="http://localhost:8080/example/examplews"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,20 @@
+ChildType
+    name
+        @NotNull
+RootType
+    amount
+        @DecimalMax(value = "99.5", inclusive = true)
+        @DecimalMin(value = "1.5", inclusive = true)
+        @NotNull
+    child
+        @NotNull
+        @Valid
+    children
+        @Size(min = 0)
+        @Valid
+    code
+        @NotNull
+        @Pattern(regexp = "[A-Z]{2}[0-9]{3}")
+    label
+        @NotNull
+        @Size(min = 2, max = 5)

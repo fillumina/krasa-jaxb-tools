@@ -30,6 +30,10 @@ public class JaxbValidationsPlugin extends Plugin {
     public static final String PLUGIN_OPTION_NAME = "-" + PLUGIN_NAME;
     public static final int PLUGIN_OPTION_NAME_LENGTH = PLUGIN_OPTION_NAME.length() + 1;
 
+    /** The name of the specification this plugin implements, and the second name it answers to. */
+    public static final String PLUGIN_ALIAS_NAME = "XBeanValidationAnnotations";
+    public static final String PLUGIN_ALIAS_OPTION_NAME = "-" + PLUGIN_ALIAS_NAME;
+
     ValidationsOptions.Builder optionsBuilder = ValidationsOptions.builder();
 
     @Override
@@ -37,10 +41,37 @@ public class JaxbValidationsPlugin extends Plugin {
         return PLUGIN_NAME;
     }
 
+    /**
+     * Reads one option of this plugin. XJC activates a plugin only for an argument equal to
+     * {@code "-"} plus {@link #getOptionName()}, and hands every other argument to every plugin,
+     * so the alias has to activate the plugin itself; see {@link #PLUGIN_ALIAS_OPTION_NAME}.
+     */
     @Override
     public int parseArgument(Options opt, String[] args, int index)
             throws BadCommandLineException, IOException {
-        return optionsBuilder.parseArgument(args[index]);
+        final String argument = args[index];
+        final String canonical = canonicalArgument(argument);
+        if (!canonical.equals(argument)) {
+            activate(opt);
+        }
+        return optionsBuilder.parseArgument(canonical);
+    }
+
+    /** @return the argument as if it had been written with {@link #PLUGIN_OPTION_NAME}. */
+    private static String canonicalArgument(String argument) {
+        return argument.startsWith(PLUGIN_ALIAS_OPTION_NAME)
+                ? PLUGIN_OPTION_NAME + argument.substring(PLUGIN_ALIAS_OPTION_NAME.length())
+                : argument;
+    }
+
+    /** Does what XJC does for the canonical name, which it does not do for an alias. */
+    private void activate(Options opt) throws BadCommandLineException {
+        if (opt.activePlugins.contains(this)) {
+            return;
+        }
+        opt.activePlugins.add(this);
+        opt.pluginURIs.addAll(getCustomizationURIs());
+        onActivated(opt);
     }
 
     @Override

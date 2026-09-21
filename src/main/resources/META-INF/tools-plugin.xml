@@ -8,4 +8,21 @@
             <generator name="ValidSEIGenerator" />
         </generators>
     </frontend>
+    <frontend name="krasa-jaxws" package="org.apache.cxf.tools.wsdlto.frontend.jaxws" profile="JAXWSProfile">
+        <container name="JAXWSContainer" package="org.apache.cxf.tools.wsdlto.frontend.jaxws" toolspec="jaxws-toolspec.xml" />
+        <processor name="WSDLToJavaProcessor" package="org.apache.cxf.tools.wsdlto.frontend.jaxws.processor" />
+        <builder name="JAXWSDefinitionBuilder" package="org.apache.cxf.tools.wsdlto.frontend.jaxws.wsdl11" />
+        <!-- CXF reads a single generators element per frontend, and a generator may name its own
+             package: that is how ours sits next to the CXF ones. -->
+        <generators package="org.apache.cxf.tools.wsdlto.frontend.jaxws.generators">
+            <generator name="AntGenerator" />
+            <generator name="ClientGenerator" />
+            <generator name="FaultGenerator" />
+            <generator name="ImplGenerator" />
+            <generator name="SEIGenerator" />
+            <generator name="ServerGenerator" />
+            <generator name="ServiceGenerator" />
+            <generator name="ValidSEIGenerator" package="com.sun.tools.xjc.addon.krasa" />
+        </generators>
+    </frontend>
 </plugin>
