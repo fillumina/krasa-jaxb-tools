@@ -1,6 +1,7 @@
 package com.sun.tools.xjc.addon.krasa.validations.jaxb;
 
-import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerTestHelper;
+import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerFixtureTest;
+import com.sun.tools.xjc.addon.krasa.validations.ValidationsAnnotation;
 import com.sun.tools.xjc.addon.krasa.validations.ValidationsArgument;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,19 +13,19 @@ import java.util.List;
  *
  * @author Francesco Illuminati
  */
-public class AliasNameTest extends AnnotationCheckerTestHelper {
+public class AliasNameTest extends AnnotationCheckerFixtureTest {
 
     private static final String ALIAS = "-XBeanValidationAnnotations";
 
-    public AliasNameTest() {
-        super("valid", "a", "ContentListType,MessageContentType,MessageType");
+    public AliasNameTest(ValidationsAnnotation library) {
+        super(library, "valid", "a", "ContentListType,MessageContentType,MessageType");
     }
 
     /**
      * The same arguments {@code ArgumentBuilder} produces, with the name this test is about.
      */
     @Override
-    public List<String> getArgs() {
+    protected List<String> getArgs() {
         List<String> args = new ArrayList<>();
         args.add(ALIAS);
         args.add(withValue(ValidationsArgument.generateNotNullAnnotations, true));

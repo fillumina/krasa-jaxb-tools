@@ -1,6 +1,8 @@
 package com.sun.tools.xjc.addon.krasa.validations.jaxb;
 
-import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerTestHelper;
+import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerFixtureTest;
+import com.sun.tools.xjc.addon.krasa.validations.ValidationsAnnotation;
+import org.junit.Test;
 
 /**
  * Verification test: the collection path must drop the natural bounds of the numeric
@@ -27,13 +29,14 @@ import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerTestHelper;
  *
  * @author Francesco Illuminati
  */
-public class NumericBoundsTest extends AnnotationCheckerTestHelper {
+public class NumericBoundsTest extends AnnotationCheckerFixtureTest {
 
-    public NumericBoundsTest() {
-        super("numericBounds", "a", "NumericBounds");
+    public NumericBoundsTest(ValidationsAnnotation library) {
+        super(library, "numericBounds", "a", "NumericBounds");
     }
 
     /** The natural bounds of xsd:int must not reach the collection. */
+    @Test
     public void testPlainIntCollectionHasNoNaturalBounds() {
         withElement("NumericBounds")
                 .withField("plainIntList")
@@ -43,6 +46,7 @@ public class NumericBoundsTest extends AnnotationCheckerTestHelper {
 
     /** Bounds declared by the schema must survive the same filtering, whatever the
      *  element type known to NumericRange (Integer here) or not (BigDecimal here). */
+    @Test
     public void testDeclaredBoundsAreKeptOnACollection() {
         withElement("NumericBounds")
                 .withField("boundedIntList")

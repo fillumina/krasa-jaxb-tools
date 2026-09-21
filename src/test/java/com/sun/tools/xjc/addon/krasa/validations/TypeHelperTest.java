@@ -16,8 +16,8 @@
 package com.sun.tools.xjc.addon.krasa.validations;
 
 import java.math.BigDecimal;
-import static junit.framework.TestCase.assertFalse;
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**

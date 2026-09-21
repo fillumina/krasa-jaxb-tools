@@ -1,13 +1,16 @@
 package com.sun.tools.xjc.addon.krasa.validations.jaxb;
 
-import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerTestHelper;
+import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerFixtureTest;
+import com.sun.tools.xjc.addon.krasa.validations.ValidationsAnnotation;
+import org.junit.Test;
 
-public class ComplexTest extends AnnotationCheckerTestHelper {
+public class ComplexTest extends AnnotationCheckerFixtureTest {
 
-    public ComplexTest() {
-        super("abase", "", false, "AddressType");
+    public ComplexTest(ValidationsAnnotation library) {
+        super(library, "abase", "", false, "AddressType");
     }
 
+    @Test
     public void testNotNullAndSizeMax() {
         withElement("AddressType")
                 .withField("name")
@@ -15,6 +18,7 @@ public class ComplexTest extends AnnotationCheckerTestHelper {
                         .withAnnotation("NotNull").assertNoParameters();
     }
 
+    @Test
     public void testNotNullAndSizeMinAndMax() {
         withElement("AddressType")
                 .withField("countryCode")
@@ -24,6 +28,7 @@ public class ComplexTest extends AnnotationCheckerTestHelper {
                                 .assertParam("max", 2);
     }
 
+    @Test
     public void testValidAndSizeMinMax() {
         withElement("AddressType")
                 .withField("phoneNumber")
@@ -33,12 +38,14 @@ public class ComplexTest extends AnnotationCheckerTestHelper {
                                 .assertParam("max", 3);
     }
 
+    @Test
     public void testAnnotationNotPresent() {
         withElement("AddressType")
                 .withField("isDefaultOneClick")
                         .assertNoAnnotationsPresent();
     }
 
+    @Test
     public void testPattern() {
         withElement("EmailAddressType")
                 .withField("preferredFormat")

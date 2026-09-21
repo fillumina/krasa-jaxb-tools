@@ -1,13 +1,16 @@
 package com.sun.tools.xjc.addon.krasa.validations.jaxb;
 
-import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerTestHelper;
+import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerFixtureTest;
+import com.sun.tools.xjc.addon.krasa.validations.ValidationsAnnotation;
+import org.junit.Test;
 
-public class ArrayTest extends AnnotationCheckerTestHelper {
+public class ArrayTest extends AnnotationCheckerFixtureTest {
 
-    public ArrayTest() {
-        super("array", "a", "Array");
+    public ArrayTest(ValidationsAnnotation library) {
+        super(library, "array", "a", "Array");
     }
 
+    @Test
     public void test() throws ClassNotFoundException {
         withElement("Array")
                 .assertImportSimpleName("Size")

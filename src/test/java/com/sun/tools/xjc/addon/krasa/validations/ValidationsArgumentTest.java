@@ -5,8 +5,8 @@ import com.sun.tools.xjc.Options;
 import com.sun.tools.xjc.addon.krasa.JaxbValidationsPlugin;
 import java.io.IOException;
 import java.util.List;
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import org.junit.Test;
 

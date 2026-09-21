@@ -21,15 +21,17 @@ Release
 <dependency>
     <groupId>com.fillumina</groupId>
     <artifactId>krasa-jaxb-tools</artifactId>
-    <version>2.7.0</version>
+    <version>2.8.0</version>
 </dependency>
 ```
 
 Versions
 ----------------
 
-The latest release is **2.7.0**: two new options, a new frontend, an option alias, and the
-dependencies moved forward.
+The latest release is **2.8.0**, a maintenance release: nothing the plugin does changes — no generated
+annotation, no option and no default differs from 2.7.0.
+
+**2.7.0** added two options, a new frontend and an option alias, and moved the dependencies forward:
 
 - `exclude` leaves chosen classes, properties or annotations out of the generated annotations, or
   changes one parameter of one of them — a different message, for example — without touching the
@@ -369,6 +371,42 @@ An [Apache Cxf plugin](https://cxf.apache.org/docs/tools.html) that runs as a CX
 
 - **`krasa`** — the frontend this project has always shipped. It declares the `ValidSEIGenerator` only, so next to the JAXB types it writes the port type interface with the `@Valid` annotations and nothing else. No CXF generator is registered under this name, so **CXF's own switches have no effect**: with `-all`, `-client`, `-server` or `-impl` you still get that one interface.
 - **`krasa-jaxws`** — new in 2.7.0. The same `ValidSEIGenerator` plus the seven generators CXF's own `jaxws` frontend declares — `AntGenerator`, `ClientGenerator`, `FaultGenerator`, `ImplGenerator`, `SEIGenerator`, `ServerGenerator`, `ServiceGenerator` — so a single invocation writes the validated interface **and** the classes those generators produce.
+
+### The frontends bring CXF's XJC onto your build classpath
+
+A frontend needs CXF's WSDL-to-Java tooling, and CXF's `cxf-tools-common` declares a JAXB XJC of its
+own — `jaxb-xjc` 2.3.5 with CXF 3.5.11. Adding this plugin therefore puts a 2.3.x XJC on the build
+classpath, and if your build has a newer one, Maven chooses between them by its nearest-wins rule
+rather than by which one you asked for. **The plugin does not read binding files itself**, so when XJC
+complains about yours it is complaining about the XJC that won:
+
+- the **2.3 line** knows only `http://java.sun.com/xml/ns/jaxb`, the Java EE namespace;
+- the **3.x and 4.x lines** know only `https://jakarta.ee/xml/ns/jaxb`, the jakarta one.
+
+A binding file written for one of them cannot be read by the other. To see which XJC your build
+resolves:
+
+```
+mvn dependency:tree -Dincludes=org.glassfish.jaxb:jaxb-xjc
+```
+
+Two ways out, depending on whether you need the jakarta namespace in that file:
+
+- **stay on the 2.3 line** and write the binding file in the namespace it knows — no dependency change
+  at all, and the simplest thing while you use this library;
+- **exclude CXF's tooling from the plugin dependency**, so your own XJC is the one that runs:
+
+```xml
+<exclusion>
+  <groupId>org.apache.cxf</groupId>
+  <artifactId>cxf-tools-wsdlto-frontend-jaxws</artifactId>
+</exclusion>
+```
+
+The annotations plugin itself runs on XJC 4.x once that is out of the way; what it cannot do is emit
+the `jakarta` annotations from an XJC 4 model. That combination — and the separation of the three
+tools, so that a validation-only build never pulls CXF at all — is what the new projects announced
+above are for.
 
 `krasa` was deliberately left alone: adding those generators to it would change what every current user generates, with extra `Client`, `Server`, `Fault` and `Impl` classes appearing in their builds. The new name is additive, and `krasa` keeps generating exactly what it generated before.
 

@@ -5,6 +5,21 @@ plugin; this file records what changed in each release.
 
 ## Versions
 
+- `2.8.0` a maintenance release: **nothing the plugin does changes.** The generated annotations, the
+  options and their defaults are those of 2.7.0 exactly, and the one change in the plugin's own code is
+  the removal of a method nothing called. What changed is the project around it:
+
+  - the test suite runs as JUnit 4, with the annotation library as the test parameter, so a single
+    fixture and a single library can be run on their own from an IDE. The expectations are untouched:
+    the same eighty `-annotation.txt` files and the same schemas, compared as before
+
+  - the tests the JUnit 3 harness needed for itself went with it, and the extraction of the generated
+    classes into those expectation files is now covered by tests that were shown to fail when the
+    extraction is deliberately broken
+
+  - the README says which XJC the CXF frontends put on the build classpath, why a binding file can then
+    be read by an XJC that is not the one you asked for, and the two ways out of it
+
 - `2.7.0` a feature release: two new options, a new frontend, an option alias, and the dependencies
   and build plugins moved to the newest release of each line that still runs on JDK 8. The new options
   change nothing unless they are asked for.

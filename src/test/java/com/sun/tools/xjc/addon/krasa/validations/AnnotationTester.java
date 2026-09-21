@@ -73,7 +73,7 @@ public class AnnotationTester<P> {
             throw new AssertionError("annotation " + annotation +
                     " of attribute " + parent.attributeName +
                     " in " + parent.filename +
-                    " mismatched value: expected " + v + " found " + value);
+                    " mismatched value: expected " + value + " found " + v);
         }
         return this;
     }

@@ -1,23 +1,26 @@
 package com.sun.tools.xjc.addon.krasa.validations.primitive;
 
 import com.sun.tools.xjc.addon.krasa.PrimitiveFixerPlugin;
-import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerTestHelper;
+import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerFixtureTest;
 import com.sun.tools.xjc.addon.krasa.validations.ArgumentBuilder;
+import com.sun.tools.xjc.addon.krasa.validations.ValidationsAnnotation;
 import com.sun.tools.xjc.addon.krasa.validations.ValidationsArgument;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
+import org.junit.Test;
 
 /**
  *
  * @author Francesco Illuminati
  */
-public class PrimitiveFixerPluginTest extends AnnotationCheckerTestHelper {
+public class PrimitiveFixerPluginTest extends AnnotationCheckerFixtureTest {
 
-    public PrimitiveFixerPluginTest() {
-        super("primitive", "a", "Primitive");
+    public PrimitiveFixerPluginTest(ValidationsAnnotation library) {
+        super(library, "primitive", "a", "Primitive");
     }
 
+    @Test
     public void testPrimitiveSubstitution() {
         withElement("Primitive")
                 .withField("abyte").assertClass(Byte.class).end()
@@ -103,7 +106,7 @@ public class PrimitiveFixerPluginTest extends AnnotationCheckerTestHelper {
     }
 
     @Override
-    public List<String> getArgs() {
+    protected List<String> getArgs() {
         return ArgumentBuilder.builder()
                 .add("-" + PrimitiveFixerPlugin.PLUGIN_NAME)
                 .add(ValidationsArgument.generateNotNullAnnotations, true)

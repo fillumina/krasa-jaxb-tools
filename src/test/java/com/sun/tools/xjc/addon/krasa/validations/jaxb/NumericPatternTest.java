@@ -1,6 +1,8 @@
 package com.sun.tools.xjc.addon.krasa.validations.jaxb;
 
-import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerTestHelper;
+import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerFixtureTest;
+import com.sun.tools.xjc.addon.krasa.validations.ValidationsAnnotation;
+import org.junit.Test;
 
 /**
  * Verification test: a numeric type must never end up with a pattern annotation.
@@ -30,13 +32,14 @@ import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerTestHelper;
  *
  * @author Francesco Illuminati
  */
-public class NumericPatternTest extends AnnotationCheckerTestHelper {
+public class NumericPatternTest extends AnnotationCheckerFixtureTest {
 
-    public NumericPatternTest() {
-        super("numericPattern", "a", "NumericPattern");
+    public NumericPatternTest(ValidationsAnnotation library) {
+        super(library, "numericPattern", "a", "NumericPattern");
     }
 
     /** Scalar numeric field: the pattern must not become {@code @Pattern}. */
+    @Test
     public void testScalarNumericMustNotHavePattern() {
         withElement("NumericPattern")
                 .withField("patternedInteger")
@@ -49,6 +52,7 @@ public class NumericPatternTest extends AnnotationCheckerTestHelper {
      * Both checks are needed: "Pattern" is matched as a prefix of the annotation name, so it
      * does not match {@code @EachPattern}.
      */
+    @Test
     public void testNumericCollectionMustNotHaveEachPattern() {
         withElement("NumericPattern")
                 .withField("patternedIntegerList")

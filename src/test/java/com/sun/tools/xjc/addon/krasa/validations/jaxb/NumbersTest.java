@@ -1,19 +1,22 @@
 package com.sun.tools.xjc.addon.krasa.validations.jaxb;
 
-import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerTestHelper;
+import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerFixtureTest;
+import com.sun.tools.xjc.addon.krasa.validations.ValidationsAnnotation;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import org.junit.Test;
 
 /**
  *
  * @author Francesco Illuminati
  */
-public class NumbersTest extends AnnotationCheckerTestHelper {
+public class NumbersTest extends AnnotationCheckerFixtureTest {
 
-    public NumbersTest() {
-        super("numbers", "a", "Numbers");
+    public NumbersTest(ValidationsAnnotation library) {
+        super(library, "numbers", "a", "Numbers");
     }
 
+    @Test
     public void test() throws ClassNotFoundException {
         withElement("Numbers")
                 .assertImportSimpleName("NotNull")

@@ -1,7 +1,8 @@
 package com.sun.tools.xjc.addon.krasa.validations.jaxb;
 
-import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerTestHelper;
+import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerFixtureTest;
 import com.sun.tools.xjc.addon.krasa.validations.ArgumentBuilder;
+import com.sun.tools.xjc.addon.krasa.validations.ValidationsAnnotation;
 import com.sun.tools.xjc.addon.krasa.validations.ValidationsArgument;
 import java.util.List;
 
@@ -10,15 +11,15 @@ import java.util.List;
  *
  * @author Francesco Illuminati
  */
-public class OptionGenerateStringListAnnotationTest extends AnnotationCheckerTestHelper {
+public class OptionGenerateStringListAnnotationTest extends AnnotationCheckerFixtureTest {
 
-    public OptionGenerateStringListAnnotationTest() {
-        super("options", "a", "OptionsType");
+    public OptionGenerateStringListAnnotationTest(ValidationsAnnotation library) {
+        super(library, "options", "a", "OptionsType");
     }
 
     @Override
-    public List<String> getArgs() {
-        // overwrite whatever options set by RunXJC2MojoTestHelper so to keep default configuration
+    protected List<String> getArgs() {
+        // the base would set options of its own, so this keeps the plugin at its defaults
         return ArgumentBuilder.builder()
                 .add(ValidationsArgument.generateNotNullAnnotations, false)
                 .add(ValidationsArgument.generateListAnnotations, true)
