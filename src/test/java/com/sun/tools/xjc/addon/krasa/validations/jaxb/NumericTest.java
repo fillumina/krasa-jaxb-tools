@@ -1,15 +1,16 @@
 package com.sun.tools.xjc.addon.krasa.validations.jaxb;
 
-import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerTestHelper;
+import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerFixtureTest;
+import com.sun.tools.xjc.addon.krasa.validations.ValidationsAnnotation;
 
 /**
  *
  * @author Francesco Illuminati
  */
-public class NumericTest extends AnnotationCheckerTestHelper {
+public class NumericTest extends AnnotationCheckerFixtureTest {
 
-    public NumericTest() {
-        super("numeric", "a", "Numeric");
+    public NumericTest(ValidationsAnnotation library) {
+        super(library, "numeric", "a", "Numeric");
     }
 
 }

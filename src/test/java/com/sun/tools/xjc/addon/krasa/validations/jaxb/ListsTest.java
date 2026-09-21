@@ -1,18 +1,21 @@
 package com.sun.tools.xjc.addon.krasa.validations.jaxb;
 
-import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerTestHelper;
+import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerFixtureTest;
+import com.sun.tools.xjc.addon.krasa.validations.ValidationsAnnotation;
+import org.junit.Test;
 
 /**
  *
  * @see https://github.com/jirutka/validator-collection
  * @author Francesco Illuminati
  */
-public class ListsTest extends AnnotationCheckerTestHelper {
+public class ListsTest extends AnnotationCheckerFixtureTest {
 
-    public ListsTest() {
-        super("lists", "a", "AddressType,Container");
+    public ListsTest(ValidationsAnnotation library) {
+        super(library, "lists", "a", "AddressType,Container");
     }
 
+    @Test
     public void testContainer() throws ClassNotFoundException {
         withElement("Container")
                 .assertImportSimpleName("Valid")
@@ -51,6 +54,7 @@ public class ListsTest extends AnnotationCheckerTestHelper {
                         .withAnnotation("NotNull").assertNoParameters();
     }
 
+    @Test
     public void testAddressType() {
         withElement("AddressType")
                 .withField("name")

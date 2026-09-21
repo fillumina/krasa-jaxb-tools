@@ -1,6 +1,8 @@
 package com.sun.tools.xjc.addon.krasa.validations.jaxb;
 
-import com.sun.tools.xjc.addon.krasa.validations.RunXJC2MojoTestHelper;
+import com.sun.tools.xjc.addon.krasa.validations.FixtureTest;
+import com.sun.tools.xjc.addon.krasa.validations.ValidationsAnnotation;
+import org.junit.Test;
 
 /**
  * Test the application of numeric restrictions to a decimal type converted to String.
@@ -8,12 +10,13 @@ import com.sun.tools.xjc.addon.krasa.validations.RunXJC2MojoTestHelper;
  *
  * @author Francesco Illuminati
  */
-public class StringDigitsRestrictionTest extends RunXJC2MojoTestHelper {
+public class StringDigitsRestrictionTest extends FixtureTest {
 
-    public StringDigitsRestrictionTest() {
-        super("stringDigitsRestriction", "a");
+    public StringDigitsRestrictionTest(ValidationsAnnotation library) {
+        super(library, "stringDigitsRestriction", "a");
     }
 
+    @Test
     public void test() {
         withElement("StringClassContainer")
                 .withField("stringField")

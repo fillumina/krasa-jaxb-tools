@@ -1,6 +1,7 @@
 package com.sun.tools.xjc.addon.krasa.validations.jaxb;
 
-import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerTestHelper;
+import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerFixtureTest;
+import com.sun.tools.xjc.addon.krasa.validations.ValidationsAnnotation;
 
 /**
  * The example documents a kind of type extension which is not handled by XJC that simply
@@ -9,10 +10,10 @@ import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerTestHelper;
  *
  * @author Francesco Illuminati
  */
-public class ExtendTest extends AnnotationCheckerTestHelper {
+public class ExtendTest extends AnnotationCheckerFixtureTest {
 
-    public ExtendTest() {
-        super("extend", "a", "AComplexType");
+    public ExtendTest(ValidationsAnnotation library) {
+        super(library, "extend", "a", "AComplexType");
     }
 
 }

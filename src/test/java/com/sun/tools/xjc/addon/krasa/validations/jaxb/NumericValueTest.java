@@ -1,6 +1,8 @@
 package com.sun.tools.xjc.addon.krasa.validations.jaxb;
 
-import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerTestHelper;
+import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerFixtureTest;
+import com.sun.tools.xjc.addon.krasa.validations.ValidationsAnnotation;
+import org.junit.Test;
 
 /**
  * Verification test: a numeric value pinned by {@code fixed} must become a fixed range, on elements
@@ -24,13 +26,14 @@ import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerTestHelper;
  *
  * @author Francesco Illuminati
  */
-public class NumericValueTest extends AnnotationCheckerTestHelper {
+public class NumericValueTest extends AnnotationCheckerFixtureTest {
 
-    public NumericValueTest() {
-        super("numericValue", "a", "NumericValue");
+    public NumericValueTest(ValidationsAnnotation library) {
+        super(library, "numericValue", "a", "NumericValue");
     }
 
     /** A value pinned by fixed on an element is a range that begins and ends there. */
+    @Test
     public void testFixedElementHasAFixedRange() {
         withElement("NumericValue")
                 .withField("fixedValue")
@@ -39,6 +42,7 @@ public class NumericValueTest extends AnnotationCheckerTestHelper {
     }
 
     /** The same on an attribute. */
+    @Test
     public void testFixedAttributeHasAFixedRange() {
         withElement("NumericValue")
                 .withField("fixedAttribute")
@@ -47,6 +51,7 @@ public class NumericValueTest extends AnnotationCheckerTestHelper {
     }
 
     /** A fixed value equal to the type's own limit is noise, not a constraint. */
+    @Test
     public void testFixedValueAtTheTypeLimitIsDropped() {
         withElement("NumericValue")
                 .withField("fixedAtTheTypeLimit")
@@ -55,6 +60,7 @@ public class NumericValueTest extends AnnotationCheckerTestHelper {
     }
 
     /** An enumeration of one value is a value set too, and it is left alone. */
+    @Test
     public void testSingleValuedEnumerationHasNoBounds() {
         withElement("NumericValue")
                 .withField("singleEnumerated")
@@ -63,6 +69,7 @@ public class NumericValueTest extends AnnotationCheckerTestHelper {
     }
 
     /** So is an enumeration of several values. */
+    @Test
     public void testMultiValuedEnumerationHasNoBounds() {
         withElement("NumericValue")
                 .withField("multiEnumerated")

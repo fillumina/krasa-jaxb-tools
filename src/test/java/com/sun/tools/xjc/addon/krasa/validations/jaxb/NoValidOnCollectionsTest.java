@@ -1,9 +1,11 @@
 package com.sun.tools.xjc.addon.krasa.validations.jaxb;
 
-import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerTestHelper;
+import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerFixtureTest;
 import com.sun.tools.xjc.addon.krasa.validations.ArgumentBuilder;
+import com.sun.tools.xjc.addon.krasa.validations.ValidationsAnnotation;
 import com.sun.tools.xjc.addon.krasa.validations.ValidationsArgument;
 import java.util.List;
+import org.junit.Test;
 
 /**
  * A collection must not carry {@code @Valid} when the option asks for it.
@@ -20,17 +22,17 @@ import java.util.List;
  *
  * @author Francesco Illuminati
  */
-public class NoValidOnCollectionsTest extends AnnotationCheckerTestHelper {
+public class NoValidOnCollectionsTest extends AnnotationCheckerFixtureTest {
 
     private static final String NO_VALID_ON_COLLECTIONS =
             "-XJsr303Annotations:generateValidOnCollections=false";
 
-    public NoValidOnCollectionsTest() {
-        super("pattern", "a", "ProcessContainer");
+    public NoValidOnCollectionsTest(ValidationsAnnotation library) {
+        super(library, "pattern", "a", "ProcessContainer");
     }
 
     @Override
-    public List<String> getArgs() {
+    protected List<String> getArgs() {
         return ArgumentBuilder.builder()
                 .add(ValidationsArgument.generateNotNullAnnotations, true)
                 .add(ValidationsArgument.generateListAnnotations, true)
@@ -41,6 +43,7 @@ public class NoValidOnCollectionsTest extends AnnotationCheckerTestHelper {
     }
 
     /** The container loses the annotation the validator deprecated. */
+    @Test
     public void testCollectionMustNotCarryValid() {
         withElement("ProcessContainer")
                 .withField("someList")

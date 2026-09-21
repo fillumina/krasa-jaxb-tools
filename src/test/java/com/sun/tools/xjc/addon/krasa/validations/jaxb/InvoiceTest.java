@@ -1,6 +1,8 @@
 package com.sun.tools.xjc.addon.krasa.validations.jaxb;
 
-import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerTestHelper;
+import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerFixtureTest;
+import com.sun.tools.xjc.addon.krasa.validations.ValidationsAnnotation;
+import org.junit.Test;
 
 /**
  * Validation API 2.0 supports inclusive for @DecimalMin and @DecimalMax
@@ -9,12 +11,13 @@ import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerTestHelper;
  *
  * @author Francesco Illuminati
  */
-public class InvoiceTest extends AnnotationCheckerTestHelper {
+public class InvoiceTest extends AnnotationCheckerFixtureTest {
 
-    public InvoiceTest() {
-        super("invoice", "a", "Invoice");
+    public InvoiceTest(ValidationsAnnotation library) {
+        super(library, "invoice", "a", "Invoice");
     }
 
+    @Test
     public void test() throws ClassNotFoundException {
         withElement("Invoice")
                 .assertImportSimpleName("DecimalMin")
