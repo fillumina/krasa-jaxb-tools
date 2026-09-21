@@ -5,6 +5,39 @@ plugin; this file records what changed in each release.
 
 ## Versions
 
+- `2.7.0` a feature release: two new options, a new frontend, an option alias, and the dependencies
+  and build plugins moved to the newest release of each line that still runs on JDK 8. The new options
+  change nothing unless they are asked for.
+
+  - dependencies updated: CXF 3.5.10 → 3.5.11, JAXB/XJC 2.3.5 → 2.3.9 (pinned, so a consumer keeps
+    resolving its own), `jakarta.validation-api` 3.0.2 → 3.1.1 and the Maven plugins (surefire,
+    compiler, javadoc, source, enforcer, gpg, central-publishing), so a consumer of the plugin
+    resolves the newer CXF patch. `velocity-engine-core` stays at 2.3, because 2.4.1 is not
+    compatible with the `commons-lang3` the CXF stack brings
+
+  - new `exclude` option ([issue #34](https://github.com/fillumina/krasa-jaxb-tools/issues/34)): a
+    repeatable statement that leaves chosen classes, properties or annotations out of the generated
+    annotations, or sets a single parameter of one of them — a different message, for example —
+    without touching the schema
+
+  - new `generateValidOnCollections` option ([issue #33](https://github.com/fillumina/krasa-jaxb-tools/issues/33)):
+    set to `false`, `@Valid` is no longer written on a collection, which Bean Validation deprecated
+    because it belongs on the type argument; it is `true` by default, so nothing changes unless it
+    is asked for
+
+  - new frontend `-frontend krasa-jaxws` ([issue #29](https://github.com/fillumina/krasa-jaxb-tools/issues/29)):
+    CXF's own generators next to the validated interface, for the builds that need both. The `krasa`
+    frontend is unchanged
+
+  - the plugin answers to `-XBeanValidationAnnotations` as well, the name the specification gives it;
+    `-XJsr303Annotations` keeps working
+
+  - documentation: the README is reorganised with one chapter per tool and a use example, the
+    maintenance notice says what this line does and what the announced new projects will do, and the
+    `generateListAnnotations` option now warns that the `validator-collection` annotations it emits
+    are `javax`-only — a jakarta provider does not enforce them, and a recent `javax` one refuses
+    to initialise them
+
 - `2.6.0` bug fix release, with one small enhancement and a few corrections of what a schema means:
 
   - a `fixed` value on an element or an attribute was lost: the field kept a primitive type with
