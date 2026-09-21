@@ -19,7 +19,7 @@ public class OptionGenerateStringListAnnotationTest extends AnnotationCheckerFix
 
     @Override
     protected List<String> getArgs() {
-        // overwrite whatever options set by RunXJC2MojoTestHelper so to keep default configuration
+        // the base would set options of its own, so this keeps the plugin at its defaults
         return ArgumentBuilder.builder()
                 .add(ValidationsArgument.generateNotNullAnnotations, false)
                 .add(ValidationsArgument.generateListAnnotations, true)

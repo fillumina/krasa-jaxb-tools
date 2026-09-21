@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import junit.framework.AssertionFailedError;
 
 /**
  * One fixture of the annotation tests: its schema, the classes generated from it, the expected
@@ -21,7 +20,7 @@ import junit.framework.AssertionFailedError;
  * <p>
  * Generation is driven by {@link XjcRunner}, and the generated code is compared with the expected
  * file by {@link #checkTrace()}, which returns every finding instead of throwing the first one so a
- * caller can report them all. The JUnit3 harness and the JUnit4 tests both use this class.
+ * caller can report them all. Every fixture test goes through this class.
  *
  * @author Francesco Illuminati
  */
@@ -178,7 +177,7 @@ class XjcFixture {
             String actualLine = actual.get(i).trim();
 
             if (!expectedLine.equals(actualLine)) {
-                throw new AssertionFailedError("annotation differs in " + getExecutionName() +
+                throw new AssertionError("annotation differs in " + getExecutionName() +
                         " expected:<" + expectedLine + "> but was:<" + actualLine + ">");
             }
         }

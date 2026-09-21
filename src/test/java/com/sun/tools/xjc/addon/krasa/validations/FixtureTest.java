@@ -19,13 +19,12 @@ import org.junit.runners.Parameterized.Parameters;
  * <p>
  * Before each test the classes are generated and compared with the expected annotations. Every
  * finding goes to an {@link ErrorCollector} rather than aborting the run, so a mismatch does not
- * hide the findings after it and the second library is still generated, which is what the JUnit3
- * harness does with its TestResult.
+ * hide the findings after it and the second library is still generated.
  *
  * <p>
- * The inherited {@link #generatedAnnotationsAreAsExpected()} is the test a fixture gets by default,
- * the way {@code testZDefault} is for the JUnit3 harness: a class with no test method of its own
- * needs nothing but its constructor and its arguments.
+ * The inherited {@link #generatedAnnotationsAreAsExpected()} is the test a fixture gets by default:
+ * a class that checks nothing beyond the expectations needs nothing but its constructor and its
+ * arguments.
  *
  * @author Francesco Illuminati
  */

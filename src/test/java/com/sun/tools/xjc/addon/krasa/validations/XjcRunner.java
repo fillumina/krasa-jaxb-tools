@@ -11,9 +11,9 @@ import org.jvnet.jaxb2.maven2.test.RunXJC2Mojo;
  *
  * <p>
  * The parent {@code RunXJC2Mojo} is a {@code TestCase}, and generation happens through its
- * {@code testExecute()}, which is {@code initMojo().execute()}. A test class that extends it can only
- * be driven through the JUnit lifecycle, which a plain test does not have; this class takes the same
- * settings and calls the same two methods, so a run is available to either kind of test.
+ * {@code testExecute()}, which is {@code initMojo().execute()} — reachable only through the JUnit
+ * lifecycle, which a plain test does not have. This class takes the same settings and calls the same
+ * two methods, so any test can drive a run.
  *
  * @author Francesco Illuminati
  */

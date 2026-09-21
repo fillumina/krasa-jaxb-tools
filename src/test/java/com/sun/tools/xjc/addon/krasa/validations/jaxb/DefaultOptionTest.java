@@ -18,7 +18,7 @@ public class DefaultOptionTest extends FixtureTest {
 
     @Override
     protected List<String> getArgs() {
-        // overwrite whatever options set by RunXJC2MojoTestHelper so to keep default configuration
+        // the base would set options of its own, so this keeps the plugin at its defaults
         return ArgumentBuilder.builder().getOptionList();
     }
 

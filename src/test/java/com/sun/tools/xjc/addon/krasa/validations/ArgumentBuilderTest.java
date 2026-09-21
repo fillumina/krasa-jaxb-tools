@@ -3,7 +3,7 @@ package com.sun.tools.xjc.addon.krasa.validations;
 import com.sun.tools.xjc.addon.krasa.JaxbValidationsPlugin;
 import java.util.Iterator;
 import java.util.List;
-import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 /**
