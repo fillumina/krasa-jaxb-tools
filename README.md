@@ -403,10 +403,15 @@ Two ways out, depending on whether you need the jakarta namespace in that file:
 </exclusion>
 ```
 
-The annotations plugin itself runs on XJC 4.x once that is out of the way; what it cannot do is emit
-the `jakarta` annotations from an XJC 4 model. That combination — and the separation of the three
-tools, so that a validation-only build never pulls CXF at all — is what the new projects announced
-above are for.
+The annotations plugin itself runs on XJC 4.x once that is out of the way, and it writes the
+`jakarta` annotations there too: measured with 2.8.0 on XJC 4.0.9, `validationAnnotations=jakarta`
+produced the same annotations as the `javax` mode, the two differing only in the package they
+import. This line is built and tested against the 2.3.x XJC, so it promises nothing about the 4.x
+one. What it cannot write is the container element form the specification asks for —
+`List<@Pattern(regexp = "…") String>` with `@Valid` on the type argument, which is the limitation
+`generateValidOnCollections` works around. That combination — and the separation of the three tools,
+so that a validation-only build never pulls CXF at all — is what the new projects announced above
+are for.
 
 `krasa` was deliberately left alone: adding those generators to it would change what every current user generates, with extra `Client`, `Server`, `Fault` and `Impl` classes appearing in their builds. The new name is additive, and `krasa` keeps generating exactly what it generated before.
 
