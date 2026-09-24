@@ -291,6 +291,10 @@ and not:
   [validator-collection](https://github.com/jirutka/validator-collection), a third-party stand-in for
   the same constraints; the form the specification asks for is what the new projects announced above
   are for.
+- the items of an element that repeats and whose type is an **`xs:list`**. XJC generates it as a list
+  of `JAXBElement`, one list of items each, because JAXB cannot map a list of lists; a constraint
+  written inside a `JAXBElement` is refused by a provider at run time, because it is not a container.
+  The cardinality of those occurrences is written on the outer list.
 - the JSR 380 constraints a schema has no source for — `@Email`, `@NotEmpty`, `@NotBlank`, the sign
   constraints (`@Positive`, `@Negative`, …) and the date constraints (`@PastOrPresent`,
   `@FutureOrPresent`) — which are not derived from anything.
