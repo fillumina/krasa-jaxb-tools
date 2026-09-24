@@ -55,6 +55,24 @@ public class ListsTest extends AnnotationCheckerFixtureTest {
     }
 
     @Test
+    public void testTheOccurrencesOfAListElementAreNotItsItems() {
+        withElement("Container")
+                .withField("optionalListOfString")
+                        .withAnnotation("Valid").assertNoParameters()
+                        .end()
+                .withField("optionalDerivedListOfInteger")
+                        .withAnnotation("Size")
+                            .assertParam("max", 5).end()
+                        .withAnnotation("Valid").assertNoParameters()
+                        .end()
+                .withField("repeatedListOfString")
+                        .withAnnotation("Size")
+                            .assertParam("min", 0)
+                            .assertParam("max", 3).end()
+                        .withAnnotation("Valid").assertNoParameters();
+    }
+
+    @Test
     public void testAddressType() {
         withElement("AddressType")
                 .withField("name")

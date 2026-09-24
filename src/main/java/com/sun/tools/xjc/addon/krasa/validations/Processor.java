@@ -3,6 +3,7 @@ package com.sun.tools.xjc.addon.krasa.validations;
 import com.sun.codemodel.JFieldVar;
 import com.sun.tools.xjc.model.CAttributePropertyInfo;
 import com.sun.tools.xjc.model.CElementPropertyInfo;
+import com.sun.tools.xjc.model.CReferencePropertyInfo;
 import com.sun.tools.xjc.model.CPropertyInfo;
 import com.sun.tools.xjc.model.CValuePropertyInfo;
 import com.sun.tools.xjc.outline.ClassOutline;
@@ -152,6 +153,9 @@ public class Processor {
             } else if (property instanceof CAttributePropertyInfo) {
                 processAttribute((CAttributePropertyInfo) property);
 
+            } else if (property instanceof CReferencePropertyInfo) {
+                processReference((CReferencePropertyInfo) property);
+
             } else if (property instanceof CValuePropertyInfo) {
                 processAttribute((CValuePropertyInfo) property);
             }
@@ -185,6 +189,51 @@ public class Processor {
             } else if (term instanceof ElementDecl) {
                 processElementDecl(property, field, particle, (ElementDecl) term, annotator);
             }
+        }
+
+        /**
+         * An element that repeats and whose type is an {@code xsd:list} can no longer be written as
+         * one space separated value, so XJC gives up the list mapping and makes a reference property
+         * of it: the field holds the occurrences, one list of items each. Only the cardinality can be
+         * written on that field; the items are inside a {@code JAXBElement}, out of reach from here,
+         * and a constraint written there is refused by a provider at run time.
+         */
+        private void processReference(CReferencePropertyInfo property) {
+            XSComponent definition = property.getSchemaComponent();
+            if (!(definition instanceof XSParticle)) {
+                return;
+            }
+            XSParticle particle = (XSParticle) definition;
+            if (!(particle.getTerm() instanceof ElementDecl)) {
+                return;
+            }
+            final JFieldVar field = classOutline.implClass.fields().get(property.getName(false));
+            if (field == null) {
+                return;
+            }
+            final ElementDecl element = (ElementDecl) particle.getTerm();
+            final int minOccurs = particle.getMinOccurs().intValue();
+            final int maxOccurs = particle.getMaxOccurs().intValue();
+            FieldAnnotator annotator =
+                    new FieldAnnotator(field, options.getAnnotationFactory(), logger, collector);
+            if (property.isCollection() && (minOccurs != 1 || maxOccurs != 1)) {
+                annotator.addSizeAnnotation(minOccurs, maxOccurs, null);
+            }
+            // the same rule the element path follows: a container goes by the option, anything else
+            // carries @Valid only when it is a complex type
+            final boolean isComplexType = element.getType().isComplexType();
+            final String targetNamespace = element.getOwnerSchema().getTargetNamespace();
+            if (Utils.isEqualsOrNull(options.getTargetNamespace(), targetNamespace)
+                    && (property.isCollection()
+                            ? options.isGenerateValidOnCollections()
+                            : isComplexType)) {
+                annotator.addValidAnnotation();
+            }
+        }
+
+        /** @return the simple type an element type takes its facets from, or null when it has none. */
+        private XSSimpleType simpleTypeOf(XSType type) {
+            return type.isComplexType() ? type.getBaseType().asSimpleType() : type.asSimpleType();
         }
 
         /**
@@ -225,7 +274,13 @@ public class Processor {
                 annotator.addNotNullAnnotation(message);
             }
 
-            if (property.isCollection() && (minOccurs != 1 || maxOccurs != 1)) {
+            final XSSimpleType simpleType = simpleTypeOf(elementType);
+            // the field of an element whose type is an xsd:list holds the items of its value, not
+            // the occurrences of the element, so a cardinality says nothing about it
+            final boolean itemsOfAList =
+                    simpleType != null && HierarchyFacetGatherer.isListType(simpleType);
+
+            if (property.isCollection() && !itemsOfAList && (minOccurs != 1 || maxOccurs != 1)) {
                 annotator.addSizeAnnotation(minOccurs, maxOccurs, null);
             }
 
@@ -237,13 +292,6 @@ public class Processor {
                     ? options.isGenerateValidOnCollections()
                     : isComplexType)) {
                 annotator.addValidAnnotation();
-            }
-
-            final XSSimpleType simpleType;
-            if (isComplexType) {
-                simpleType = elementType.getBaseType().asSimpleType();
-            } else {
-                simpleType = elementType.asSimpleType();
             }
 
             if (simpleType != null) {

@@ -5,6 +5,19 @@ plugin; this file records what changed in each release.
 
 ## Versions
 
+- `2.9.0-SNAPSHOT` the version under development:
+
+  - an element whose type is an `xs:list` holds its items in the generated field, so the number of
+    times the element occurs is no longer written there. An optional one used to get
+    `@Size(min = 0, max = 1)`, which counts the items instead of the occurrences and rejects a value
+    the schema allows, and a list type stating its own length had that length displaced by it. The
+    length facets of the list type are written as before
+
+  - an element that repeats and is a list is generated as a list of `JAXBElement`, one list of items
+    each: its cardinality is now written on the outer list, where it counts the occurrences. The
+    items inside the `JAXBElement` stay unannotated, because a constraint written there is refused
+    by a provider at run time
+
 - `2.8.0` a maintenance release: **nothing the plugin does changes.** The generated annotations, the
   options and their defaults are those of 2.7.0 exactly, and the one change in the plugin's own code is
   the removal of a method nothing called. What changed is the project around it:

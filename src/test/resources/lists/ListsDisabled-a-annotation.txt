@@ -22,3 +22,11 @@ Container
     listOfString
         @NotNull
         @Valid
+    optionalDerivedListOfInteger
+        @Size(max = 5)
+        @Valid
+    optionalListOfString
+        @Valid
+    repeatedListOfString
+        @Size(min = 0, max = 3)
+        @Valid

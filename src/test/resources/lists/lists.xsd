@@ -17,6 +17,15 @@
                              minOccurs="2" maxOccurs="4"/>
                 <xsd:element name="listOfString" type="a:ListOfStringType"/>
                 <xsd:element name="derivedListOfInteger" type="a:DerivedListOfIntegerType"/>
+
+                <!-- an optional element whose type is a list: its value holds any number of items -->
+                <xsd:element name="optionalListOfString" type="a:ListOfStringType" minOccurs="0"/>
+                <xsd:element name="optionalDerivedListOfInteger"
+                             type="a:DerivedListOfIntegerType" minOccurs="0"/>
+
+                <!-- the element repeats and its type is a list: two multiplicities at once -->
+                <xsd:element name="repeatedListOfString" type="a:ListOfStringType"
+                             minOccurs="0" maxOccurs="3"/>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
