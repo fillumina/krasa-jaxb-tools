@@ -56,7 +56,10 @@ See [CHANGELOG.md](CHANGELOG.md) for the full history of every release.
   options from the issues, with every default left exactly as it is.
 - Its name, URL and Maven coordinates stay where they are, so nothing has to be re-pointed.
 
-**New projects, one per tool** (their own names and coordinates, announced later)
+**New projects, one per tool** — [`xjc-bean-validation-plugin`](https://github.com/fillumina/xjc-bean-validation-plugin),
+[`xjc-primitives-plugin`](https://github.com/fillumina/xjc-primitives-plugin) and
+[`cxf-validation-frontend`](https://github.com/fillumina/cxf-validation-frontend), each with its
+own name, URL and coordinates:
 
 - Built from a copy of these sources, and breaking compatibility from the first commit: the two
   worlds cannot be carried in one codebase.
