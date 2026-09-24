@@ -45,8 +45,14 @@ class FieldAnnotator {
         this.xjcAnnotator = new XjcAnnotator(field, log, collector);
     }
 
-    void addEachSizeAnnotation(Integer minLength, Integer maxLength) {
-        if ((minLength != null && minLength != 0) ||
+    /** Writes an exact length when present; otherwise writes the available bounds for each value. */
+    void addEachSizeAnnotation(Integer minLength, Integer maxLength, Integer length) {
+        if (isValidLength(length)) {
+            xjcAnnotator.annotate(EachSize.class)
+                    .param(MIN, length)
+                    .param(MAX, length)
+                    .log();
+        } else if ((minLength != null && minLength != 0) ||
                 (maxLength != null && maxLength != 0)) {
             xjcAnnotator.annotate(EachSize.class)
                     .param(MIN, minLength)
@@ -96,16 +102,15 @@ class FieldAnnotator {
     }
 
     void addSizeAnnotation(Integer minLength, Integer maxLength, Integer length) {
-        if (isValidLength(minLength) || isValidLength(maxLength)) {
-            xjcAnnotator.annotate(annotationFactory.getSizeClass())
-                    .paramIf(isValidLength(minLength), MIN, minLength)
-                    .paramIf(isValidLength(maxLength), MAX, maxLength)
-                    .log();
-
-        } else if (isValidLength(length)) {
+        if (isValidLength(length)) {
             xjcAnnotator.annotate(annotationFactory.getSizeClass())
                     .param(MIN, length)
                     .param(MAX, length)
+                    .log();
+        } else if (isValidLength(minLength) || isValidLength(maxLength)) {
+            xjcAnnotator.annotate(annotationFactory.getSizeClass())
+                    .paramIf(isValidLength(minLength), MIN, minLength)
+                    .paramIf(isValidLength(maxLength), MAX, maxLength)
                     .log();
         }
     }

@@ -36,7 +36,8 @@ public abstract class AbstractFacet {
     public abstract LinkedHashSet<String> enumerationList();
 
     public LinkedHashSet<String> getPatterns() {
-        final LinkedHashSet<String> patterns = patternList();
+        final LinkedHashSet<String> patterns = patternList() == null
+                ? new LinkedHashSet<>() : patternList();
         final String pattern = pattern();
         Utils.addIfNotNullOrEmpty(patterns, pattern, String::isEmpty);
         if (patterns != null && !patterns.isEmpty()) {
@@ -49,7 +50,8 @@ public abstract class AbstractFacet {
     }
 
     public LinkedHashSet<String> getEnumerations() {
-        final LinkedHashSet<String> enumerations = enumerationList();
+        final LinkedHashSet<String> enumerations = enumerationList() == null
+                ? new LinkedHashSet<>() : enumerationList();
         final String enumeration = enumeration();
         Utils.addIfNotNullOrEmpty(enumerations, enumeration, String::isEmpty);
         if (enumerations != null && !enumerations.isEmpty()) {

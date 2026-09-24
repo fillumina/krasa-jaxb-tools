@@ -7,6 +7,21 @@ plugin; this file records what changed in each release.
 
 - `2.9.0-SNAPSHOT` the version under development:
 
+  - boxed boolean properties retain their generated `isX()` accessor and gain `getX()` for JavaBeans
+    readers. No primitive replacement option or default changes
+
+  - the CXF frontend writes one `@Valid` on an INOUT holder and none on a void return. Input and
+    output policies continue to select the same directions for both `javax` and `jakarta`
+
+  - collecting `@Pattern.List` while processing an `exclude` statement now retains its nested
+    patterns instead of failing. A single pattern or enumeration with no facet collection no longer
+    fails when gathering restrictions
+
+  - an exact length on each repeated string is now written as `@EachSize(min = n, max = n)` when
+    collection annotations are enabled. An exact length inherited alongside a minimum or maximum
+    length takes precedence over that older bound. A list type's own length remains on its field.
+    Jakarta validation still does not enforce the legacy `@Each*` annotations
+
   - an element whose type is an `xs:list` holds its items in the generated field, so the number of
     times the element occurs is no longer written there. An optional one used to get
     `@Size(min = 0, max = 1)`, which counts the items instead of the occurrences and rejects a value

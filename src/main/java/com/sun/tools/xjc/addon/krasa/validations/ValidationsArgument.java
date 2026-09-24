@@ -131,7 +131,7 @@ public enum ValidationsArgument {
     // used by ValidSEIGenerator
     generateServiceValidationAnnotations(
             String.class,
-            "used by cxf-codegen to perform validations on fields annotated with @Valid",
+            "CXF frontend: adds @Valid to selected input and output parameters and non-void returns; an INOUT holder is annotated once",
             // I prefer to be very explicit here instead of relaying on defaults
             (p,v) -> {
                 if ("in".equalsIgnoreCase(v)) {

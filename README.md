@@ -267,6 +267,9 @@ Bean validation policy can be customized with `-XBeanValidationAnnotations:gener
 - `In` (validate only requests)
 - `Out` (validate only responses)
 
+A method returning `void` has no return value to annotate. An INOUT holder receives one `@Valid`
+when either selected direction includes it; a non-void return is annotated only for `Out` or `InOut`.
+
 Using this option requires one of the frontends of this project as the CXF plugin's front end — `-frontend krasa` or `-frontend krasa-jaxws` — see [The CXF frontends](#the-cxf-frontends-krasa-and-krasa-jaxws).
 
 ### Supported annotations
@@ -284,6 +287,10 @@ The plugin generates sources annotated with the following Java Bean Validation 2
 - `@Digits` if there is a totalDigits or fractionDigits restriction.
 - `@Pattern` and `@PatternList` if there is a Pattern restriction; strings only — numeric patterns are not supported, see [Numeric patterns are not supported](#numeric-patterns-are-not-supported)
 
+Pattern lists remain intact when an `exclude` statement selects their property.
+This line retains its existing limited XML Schema regular-expression substitutions; it does not
+implement the newer project's regex compatibility check or type-use annotations.
+
 **That is only part of JSR 380.** The generator writes the constraints a schema can express, where a
 JAXB field or parameter allows them — the annotations above, on a field, a getter or a parameter —
 and not:
@@ -298,6 +305,10 @@ and not:
   of `JAXBElement`, one list of items each, because JAXB cannot map a list of lists; a constraint
   written inside a `JAXBElement` is refused by a provider at run time, because it is not a container.
   The cardinality of those occurrences is written on the outer list.
+  A list type's own length stays on the field holding its items; an exact length of each repeated
+  string is written as `@EachSize(min = n, max = n)` only when `generateListAnnotations=true`.
+  The `@Each*` constraints remain specific to the old `javax` validation library and are not
+  enforced by a Jakarta provider.
 - the JSR 380 constraints a schema has no source for — `@Email`, `@NotEmpty`, `@NotBlank`, the sign
   constraints (`@Positive`, `@Negative`, …) and the date constraints (`@PastOrPresent`,
   `@FutureOrPresent`) — which are not derived from anything.
@@ -369,6 +380,9 @@ In a `maven-jaxb2-plugin` run it is one more XJC argument:
   <arg>-Xequals</arg>
 </args>
 ```
+
+A boxed boolean keeps the generated `isX()` method and also gains a `getX()` method
+so JavaBeans readers can find its nullable `Boolean` value. Other boxed accessors are unchanged.
 
 **WARNING:** must be defined before `XhashCode` or `Xequals`.
 

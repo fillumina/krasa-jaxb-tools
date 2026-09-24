@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://example.com/weather"
+             targetNamespace="http://example.com/weather">
+
+    <types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://example.com/weather">
+            <element name="City" type="string"/>
+            <element name="Weather" type="string"/>
+            <element name="Notice" type="string"/>
+            <element name="UpdatedCity" type="string"/>
+            <element name="LookupCity" type="string"/>
+        </schema>
+    </types>
+
+    <message name="GetWeatherRequest">
+        <part name="City" element="tns:City"/>
+    </message>
+    <message name="GetWeatherResponse">
+        <part name="Weather" element="tns:Weather"/>
+    </message>
+    <message name="NotifyCityRequest">
+        <part name="Notice" element="tns:Notice"/>
+    </message>
+    <message name="LookupCityRequest">
+        <part name="LookupCity" element="tns:LookupCity"/>
+    </message>
+    <message name="LookupCityResponse">
+        <part name="Weather" element="tns:Weather"/>
+        <part name="Notice" element="tns:Notice"/>
+    </message>
+    <message name="UpdateCityMessage">
+        <part name="UpdatedCity" element="tns:UpdatedCity"/>
+    </message>
+
+    <portType name="WeatherServicePortType">
+        <operation name="GetWeather">
+            <input message="tns:GetWeatherRequest"/>
+            <output message="tns:GetWeatherResponse"/>
+        </operation>
+        <operation name="LookupCity">
+            <input message="tns:LookupCityRequest"/>
+            <output message="tns:LookupCityResponse"/>
+        </operation>
+        <operation name="UpdateCity">
+            <input message="tns:UpdateCityMessage"/>
+            <output message="tns:UpdateCityMessage"/>
+        </operation>
+        <operation name="NotifyCity">
+            <input message="tns:NotifyCityRequest"/>
+        </operation>
+    </portType>
+
+    <binding name="WeatherServiceSoapBinding" type="tns:WeatherServicePortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="GetWeather">
+            <soap:operation soapAction="http://example.com/weather/GetWeather"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="LookupCity">
+            <soap:operation soapAction="http://example.com/weather/LookupCity"/>
+            <input><soap:body use="literal"/></input>
+            <output><soap:body use="literal"/></output>
+        </operation>
+        <operation name="UpdateCity">
+            <soap:operation soapAction="http://example.com/weather/UpdateCity"/>
+            <input><soap:body use="literal"/></input>
+            <output><soap:body use="literal"/></output>
+        </operation>
+        <operation name="NotifyCity">
+            <soap:operation soapAction="http://example.com/weather/NotifyCity"/>
+            <input><soap:body use="literal"/></input>
+        </operation>
+    </binding>
+
+    <service name="WeatherService">
+        <port name="WeatherServicePort" binding="tns:WeatherServiceSoapBinding">
+            <soap:address location="http://example.com/weather/service"/>
+        </port>
+    </service>
+
+</definitions>

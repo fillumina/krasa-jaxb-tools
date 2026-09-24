@@ -1,0 +1,17 @@
+Container
+    fromMaximum
+        @EachSize(min = 3, max = 3)
+        @Size(min = 0, max = 3)
+        @Valid
+    fromMinimum
+        @EachSize(min = 3, max = 3)
+        @Size(min = 0, max = 3)
+        @Valid
+    listValue
+        @NotNull
+        @Size(min = 2, max = 2)
+        @Valid
+    repeated
+        @EachSize(min = 4, max = 4)
+        @Size(min = 0, max = 3)
+        @Valid

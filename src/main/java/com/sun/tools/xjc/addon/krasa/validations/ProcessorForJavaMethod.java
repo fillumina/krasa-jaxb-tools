@@ -4,6 +4,7 @@ import org.apache.cxf.tools.common.model.JAnnotation;
 import org.apache.cxf.tools.common.model.JavaMethod;
 import org.apache.cxf.tools.common.model.JavaParameter;
 
+/** Writes one validation annotation for each selected parameter and each non-void return. */
 public class ProcessorForJavaMethod {
 
     private static final String NAME = ProcessorForJavaMethod.class.getSimpleName();
@@ -21,7 +22,7 @@ public class ProcessorForJavaMethod {
     }
 
     public void process(JavaMethod javaMethod) {
-        if (validationsOptions.isValidOut()) {
+        if (validationsOptions.isValidOut() && !"void".equals(javaMethod.getReturnValue())) {
             log("adding annotation to " + javaMethod.getSignature());
             javaMethod.addAnnotation(VALID_RETURN, validAnnotationClass);
         }
@@ -30,13 +31,13 @@ public class ProcessorForJavaMethod {
     }
 
     private void process(JavaParameter javaParameter) {
-        if (validationsOptions.isValidIn() && (javaParameter.isIN() || javaParameter.isINOUT())) {
-            log("adding in " + javaParameter.getName());
+        boolean incoming = validationsOptions.isValidIn()
+                && (javaParameter.isIN() || javaParameter.isINOUT());
+        boolean outgoing = validationsOptions.isValidOut()
+                && (javaParameter.isOUT() || javaParameter.isINOUT());
+        if (incoming || outgoing) {
+            log("adding annotation to " + javaParameter.getName());
             javaParameter.addAnnotation(VALID_PARAM, validAnnotationClass);
-        }
-        if (validationsOptions.isValidOut() && (javaParameter.isOUT() || javaParameter.isINOUT())) {
-            log("adding out " + javaParameter.getName());
-            javaParameter.addAnnotation(VALID_RETURN, validAnnotationClass);
         }
     }
 

@@ -1,0 +1,32 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="a"
+            xmlns:a="a" elementFormDefault="qualified">
+    <xsd:element name="container">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="repeated" type="a:ExactString" minOccurs="0" maxOccurs="3"/>
+                <xsd:element name="fromMinimum" type="a:ExactFromMinimum" minOccurs="0" maxOccurs="3"/>
+                <xsd:element name="fromMaximum" type="a:ExactFromMaximum" minOccurs="0" maxOccurs="3"/>
+                <xsd:element name="listValue" type="a:FixedList"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:simpleType name="ExactString">
+        <xsd:restriction base="xsd:string"><xsd:length value="4"/></xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="MinimumString">
+        <xsd:restriction base="xsd:string"><xsd:minLength value="1"/></xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="MaximumString">
+        <xsd:restriction base="xsd:string"><xsd:maxLength value="5"/></xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="ExactFromMinimum">
+        <xsd:restriction base="a:MinimumString"><xsd:length value="3"/></xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="ExactFromMaximum">
+        <xsd:restriction base="a:MaximumString"><xsd:length value="3"/></xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="FixedList">
+        <xsd:restriction base="a:Strings"><xsd:length value="2"/></xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="Strings"><xsd:list itemType="xsd:string"/></xsd:simpleType>
+</xsd:schema>

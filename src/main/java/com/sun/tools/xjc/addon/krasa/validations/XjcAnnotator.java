@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Pattern;
 
 import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -46,6 +47,13 @@ class XjcAnnotator {
         /** False when the annotation is a duplicate and is written nowhere. */
         private final boolean active;
         private final Map<String,String> parameterMap = new LinkedHashMap<>();
+        private final List<Annotate> nested = new ArrayList<>();
+
+        private Annotate(Class<? extends Annotation> type, JAnnotationUse use) {
+            this.annotationClass = type;
+            this.annotationUse = use;
+            this.active = true;
+        }
 
         public Annotate(JAnnotationUse annotationUse) {
             this.annotationUse = annotationUse;
@@ -76,6 +84,10 @@ class XjcAnnotator {
 
         Map<String, String> getParameters() {
             return parameterMap;
+        }
+
+        List<Annotate> getNested() {
+            return nested;
         }
 
         /**
@@ -149,7 +161,7 @@ class XjcAnnotator {
         }
 
         public MultipleAnnotation multipleAnnotationContainer(String paramName) {
-            JAnnotationArrayMember array = annotationUse.paramArray(paramName);
+            JAnnotationArrayMember array = annotationUse == null ? null : annotationUse.paramArray(paramName);
             return new MultipleAnnotation(array);
         }
 
@@ -161,8 +173,12 @@ class XjcAnnotator {
             }
 
             public Annotate annotate(Class<? extends Annotation> annotationClass) {
-                JAnnotationUse annotationUse = array.annotate(annotationClass);
-                return new Annotate(annotationUse);
+                if (array == null) {
+                    Annotate child = new Annotate(annotationClass, null);
+                    nested.add(child);
+                    return child;
+                }
+                return new Annotate(array.annotate(annotationClass));
             }
 
         }

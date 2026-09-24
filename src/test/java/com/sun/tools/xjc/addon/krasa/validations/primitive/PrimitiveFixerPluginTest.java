@@ -5,9 +5,16 @@ import com.sun.tools.xjc.addon.krasa.validations.AnnotationCheckerFixtureTest;
 import com.sun.tools.xjc.addon.krasa.validations.ArgumentBuilder;
 import com.sun.tools.xjc.addon.krasa.validations.ValidationsAnnotation;
 import com.sun.tools.xjc.addon.krasa.validations.ValidationsArgument;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.io.File;
+import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -109,11 +116,53 @@ public class PrimitiveFixerPluginTest extends AnnotationCheckerFixtureTest {
                 // a boxed field with a primitive accessor would not compile, so the substitution has
                 // to reach the getter and the setter as well
                 .withMethod("isAboolean").assertType("Boolean").end()
+                .withMethod("getAboolean").assertType("Boolean").end()
                 .withMethod("setAboolean").assertType("Boolean").end()
                 .withMethod("getAfloat").assertType("Float").end()
                 .withMethod("setAfloat").assertType("Float").end()
                 .withMethod("getAdouble").assertType("Double").end()
                 .withMethod("setAdouble").assertType("Double").end();
+    }
+
+    @Test
+    public void boxedNullableBooleanIsReadableAsAJavaBeansProperty() throws Exception {
+        Path output = Files.createTempDirectory("primitive-bean-");
+        File source = new File(getGeneratedDirectory(), "a/Primitive.java");
+        try {
+            String configuredHome = System.getenv("JAVA_HOME");
+            File javaHome = new File(configuredHome != null ? configuredHome : System.getProperty("java.home"));
+            File javac = new File(javaHome, "bin/javac");
+            if (!javac.exists()) {
+                javac = new File(javaHome.getParentFile(), "bin/javac");
+            }
+            Process compiler = new ProcessBuilder(javac.getAbsolutePath(),
+                    "-classpath", System.getProperty("java.class.path"),
+                    "-d", output.toString(), source.getAbsolutePath()).inheritIO().start();
+            Assert.assertEquals("generated bean must compile", 0, compiler.waitFor());
+            try (URLClassLoader loader = new URLClassLoader(new java.net.URL[] { output.toUri().toURL() },
+                    getClass().getClassLoader())) {
+                Class<?> beanClass = loader.loadClass("a.Primitive");
+                PropertyDescriptor property = null;
+                for (PropertyDescriptor descriptor : Introspector.getBeanInfo(beanClass).getPropertyDescriptors()) {
+                    if ("aboolean".equals(descriptor.getName())) {
+                        property = descriptor;
+                    }
+                }
+                Assert.assertNotNull("JavaBeans must recognize the nullable boolean", property);
+                Assert.assertEquals(Boolean.class, property.getPropertyType());
+                Assert.assertNotNull(property.getReadMethod());
+                Assert.assertNotNull(property.getWriteMethod());
+                Object bean = beanClass.getDeclaredConstructor().newInstance();
+                property.getWriteMethod().invoke(bean, Boolean.TRUE);
+                Assert.assertEquals(Boolean.TRUE, property.getReadMethod().invoke(bean));
+                property.getWriteMethod().invoke(bean, new Object[] { null });
+                Assert.assertNull(property.getReadMethod().invoke(bean));
+            }
+        } finally {
+            Files.deleteIfExists(output.resolve("a/Primitive.class"));
+            Files.deleteIfExists(output.resolve("a"));
+            Files.deleteIfExists(output);
+        }
     }
 
     @Override

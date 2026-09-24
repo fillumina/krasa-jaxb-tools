@@ -5,6 +5,7 @@ import com.sun.codemodel.JCodeModel;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JFormatter;
 import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
 import com.sun.codemodel.JStatement;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
@@ -19,7 +20,8 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 
 /**
- * Substitute all primitive types with their respective boxed types (i.e. int → Integer)
+ * Substitute primitive types with their boxed types (for example, int becomes Integer).
+ * A boxed boolean keeps its is-prefixed accessor and gains a get-prefixed accessor for JavaBeans readers.
  * <br>
  * The plugin is configured in {@code /resources/META-INF/services/com.sun.tools.xjc.Plugin} .
  * 
@@ -48,8 +50,8 @@ public class PrimitiveFixerPlugin extends Plugin {
     @Override
     public String getUsage() {
         return "-" + PLUGIN_NAME
-                + "    :   Replaces primitive types of fields and methods by proper Class, " +
-                "WARNING: must be defined before XhashCode or Xequals.  \n";
+                + "    :   Boxes primitive fields and accessors; boxed booleans keep isX and gain getX. " +
+                "Define it before XhashCode or Xequals.  \n";
     }
 
     @Override
@@ -76,7 +78,17 @@ public class PrimitiveFixerPlugin extends Plugin {
                         JCodeModel jCodeModel = new JCodeModel();
                         JClass newType = jCodeModel.ref(o);
                         fieldVar.type(newType);
-                        setReturnType(newType, getMethodsMap(MethodType.GETTER, fieldVar, co));
+                        JMethod getter = getMethodsMap(MethodType.GETTER, fieldVar, co);
+                        setReturnType(newType, getter);
+                        if (o == Boolean.class && getter.name().startsWith("is")) {
+                            String name = "get" + getter.name().substring(2);
+                            boolean exists = co.implClass.methods().stream()
+                                    .anyMatch(method -> method.name().equals(name)
+                                            && method.listParams().length == 0);
+                            if (!exists) {
+                                co.implClass.method(JMod.PUBLIC, newType, name).body()._return(fieldVar);
+                            }
+                        }
                         setParameter(newType, getMethodsMap(MethodType.SETTER, fieldVar, co));
                     }
                 }
@@ -102,9 +114,7 @@ public class PrimitiveFixerPlugin extends Plugin {
         }
     }
 
-    /**
-     * I hate this shit
-     */
+    /** Finds the generated accessor by the field reference in its body. */
     private JMethod getMethodsMap(MethodType type, JFieldVar field, ClassOutline co) {
         String getterBody = "return " + field.name() + ";";
         for (JMethod method : co.implClass.methods()) {

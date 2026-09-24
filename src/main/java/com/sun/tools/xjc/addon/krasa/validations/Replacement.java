@@ -156,6 +156,18 @@ class Replacement {
         for (Map.Entry<String, String> parameter : parameters.entrySet()) {
             writeParameter(annotation, type, parameter.getKey(), parameter.getValue());
         }
+        if (!computed.getNested().isEmpty()) {
+            XjcAnnotator.Annotate.MultipleAnnotation children =
+                    annotation.multipleAnnotationContainer("value");
+            for (XjcAnnotator.Annotate child : computed.getNested()) {
+                XjcAnnotator.Annotate written = children.annotate(child.getAnnotationClass());
+                for (Map.Entry<String, String> parameter : child.getParameters().entrySet()) {
+                    writeParameter(written, child.getAnnotationClass(),
+                            parameter.getKey(), parameter.getValue());
+                }
+                written.log();
+            }
+        }
         annotation.log();
     }
 

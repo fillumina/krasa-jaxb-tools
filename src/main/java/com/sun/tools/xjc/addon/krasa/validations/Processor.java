@@ -334,7 +334,7 @@ public class Processor {
         }
 
         private void setEachAnnotations(FieldHelper fieldHelper, FieldAnnotator annotator, AccumulatorFacet facet) {
-            annotator.addEachSizeAnnotation(facet.minLength(), facet.maxLength());
+            annotator.addEachSizeAnnotation(facet.minLength(), facet.maxLength(), facet.length());
             annotator.addEachDigitsAnnotation(facet.totalDigits(), facet.fractionDigits());
             annotator.addEachDecimalMinAnnotation(
                     fieldHelper.validItemValue(facet.minInclusive()),
