@@ -2,6 +2,29 @@
 
 # XJC and CXF plugins that generate Bean Validation annotations
 
+## The new line: three plugins, published
+
+The three tools this artifact conflates are now three independent projects, all published on Maven
+Central. All three need **JDK 21** and **XJC 4** and work with `jakarta.validation` only. The
+annotations plugin writes the container element form the specification asks for —
+`List<@Size(max = 5) String>`, with `@Valid` on the type argument — in place of the `@Valid` on the
+container this project generates:
+
+| here | the new line | Maven coordinates | activated with |
+| --- | --- | --- | --- |
+| `-XBeanValidationAnnotations` (and `-XJsr303Annotations`) | [xjc-bean-validation-plugin](https://github.com/fillumina/xjc-bean-validation-plugin) | `com.fillumina:xjc-bean-validation-plugin` | `-XBeanValidationAnnotations` |
+| `-XReplacePrimitives` | [xjc-primitives-plugin](https://github.com/fillumina/xjc-primitives-plugin) | `com.fillumina:xjc-primitives-plugin` | `-XReplacePrimitives` |
+| `-frontend krasa` | [cxf-validation-frontend](https://github.com/fillumina/cxf-validation-frontend) | `com.fillumina:cxf-validation-frontend` | `-frontend bean-validation` |
+
+Each project has an example beside it — [`xjc-bean-validation-plugin-example`](https://github.com/fillumina/xjc-bean-validation-plugin-example),
+[`xjc-primitives-plugin-example`](https://github.com/fillumina/xjc-primitives-plugin-example) and
+[`cxf-validation-frontend-example`](https://github.com/fillumina/cxf-validation-frontend-example) —
+and [`xjc-plugins-example`](https://github.com/fillumina/xjc-plugins-example) runs all three in one
+build, which is where the split is shown to do what the single plugin did.
+
+A build that has to stay on **JDK 8** and the `javax` validation API stays with this project; the
+section *This project is in maintenance* below explains which line to pick.
+
 ## Content of the project
 
 Three independent tools ship in this one artifact, and a build can use any combination of them:
@@ -13,6 +36,8 @@ Three independent tools ship in this one artifact, and a build can use any combi
 - **[The CXF frontends](#the-cxf-frontends-krasa-and-krasa-jaxws)** — an [Apache Cxf plugin](https://cxf.apache.org/docs/tools.html) that adds the `javax` or `jakarta` `@Valid` annotation to the SOAP methods and their parameters (both optionally) of the generated Port Type interface. It ships two frontends, `krasa` and `krasa-jaxws`, selected with `-frontend`.
 
 The two XJC plugins work on the schema and the frontends on the WSDL handed to CXF: nothing else is shared between them, and none of them needs the others to be configured.
+
+The same three tools, rebuilt for JDK 21 and the `jakarta` API, are the three published projects described under [The new line](#the-new-line-three-plugins-published) above.
 
 Release
 ----------------
@@ -45,7 +70,7 @@ annotation, no option and no default differs from 2.7.0.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full history of every release.
 
-## This project is in maintenance — new projects will follow
+## This project is in maintenance — the new projects have been published
 
 **This project** (`com.fillumina:krasa-jaxb-tools`)
 
@@ -56,10 +81,10 @@ See [CHANGELOG.md](CHANGELOG.md) for the full history of every release.
   options from the issues, with every default left exactly as it is.
 - Its name, URL and Maven coordinates stay where they are, so nothing has to be re-pointed.
 
-**New projects, one per tool** — [`xjc-bean-validation-plugin`](https://github.com/fillumina/xjc-bean-validation-plugin),
+**The new line, one project per tool** — [`xjc-bean-validation-plugin`](https://github.com/fillumina/xjc-bean-validation-plugin),
 [`xjc-primitives-plugin`](https://github.com/fillumina/xjc-primitives-plugin) and
 [`cxf-validation-frontend`](https://github.com/fillumina/cxf-validation-frontend), each with its
-own name, URL and coordinates:
+own name, URL and coordinates, all published on Maven Central:
 
 - Built from a copy of these sources, and breaking compatibility from the first commit: the two
   worlds cannot be carried in one codebase.
@@ -80,12 +105,22 @@ own name, URL and coordinates:
 - A project that has to stay on a JDK 8 toolchain stays here, and this project stays maintained for
   it — fixes and new options, with every default left exactly as it is.
 
-The one difficult case is staying on JDK 8 *and* needing the new standards — `jakarta.validation`,
-or the annotations the specification moved from containers to type arguments. That combination is
-the only unstable ground in this arrangement, and it gets a **best-effort, optional-only** answer:
-a new option where one can be written, never a change to what the current defaults generate. If it
-is your case, an [issue](https://github.com/fillumina/krasa-jaxb-tools/issues) describing it is what
-tells us how far that effort should go.
+The difficult case left is staying on JDK 8 *and* needing the constraints the specification moved
+to a **type argument** — `List<@Size(max = 5) String>`, with `@Valid` on the type argument instead
+of on the container. This line cannot write that form: codemodel, the library the generator writes
+Java through, has no `annotate()` for a type use, in 2.3.5 or in 4.0.5. A collection here carries
+either `@Valid` on the container, which Bean Validation deprecated, or the `@Each*` annotations of
+validator-collection, which are `javax`-only: a `jakarta` provider either refuses them with a
+`ConstraintDefinitionException` or ignores them silently, and the build stays green either way.
+`jakarta.validation` itself is not the difficulty — this line writes it with
+`validationAnnotations=jakarta`, the frontend included, and its fixtures run against both libraries
+on JDK 8.
+
+That combination is the only unstable ground in this arrangement, and it gets a **best-effort,
+optional-only** answer: an option that emits the type-argument form another way, if one can be
+written, never a change to what the current defaults generate. If it is your case, an
+[issue](https://github.com/fillumina/krasa-jaxb-tools/issues) describing it is what tells us how far
+that effort should go.
 
 ## Example projects
 
@@ -94,6 +129,12 @@ There are 2 example projects containing many different plugins and configuration
 - [GitHub - fillumina/krasa-jaxb-tools-jdk21-example: Examples of usage of krasa-jaxb-tools using latest technologies (Java 21)](https://github.com/fillumina/krasa-jaxb-tools-jdk21-example) as the name suggests it's compiled with **JDK 21** and provides working examples of many different plugins using both XJC and CXF configured with both `javax` and `jakarta` packages using the latest versions available.
 
 - [GitHub - fillumina/krasa-jaxb-tools-example: Sample project for https://github.com/fillumina/krasa-jaxb-tools](https://github.com/fillumina/krasa-jaxb-tools-example) uses **JDK 8** and provides examples using the latest versions of plugins and dependencies available for that java version.
+
+The new line has an example per project — [`xjc-bean-validation-plugin-example`](https://github.com/fillumina/xjc-bean-validation-plugin-example),
+[`xjc-primitives-plugin-example`](https://github.com/fillumina/xjc-primitives-plugin-example) and
+[`cxf-validation-frontend-example`](https://github.com/fillumina/cxf-validation-frontend-example) —
+plus [`xjc-plugins-example`](https://github.com/fillumina/xjc-plugins-example), which uses all three
+together; those are the projects each new plugin is tested against.
 
 ## The XJC plugin `BeanValidationAnnotations`
 
