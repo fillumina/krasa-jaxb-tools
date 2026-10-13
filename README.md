@@ -2,6 +2,34 @@
 
 # Bean Validation tools for XJC and CXF
 
+*Add `javax` or `jakarta` Bean Validation to the classes generated from your XSD.*
+
+[XJC](https://github.com/eclipse-ee4j/jaxb-ri) turns an XML Schema into Java classes, and drops the restrictions on the way: a value of exactly two characters arrives as a plain `String`. This project writes those restrictions into the generated code as Bean Validation annotations, so a validator can enforce what the schema already states.
+
+This schema:
+
+```xml
+<xsd:element name="CountryCode">
+  <xsd:simpleType>
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="2"/>
+      <xsd:maxLength value="2"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+</xsd:element>
+```
+
+generates:
+
+```java
+@XmlElement(name = "CountryCode", required = true)
+@NotNull
+@Size(min = 2, max = 2)
+protected String countryCode;
+```
+
+The same tools add `@Valid` to the parameters and return values of CXF-generated service interfaces.
+
 ## Choose the right line
 
 This artifact is the maintained compatibility line for builds that need **JDK 8**, XJC 2.3, CXF 3.5, or the `javax` validation API. It keeps its Maven coordinates and existing behaviour: fixes and additive options are welcome, but defaults and generated output do not change.
