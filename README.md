@@ -1,15 +1,8 @@
 ![Maven Central](https://img.shields.io/maven-central/v/com.fillumina/krasa-jaxb-tools.svg)
 
-# Bean Validation tools for XJC and CXF
-
-*Add `javax` or `jakarta` Bean Validation to the classes generated from your XSD.*
-
 > ## WARN: HV000271: Using `@Valid` on a container (java.util.List) is deprecated.
 >
-> Hibernate Validator 9.1 warns using `@Valid` on a container (java.util.List) is deprecated. You should apply the annotation on the type  
-> *argument(s)* about the collections this artifact generates. The form it asks for,
-> `List<@Valid RemarksType>`, is written by the [Bean Validation
-> plugin](https://github.com/fillumina/xjc-bean-validation-plugin) of the new line, **not here**. The warning is a deprecation and validation still runs (checked on Hibernate Validator 6.2.5, 7.0.5, 8.0.2 and 9.1.4, only 9.1.x logs it). 
+> Hibernate Validator 9.1 warns using `@Valid` on a container (java.util.List) is deprecated. You should apply the annotation on the type *argument(s)* about the collections this artifact generates. The form it asks for, `List<@Valid RemarksType>`, is written by the [Bean Validation plugin](https://github.com/fillumina/xjc-bean-validation-plugin) of the new line, **not here**. The warning is a deprecation and validation still runs (checked on Hibernate Validator 6.2.5, 7.0.5, 8.0.2 and 9.1.4, only 9.1.x logs it). 
 >
 > To stop it, either:
 >
@@ -17,6 +10,10 @@
 > - set `-XBeanValidationAnnotations:generateValidOnCollections=false`, which also stops the parent
 > from cascading into those collections. [Compatibility limits of this
 > line](#compatibility-limits-of-this-line) explains why this artifact cannot move the annotation.
+
+# Bean Validation tools for XJC and CXF
+
+*Add `javax` or `jakarta` Bean Validation to the classes generated from your XSD.*
 
 [XJC](https://github.com/eclipse-ee4j/jaxb-ri) turns an XML Schema into Java classes, and drops the restrictions on the way: a value of exactly two characters arrives as a plain `String`. This project writes those restrictions into the generated code as Bean Validation annotations, so a validator can enforce what the schema already states.
 
